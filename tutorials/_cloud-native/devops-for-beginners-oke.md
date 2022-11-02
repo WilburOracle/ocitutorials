@@ -1,6 +1,6 @@
 ---
-title: "Oracle Cloud Infrastructure(OCI) DevOpsことはじめ-OKE編-"
-excerpt: "OCI DevOpsでコンテナアプリケーション開発におけるCI/CDを学びます。"
+title: "Oracle 云基础设施 (OCI) DevOps 入门 -OKE 版-"
+excerpt: "使用 OCI DevOps 在容器应用程序开发中学习 CI/CD。"
 layout: single
 order: "012"
 tags:
@@ -8,133 +8,133 @@ date: "2022-04-06"
 lastmod: "2022-04-06"
 ---
 
-OCI DevOpsは、OCI上にCI/CD環境を構築するマネージドサービスです。ここでは、Oracle Container Engine for Kubernetes(OKE)サービスを利用したKubernetesクラスタの構築、アーティファクト環境とOCI DevOpsのセットアップ、CI/CDパイプラインの実装と実行までの手順を記します。  
-この手順を実施することで、OCI DevOpsを利用したコンテナアプリケーション開発におけるCI/CDを学習できます。
+OCI DevOps 是在 OCI 上构建 CI/CD 环境的托管服务。在这里，我们将描述使用 Oracle Container Engine for Kubernetes (OKE) 服务构建 Kubernetes 集群、设置工件环境和 OCI DevOps 以及实施和运行 CI/CD 管道的步骤。
+通过遵循此过程，您可以在使用 OCI DevOps 的容器应用程序开发中学习 CI/CD。
 
-**Oracle Container Engine for Kubernetes(OKE)について**  
-Oracle Container Engine for Kubernetesは、Oracle Cloud Infrastructure(OCI)で提供される、完全に管理されたスケーラブルで可用性の高いマネージドのKubernetessサービスです。  
-詳細は[こちら](https://www.oracle.com/jp/cloud-native/container-engine-kubernetes/)のページをご確認ください。
+**关于适用于 Kubernetes 的 Oracle 容器引擎 (OKE)**
+Oracle Container Engine for Kubernetes 是在 Oracle 云基础设施 (OCI) 上提供的完全托管、可扩展且高度可用的托管 Kubernetes 服务。
+详情请查看页面[这里](https://www.oracle.com/jp/cloud-native/container-engine-kubernetes/)。
 {: .notice--info}
 
-前提条件
+先决条件
 --------
-- 環境
-  - [OCI DevOps事前準備](/ocitutorials/cloud-native/devops-for-commons/)が完了していること
+-环境
+  - [OCI DevOps 准备](/ocitutorials/cloud-native/devops-for-commons/) 完成
 
-全体構成
+整体结构
 --------
 
-以下の図にある環境を構築することがゴールです。環境構築後、サンプルソースコードを変更して、「git push」コマンド実行をトリガーにCI/CDパイプラインの実行、OKEクラスタ上にサンプルコンテナアプリケーションのデプロイまでの工程が、自動で行われることを確認します。
+目标是构建下图所示的环境。搭建环境后，更改示例源代码，以“git push”命令的执行为触发器执行CI/CD流水线，确认从部署示例容器应用到OKE集群的流程是自动执行的。去做。
 
 ![](1-012.png)
 
-作業構成は、「事前準備」と「OCI DevOps 環境構築」の2構成です。
+工作配置有“准备”和“OCI DevOps环境搭建”两种。
 
-「事前準備」では、冒頭で紹介したOKEを利用したKubernetesクラスタを構築します。そして、OCI DevOpsサービスを利用する上で必要となる認証トークン設定、サンプルアプリケーションの取得、OCI DevOpsでOKEクラスタを利用するための動的グループ・ポリシーの設定を行います。
+在“准备”中，我们将使用开头介绍的 OKE 构建一个 Kubernetes 集群。然后，设置使用 OCI DevOps 服务所需的认证令牌，获取示例应用程序，并设置使用 OCI DevOps 的 OKE 集群的动态组策略。
 
-「OCI DevOps 環境構築」では、デプロイ先となるOKEクラスタの登録、コード・リポジトリとアーティファクト・レジストリの設定と管理、OCI DevOpsのパイプラインとなるビルド・パイプラインとデプロイメント・パイプラインの構築、パイプラインを自動化させるためのトリガー機能の設定、最後にソースコードの変更および「git push」コマンド実行を契機に、構築したパイプラインの稼働とデプロイされたアプリケーションの稼働を確認します。
+在“OCI DevOps环境搭建”中，注册要部署的OKE集群，设置和管理代码仓库和工件注册表，构建构建管道和部署管道为OCI DevOps管道，管道设置触发功能为自动化，最后，更改源代码并执行“git push”命令来检查构建的管道的运行情况和部署的应用程序的运行情况。
 
-ここで、関係する機能、サービスを整理しておきます。
+相关的功能和服务在这里整理。
 
-**コード・リポジトリ**  
-コード・リポジトリは、ソースコードをバージョン管理できるOCI DevOpsの機能の一つです。GitHubやGitLabと同じようにリポジトリを作成して、ソースコードのバージョン管理をしながら効率的に開発を行えます。
+**代码库**
+代码存储库是 OCI DevOps 的功能之一，它允许您对源代码进行版本控制。您可以像 GitHub 和 GitLab 一样创建存储库，在管理源代码版本的同时进行高效开发。
 {: .notice--info}
 
-**アーティファクト・レジストリ**  
-アーティファクト・レジストリは、ソフトウェア開発パッケージを格納、共有および管理するためのOCIのサービスです。OCI DevOpsと統合して利用します。  
-詳細は[こちら](https://docs.oracle.com/en-us/iaas/artifacts/using/overview.htm)のページをご確認ください。
+**工件注册表**
+Artifact Registry 是 OCI 用于存储、共享和管理软件开发包的服务。与 OCI DevOps 集成使用。
+请查看页面 [此处](https://docs.oracle.com/en-us/iaas/artifacts/using/overview.htm) 了解详细信息。
 {: .notice--info}
 
-**コンテナレジストリ**  
-コンテナレジストリは、コンテナイメージを保存および共有するための専用のレジストリです。OCIには、Oracle Cloud Ifrastructure Registry（OCIR）というコンテナイメージ専用のレジストリサービスがあります。OCI DevOpsと統合して利用します。
-詳細は[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryoverview.htm)のページをご確認ください。
+**容器注册表**
+容器注册表是用于存储和共享容器镜像的专用注册表。 OCI 有一个专门用于容器镜像的注册表服务，称为 Oracle 云基础设施注册表 (OCIR)。与 OCI DevOps 集成使用。
+有关详细信息，请查看页面 [此处](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryoverview.htm)。
 {: .notice--info}
 
-事前準備の流れ
+准备流程
 ---------------------------------
-* 1.OKE セットアップ
-* 2.認証トークン セットアップ
-* 3.サンプルアプリケーション取得
-* 4.ポリシーの設定
+* 1.OKE设置
+* 2. 认证令牌设置
+* 3. 获取示例应用程序
+* 4.策略设置
 
-1.OKEセットアップ
+1.OKE设置
 ---------------------------------
 
 ![](1-125.png)
 
-### 1-1 OCIダッシュボードからOKEクラスタの構築
+### 1-1 从 OCI 仪表板构建 OKE 集群
 
-3ノード、1クラスタとして、OKEクラスタを構築します。  左上のハンバーガーメニューを展開して、「開発者サービス」から「Kubernetesクラスタ(OKE)」を選択します。
+构建一个 3 个节点和 1 个集群的 OKE 集群。展开左上角的汉堡菜单，从“开发者服务”中选择“Kubernetes Cluster (OKE)”。
 
 ![](1-001.png)
 
-プルダウンメニューから「xxxxxx（ルート）」を選択します。  
-選択されている場合は、そのまま進んでください。
+从下拉菜单中选择“xxxxxx (root)”。
+如果被选中，请继续。
 
 ![](1-142.png)
 
-「クラスタの作成」ボタンをクリックします。
+单击创建集群按钮。
 
 ![](1-002.png)
 
-「クイック作成」が選択されていることを確認して、「ワークフローの起動」ボタンをクリックします。
+确保选择了快速创建并单击启动工作流按钮。
 
 ![](1-003.png)
 
-以下の内容であることを確認します。
+确保它具有以下内容：
 
-* 名前：cluster1
-* Kubernetes APIエンドポイント:パブリック・エンドポイント
-* Kubernetesワーカー・ノード:プライベート・ワーカー
-* シェイプ：VM Standard.E3.Flex
-* OCPU数の選択: 1
-* メモリー量（GB）： 16
+* 名称：cluster1
+* Kubernetes API 端点：公共端点
+* Kubernetes Worker 节点：私有 Worker
+* 形状：VM Standard.E3.Flex
+* 选择 OCPU 数量：1
+* 内存（GB）：16
 
 ![](1-004.png)
 
-**Kubernetesバージョンについて**  
-上記のスクリーンショットに表示されているKubernetesバージョンと実際にコンソールに表示されているKubernetesバージョンは異なる可能性があります。  
-このハンズオンでは、Kubernetesバージョンは特に問わないので、コンソール上で選択されているデフォルトのバージョンで進めてください。  
+**关于 Kubernetes 版本**
+上面屏幕截图中显示的 Kubernetes 版本和控制台中显示的实际 Kubernetes 版本可能会有所不同。
+对于本次动手操作，Kubernetes 版本无关紧要，因此请继续使用控制台上选择的默认版本。
 {: .notice--info}
 
-画面「次」ボタンをクリックします。
+单击屏幕上的“下一步”按钮。
 
 ![](1-005.png)
 
-画面「クラスタ作成」ボタンをクリックします。
+单击屏幕上的“创建集群”按钮。
 
 ![](1-006.png)
 
-画面「閉じる」ボタンをクリックします。
+单击屏幕上的“关闭”按钮。
 
 ![](1-007.png)
 
-黄色の「作成中」から緑の「アクティブ」になることを確認します。「アクティブ」であればクラスタ作成は完了です。
+确认它从黄色的“Creating”变为绿色的“Active”。如果是“Active”，则集群创建完成。
 
 ![](1-008.png)
 
-### 1-2 Cloud Shellを利用してクラスタを操作
+### 1-2 使用 Cloud Shell 操作集群
 
-Cloud Shellを利用して、作成したKubernetesクラスタに接続します。
+使用 Cloud Shell 连接到创建的 Kubernetes 集群。
 
-「クラスタへのアクセス」ボタンをクリックします。
+单击访问集群按钮。
 
 ![](1-009.png)
 
-「Cloud Shellの起動」ボタン、「コピー」リンクテキスト、「閉じる」ボタンの順にクリックします。
+单击“启动 Cloud Shell”按钮，然后单击“复制”链接文本，然后单击“关闭”按钮。
 
 ![](1-010.png)
 
-Cloud Shell起動後、「コピー」した内容をペーストして、Enterキーを押します。
+启动 Cloud Shell 后，粘贴“复制”的内容，然后按 Enter 键。
 
 ![](1-011.png)
 
-以下コマンドを実行して、3ノードの「STATUS」が「Ready」になっていることを確認します。
+执行以下命令确认3个节点的“STATUS”为“Ready”。
 
-```sh
-kubectl get nodes
+``` 嘘
+kubectl get node
 ```
-***コマンド結果***
+***命令结果***
 ```sh
 NAME          STATUS   ROLES   AGE     VERSION
 10.0.10.141   Ready    node    6m33s   v1.21.5
@@ -142,52 +142,52 @@ NAME          STATUS   ROLES   AGE     VERSION
 10.0.10.231   Ready    node    6m23s   v1.21.5
 ```
 
-以上でOKEクラスタの構築は完了です。
+这样就完成了OKE集群的搭建。
 
-2.認証トークン セットアップ
+2. 身份验证令牌设置
 ---------------------------------
 
-右上にある「プロファイル」アイコンをクリックして、プロファイル名を選択します。
+单击右上角的个人资料图标，然后选择您的个人资料名称。
 
 ![](1-023.png)
 
-左メニュー「認証トークン」を選択します。
+从左侧菜单中选择“身份验证令牌”。
 
 ![](1-024.png)
 
-「トークンの作成」をボタンをクリックします。
+单击“创建令牌”按钮。
 
 ![](1-025.png)
 
-「説明」に「oci-devops-handson」と入力して、「トークンの生成」ボタンをクリックします。
+在描述中输入“oci-devops-handson”，然后单击生成令牌按钮。
 
 ![](1-026.png)
 
-「コピー」をクリックして、「閉じる」ボタンをクリックします。  コピーした認証トークンは、後の手順で必要となるので、テキストエディタなどにペーストしておきます。
+单击复制，然后单击关闭按钮。您将在稍后的步骤中需要复制的身份验证令牌，因此将其粘贴到文本编辑器中。
 
 ![](1-027.png)
 
-以上で、認証トークンの作成は完了です。
+这样就完成了身份验证令牌的创建。
 
-3.サンプルアプリケーション取得
+3. 样本申请获取
 ---------------------------------
 
-ここでは、サンプルアプリケーションをダウンロードします。
+在此处下载示例应用程序。
 
-上部メニューの「Cloud　Shell」アイコンをクリックして、Cloud Shellを起動します。
+单击上方菜单中的“Cloud Shell”图标以启动 Cloud Shell。
 
 ![](1-028.png)
 
-起動画面
+开机画面
 
 ![](1-029.png)
 
-起動後、以下コマンドを実行します。
+启动后，执行以下命令。
 
 ```sh
 wget https://objectstorage.ap-tokyo-1.oraclecloud.com/n/orasejapan/b/oci-devops-handson/o/oke%2Foci-devops-oke.zip
 ```
-***コマンド結果***
+***命令结果***
 ```sh
 --2021-12-06 07:41:06--  https://objectstorage.uk-london-1.oraclecloud.com/p/NHrjAcamTrUsDXrJybmjKYxDdEH5qus9HMDlnh9lGRIp0GOELTK-wScn3aAehiMX/n/orasejapan/b/devday2021/o/oci-devops-oke.zip
 Resolving objectstorage.uk-london-1.oraclecloud.com (objectstorage.uk-london-1.oraclecloud.com)... 134.70.60.1, 134.70.64.1, 134.70.56.1
@@ -201,41 +201,41 @@ Saving to: ‘oke%2Foci-devops-oke.zip’
 2021-12-06 07:41:06 (3.29 MB/s) - ‘oke%2Foci-devops-oke.zip’ saved [1112595/1112595]
 ```
 
-ダウンロードしたzipファイルを解凍します。
+解压缩下载的 zip 文件。
 
 ```sh
 unzip oke%2Foci-devops-oke.zip
 ```
 
-「oci-devops-oke」というディレクトリがあることを確認します。
+确保有一个名为“oci-devops-oke”的目录。
 
-4.ポリシーの設定
+4.策略设置
 ---------------------------------
 
-ここでは、[事前準備](/ocitutorials/cloud-native/devops-for-commons/)に追加で必要なポリシーの設定を行います。  
+在 [事前准备](/ocitutorials/cloud-native/devops-for-commons/) 中设置额外的必要策略。
 
-追加で必要となるポリシーは以下となります。
+其他必需的政策是：
 
-ポリシー|説明
+政策|说明
 -|-
-Allow dynamic-group OCI_DevOps_Dynamic_Group_OKE to manage cluster-family in compartment id コンパートメントOCID|OCI DevOpsがOKEを管理できるようにするポリシー
+允许动态组 OCI_DevOps_Dynamic_Group_OKE 管理隔离专区 ID 隔离专区 OCID|策略中的集群系列，以允许 OCI DevOps 管理 OKE
 
-今回のハンズオンでは、スクリプトを利用して、ポリシーを設定します。  
-スクリプトは先ほど解凍した関連資材に含まれています。  
+在本次实践中，我们将使用脚本来设置策略。
+该脚本包含在您之前解压缩的相关材料中。
 
-Cloud Shellを起動し、以下のコマンドを実行します。  
+启动 Cloud Shell 并运行以下命令。
 
 ```sh
 chmod +x oci-devops-oke/prepare/prepare.sh
 ```
 
-スクリプトを実行します。  
+运行脚本。
 
 ```sh
 ./oci-devops-oke/prepare/prepare.sh
 ```
 
-***コマンド結果***
+***命令结果***
 ```sh
 ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 {
@@ -263,141 +263,141 @@ ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 }
 ```
 
-これで、ポリシーの設定は完了です。
+策略配置现已完成。
 
 
-以上で、事前準備は完了です。
+准备工作现已完成。
 
-OCI DevOps 環境構築
+OCI DevOps 环境搭建
 ---------------------------------
-* 1.環境
-* 2.コード・リポジトリ
-* 3.アーティファクト
-* 4.デプロイメント・パイプライン
-* 5.ビルド・パイプライン
-* 6.トリガー
-* 7.パイプラインの実行
-* 8.デプロイの確認
+* 1.环境
+* 2. 代码仓库
+* 3. 神器
+* 4. 部署管道
+* 5. 构建管道
+* 6. 触发
+* 7.流水线执行
+* 8. 确认部署
 
-1.環境
+1.环境
 ---------------------------------
 
 ![](1-128.png)
 
-ここからは、[事前準備](/ocitutorials/cloud-native/devops-for-commons/)で構築したDevOpsインスタンスに対して操作を行います。  
+从这里，操作 [Preparation](/ocitutorials/cloud-native/devops-for-commons/) 中内置的 DevOps 实例。
 
-OCI Console 左上のハンバーガーメニューから、**開発者サービス** > **DevOps** > **プロジェクト**と選択します。  
+从 OCI 控制台左上角的汉堡菜单中，选择 **Developer Services** > **DevOps** > **Projects**。
 
 ![](1-201.png)
 
-`oci-devops-handson`を選択します。
+选择“oci-devops-handson”。
 
 ![](1-202.png)
 
-OCI DevOpsからOKEクラスタにアプリケーションのデプロイを行うために、OKEクラスタを登録します。
+注册 OKE 集群以将应用程序从 OCI DevOps 部署到 OKE 集群。
 
-「環境の作成」を選択します。
+选择创建环境。
 
 ![](1-043.png)
 
-「環境タイプ」で「Oracle Kubernetesエンジン」を選択、「名前」で「oke-cluster」を選択します。
+为“环境类型”选择“Oracle Kubernetes Engine”，为“名称”选择“oke-cluster”。
 
 ![](1-044.png)
 
-「次」ボタンをクリックします。
+单击下一步按钮。
 
 ![](1-045.png)
 
-「クラスタ」で「cluster1」を選択します。
+在“集群”中选择“集群1”。
 
 ![](1-046.png)
 
-「環境の作成」ボタンをクリックします。
+单击创建环境按钮。
 
 ![](1-047.png)
 
-パンくずリストから「oci-devops-handson」をクリックします。
+单击面包屑中的 oci-devops-handson。
 
 ![](1-048.png)
 
-以上で、環境の作成は完了です。
+环境创建现已完成。
 
-2.コード・リポジトリ
+2.代码仓库
 ---------------------------------
 
 ![](1-129.png)
 
-### 2-1.コード・リポジトリの作成
+### 2-1. 创建代码仓库
 
-OCI DevOpsの「コード・リポジトリ」では、独自のプライベート・コード・リポジトリをOCI DevOps上に作成します。
+OCI DevOps Code Repository 在 OCI DevOps 上创建您自己的私有代码存储库。
 
-「リポジトリの作成」ボタンをクリックします。
+单击创建存储库按钮。
 
 ![](1-049.png)
 
-「リポジトリ名」に「oci-devops-handson」と入力して、「リポジトリの作成」ボタンをクリックします。
+在“Repository Name”中输入“oci-devops-handson”，点击“Create Repository”按钮。
 
 ![](1-050.png)
 
 ![](1-051.png)
 
-以上で、コード・リポジトリの作成は完了です。
+这样就完成了代码仓库的创建。
 
-### 2-2.クローンしたサンプルコードをプッシュ
+### 2-2.推送克隆的示例代码
 
-#### 2-2-1.クローン先情報を取得
+#### 2-2-1. 获取克隆目的地信息
 
-ダウンロードしたサンプルコードを「oci-devops-handson」リポジトリにプッシュします。
+将下载的示例代码推送到“oci-devops-handson”存储库。
 
-プッシュ先を取得するために「クローン」ボタンをクリックします。
+单击“克隆”按钮以获取推送目标。
 
 ![](1-052.png)
 
-「HTTPSでクローニングします 読取り専用」にある「コピー」をクリックして、「閉じる」ボタンをクリックします。コピーした内容は、テキストエディタにペーストしておきます。
+单击通过 HTTPS 只读克隆下的复制，然后单击关闭按钮。将复制的内容粘贴到文本编辑器中。
 
 ![](1-053.png)
 
-#### 2-2-2.「oci-devops-handson」リポジトリのユーザ名とパスワードの取得
+#### 2-2-2. 获取“oci-devops-handson”仓库的用户名和密码
 
-「oci-devops-handson」リポジトリを利用する上で、ユーザ名とパスワードが必要となります。
+使用“oci-devops-handson”存储库需要用户名和密码。
 
-ユーザ名は、`<テナンシ名>/<ユーザ名>` となります。
+用户名是`<tenancy name>/<username>`。
 
-＜ユーザ名＞を確認します。ユーザ名は右上にある「プロファイル」アイコンをクリックして、プロファイル名を選択します。
+检查 <用户名>。对于您的用户名，单击右上角的个人资料图标并选择您的个人资料名称。
 
 ![](1-054.png)
 
-「ユーザーの詳細画面」の赤枠箇所をコピーして、テキストエディタにペーストしておきます。
+复制“用户详细信息屏幕”的红框部分并将其粘贴到文本编辑器中。
 
 ![](1-055.png)
 
-次に、＜テナンシ名＞を確認します。
+然后检查 <租户名称>。
 
-右上にある「プロファイル」アイコンをクリックして、「テナンシ」を選択します。
+单击右上角的配置文件图标，然后选择租赁。
 
 ![](1-056.png)
 
-「テナンシ詳細」の「名前」赤枠箇所をコピーして、テキストエディタにペーストしておきます。  
-また、後続手順で必要となる「オブジェクト・ストレージ・ネームスペース」の赤枠箇所もコピーして、テキストエディタにペーストしておきます。
+复制“Tenancy Details”中的“Name”红框并将其粘贴到文本编辑器中。
+此外，复制后续步骤中所需的“对象存储命名空间”的红框部分，并将其粘贴到文本编辑器中。
 
 ![](1-057.png)
 
-以下、テキストエディタにペーストした内容に当てはめて利用します。
+下面，将其应用于文本编辑器中粘贴的内容并使用它。
 
-ユーザ名：`<テナンシ名>/<ユーザ名>`
+用户名：`<租户名称>/<用户名>`
 
-パスワードは、事前準備で作成した `認証トークン` を利用します。
+对于密码，请使用预先创建的“身份验证令牌”。
 
 
-#### 2-2-3.「oci-devops-handson」リポジトリへサンプルコードのプッシュ
+#### 2-2-3. 将示例代码推送到“oci-devops-handson”仓库
 
-Cloud Shellを利用して、「oci-devops-handson」リポジトリをプルします。リポジトリのURLは、先ほどテキストエディタにペーストしたURLを指定します。
-「xxxxxxxxxx」箇所はご自身の環境に合わせて置き換えてください。
+使用 Cloud Shell，拉取“oci-devops-handson”存储库。对于存储库的 URL，请指定您之前粘贴到文本编辑器中的 URL。
+请根据您的环境替换“xxxxxxxxxx”。
 
 ```sh
 git clone https://devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com/namespaces/xxxxxxxxxx/projects/oci-devops-handson/repositories/oci-devops-handson
 ```
-ユーザ名は、先ほど確認した内容、パスワードは事前準備で作成した認証トークンを入力します。※パスワードは入力時に表示されません。
+对于用户名，输入您之前确认的内容，对于密码，输入预先创建的身份验证令牌。 *输入密码时不会显示密码。
 ```sh
 Username for 'https://devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com': xxxxxxxxx/oracleidentitycloudservice/xxxxxx.xxxxxxxx@oracle.com
 Password for 'https://xxxxxxxxxx/oracleidentitycloudservice/xxxxxx.xxxxxxxx@oracle.com@devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com':
@@ -410,7 +410,7 @@ remote: Total 2 (delta 0), reused 2 (delta 0)
 Unpacking objects: 100% (2/2), done.
 ```
 
-以下、「oci-devops-handson」ディレクトリがあることを確認します。
+确认下面有一个“oci-devops-handson”目录。
 
 ```sh
 ls
@@ -419,13 +419,13 @@ ls
 oci-devops-handson  oci-devops-oke  oke%2Foci-devops-oke.zip
 ```
 
-ダウンロードしたサンプルコードを「oci-devops-handson」ディレクトリにコピーします。
+将下载的示例代码复制到“oci-devops-handson”目录。
 
 ```sh
 cp -R oci-devops-oke/* ./oci-devops-handson
 ```
 
-コミットしてからプッシュします。
+提交然后推送。
 
 ```sh
 cd ./oci-devops-handson
@@ -433,18 +433,18 @@ cd ./oci-devops-handson
 ```sh
 git add -A .
 ```
-「＜email＞」任意のメールアドレス、「＜user_name＞」任意のユーザ名を入力してください。
+为“<email>”输入任何电子邮件地址，为“<user_name>”输入任何用户名。
 ```sh
 git config --global user.email "<email>"
 ```
 ```sh
 git config --global user.name "<user_name>"
 ```
-コミットします。
+提交。
 ```sh
 git commit -m "first commit"
 ```
-**コマンド結果**
+**命令结果**
 ```sh
 [main e964068] first commit
  6 files changed, 111 insertions(+)
@@ -465,7 +465,7 @@ git push -u origin main
 ```
 ユーザ名は、先ほど確認した内容、パスワードは事前準備で作成した認証トークンを入力します。※パスワードは入力時に表示されません。
 
-**コマンド結果**
+**命令结果**
 ```sh
 Username for 'https://devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com': xxxxxxxxx/oracleidentitycloudservice/xxxxxx.xxxxxxxx@oracle.com
 Password for 'https://xxxxxxxxxx/oracleidentitycloudservice/xxxxxx.xxxxxxxx@oracle.com@devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com':
@@ -481,82 +481,82 @@ To https://devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com/namespaces/xxxxxxxx
 Branch main set up to track remote branch main from origin.
 ```
 
-OCIコンソールからも確認してみます。
+我也会从 OCI 控制台检查它。
 
 ![](1-135.png)
 
 ![](1-058.png)
 
-以上で、コード・リポジトリの作成は完了です。
+这样就完成了代码仓库的创建。
 
-3.アーティファクト
+3.神器
 ---------------------------------
 
 ![](1-130.png)
 
-### 3-1.OCIRのセットアップ
+### 3-1. 设置 OCIR
 
-ビルドパイプラインでビルドしたコンテナイメージを格納するコンテナイメージレジストリのセットアップを行います。
-OCIでは、Oracle Container Image Registry(OCIR)を利用します。
+设置存储由构建管道构建的容器镜像的容器镜像注册表。
+OCI 使用 Oracle 容器映像注册表 (OCIR)。
 
-**OCIRについて**  
-フルマネージドなDocker v2標準対応のコンテナレジストリを提供するサービスです。OKEと同一リージョンに展開することによる低レイテンシを実現します。  詳細は[こちら](https://www.oracle.com/jp/cloud-native/container-registry/)のページをご確認ください。
+**关于 OCIR**
+提供完全托管的符合 Docker v2 标准的容器注册表的服务。低延迟是通过部署在与 OKE 相同的区域来实现的。详情请查看页面[这里](https://www.oracle.com/jp/cloud-native/container-registry/)。
 {: .notice--info}
 
-左上のハンバーガーメニューをクリックして、「開発者サービス」-「コンテナ・レジストリ」を選択します。
+点击左上角的汉堡菜单，选择“开发者服务”-“容器注册表”。
 
 ![](1-059.png)
 
-「リポジトリの作成」ボタンをクリックします。
+单击创建存储库按钮。
 
 ![](1-060.png)
 
-「リポジトリ名」に「devops-handson」と入力、「アクセス」で「パブリック」を選択して、「リポジトリの作成」ボタンをクリックします。
+在“Repository Name”中输入“devops-handson”，在“Access”中选择“Public”，点击“Create Repository”按钮。
 
 ![](1-061.png)
 
-**レポジトリ名について**  
-OCIRのレポジトリ名はテナンシで一意になります。  
-集合ハンズオンなど複数人で同一環境を共有されている皆様は、`devops-handson01`や`devops-handson-tn`などの名前のイニシャルを付与し、名前が重複しないようにしてください。
-{: .notice--warning}
+**关于存储库名称**
+OCIR 存储库名称在您的租约中是唯一的。
+多人共享同一环境，如集体动手，请在名称前加上“devops-handson01”、“devops-handson-tn”等名称的首字母，避免名称重复。
+{: .notice--警告}
 
-以上でOCIRのセットアップは完了です。
+OCIR 设置现已完成。
 
-### 3-2.アーティファクト・レジストリの作成
+### 3-2. 创建工件注册表
 
-OCI DevOpsからOKEクラスタにデプロイする際に利用するマニフェストをアーティファクト・レジストリに登録します。
+在工件注册表中注册从 OCI DevOps 部署到 OKE 集群时要使用的清单。
 
-この登録したマニフェストを利用して、OCI DevOpsから自動でOKEクラスタにデプロイ可能となります。
+使用此注册清单，您可以从 OCI DevOps 自动部署到 OKE 集群。
 
-アーティファクト・レジストリを作成します。
-左上のハンバーガーメニューをクリックして、「開発者サービス」-「アーティファクト・レジストリ」を選択します。
+创建工件注册表。
+点击左上角的汉堡菜单，选择“开发者服务”-“工件注册表”。
 
 ![](1-062.png)
 
-「リポジトリの作成」ボタンをクリックします。
+单击创建存储库按钮。
 
 ![](1-063.png)
 
-「名前」に「artifact-repository」と入力、「不変アーティファクト」のチェックを外します。
+在“名称”中输入“artifact-repository”并取消选中“Immutable Artifact”。
 
 ![](1-064.png)
 
-「作成」ボタンをクリックします。
+单击“创建”按钮。
 
 ![](1-065.png)
 
-次に、アーティファクトとなるマニフェストをアップロードします。
+接下来，上传清单，这将是您的工件。
 
-Cloud Shellに戻って、クローンしたサンプルコードにある「deploy.yaml」のコンテナイメージレジストリのパスを変更します。
+返回 Cloud Shell，在克隆的示例代码中更改“deploy.yaml”中的容器镜像注册表路径。
 
-「＜your-object-storage-namespace＞」の箇所を事前に取得した`<オブジェクト・ストレージ・ネームスペース>`に変更して、保存します。
+将“<your-object-storage-namespace>”替换为您之前获得的`<object storage namespace>`并保存。
 
-リポジトリ名において、「devops-handson-tn」(例)のように固有の名前を付与した場合は、合わせて変更します。
+在存储库名称中，如果您指定了一个唯一名称，例如“devops-handson-tn”（示例），请相应地进行更改。
 
-※リージョンが、アッシュバーン(us-ashburn-1)ではない場合、環境に合わせて「iad.ocir.io」の部分も変更してください。
+*如果区域不是Ashburn（us-ashburn-1），请根据您的环境更改“iad.ocir.io”部分。
 
-各リージョンのOCIRエンドポイントは[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryprerequisites.htm)で確認できます。  
-ここでは、以降も「iad.ocir.io」で進めます。
+可以在 [此处](https://docs.oracle.com/en-us/iaas/Content/Registry/Concepts/registryprerequisites.htm) 找到每个区域的 OCIR 端点。
+从现在开始，我们将继续使用“iad.ocir.io”。
 
 ```sh
 cd ~
@@ -599,17 +599,16 @@ spec:
     app: devops-handson
 ```
 
-「アーティファクトのアップロード」ボタンをクリックします。
+单击上传工件按钮。
 
 ![](1-066.png)
 
-「アーティファクト・パス」に「deploy.yaml」と入力、「バージョン」に「1」と入力、「Upload method」は「Cloud Shell」を選択、「Lanunch Cloud Shell」ボタンをクリックして、「コピー」をクリックします。
-コピーしたコマンドを起動したCloud Shell上にペーストします。
+在“Artifact Path”中输入“deploy.yaml”，在“Version”中输入“1”，“上传方式”选择“Cloud Shell”，点击“Launch Cloud Shell”按钮，点击“Copy”点击。
+将复制的命令粘贴到已启动的 Cloud Shell 上。
 
 ![](1-067.png)
 
-「./＜file-name＞」を「./oci-devops-oke/deploy.yaml」に書き換えて、Enterキーを押します。
-
+将“./<file-name>”替换为“./oci-devops-oke/deploy.yaml”，然后按 Enter。
 ```sh
 oci artifacts generic artifact upload-by-path \
 >   --repository-id ocid1.artifactrepository.oc1.xx-xxxxxx-1.0.amaaaaaassl65iqaluitbpvjd5inibwke4axtb7l4so6jgvsywlh5m2ohgca \
@@ -634,37 +633,37 @@ oci artifacts generic artifact upload-by-path \
 }
 ```
 
-「閉じる」ボタンをクリックします。
+单击“关闭”按钮。
 
 ![](1-068.png)
 
-アップロードされたことを確認します。表示されない場合は、ブラウザを更新してください。
+确认已上传。如果您没有看到它，请刷新您的浏览器。
 
 ![](1-069.png)
 
-以上で、アーティファクト・レジストリの作成は完了です。
+这样就完成了 Artifact Registry 的创建。
 
-### 3-3.アーティファクトの追加
+### 3-3. 添加工件
 
-OCI DevOpsでセットアップしたアOCIRとアーティファクト・レジストリを利用できるように設定を行います。
+进行设置，以便您可以使用在 OCI DevOps 中设置的 OCIR 和 Artifact Registry。
 
-まずは、OCIRから設定します。
-左上にあるハンバーガーメニューから「開発者サービス」-「プロジェクト」を選択します。
+首先，从 OCIR 设置。
+从左上角的汉堡菜单中选择“开发者服务”-“项目”。
 
 ![](1-032.png)
 
-「oci-devops-handson」プロジェクトを選択します。
+选择“oci-devops-handson”项目。
 
 ![](1-070.png)
 
-「アーティファクトの追加」ボタンをクリックします。
+单击添加工件按钮。
 
 ![](1-071.png)
 
-「名前」に「ocir」と入力、「コンテナ・レジストリのイメージへの完全修飾パスを入力してください」には、マニフェストで書き換えたパスを入力します。
-以下「＜your-object-storage-namespace＞」には、事前に取得した`<オブジェクト・ストレージ・ネームスペース>`を入力してください。
+为“名称”输入“ocir”，并在清单中为“输入容器注册表中映像的完全限定路径”输入重写的路径。
+对于下面的“<your-object-storage-namespace>”，输入您预先获取的`<object storage namespace>`。
 
-リポジトリ名において、「devops-handson-tn」(例)のように固有の名前を付与した場合は、合わせて変更します。
+在存储库名称中，如果您指定了一个唯一名称，例如“devops-handson-tn”（示例），请相应地进行更改。
 
 ```sh
 iad.ocir.io/<your-object-storage-namespace>/devops-handson:${BUILDRUN_HASH}
@@ -672,318 +671,318 @@ iad.ocir.io/<your-object-storage-namespace>/devops-handson:${BUILDRUN_HASH}
 
 ![](1-072.png)
 
-「追加」ボタンをクリックします。
+单击“添加”按钮。
 
 ![](1-073.png)
 
-次に、アーティファクト・レジストリを設定します。
+接下来，设置工件注册表。
 
-「アーティファクトの追加」ボタンをクリックします。
+单击添加工件按钮。
 
 ![](1-136.png)
 
-「名前」に「artifact-repository」と入力、「タイプ」は「Kubernetesマニフェスト」を選択して、「選択」ボタンをクリックします。
+“Name”输入“artifact-repository”，“Type”选择“Kubernetes Manifest”，点击“Select”按钮。
 
 ![](1-074.png)
 
-「artifact-repository」にチェックを入れます。
+检查“工件存储库”。
 
 ![](1-075.png)
 
-「選択」ボタンをクリックします。
+单击选择按钮。
 
 ![](1-076.png)
 
-もう一つの「選択」ボタンをクリックします。
+单击另一个“选择”按钮。
 
 ![](1-077.png)
 
-「deploy.yaml:1」にチェックを入れます。
+检查“deploy.yaml:1”。
 
 ![](1-078.png)
 
-「選択」ボタンをクリックします。
+单击选择按钮。
 
 ![](1-076.png)
 
-「追加」ボタンをクリックします。
+单击“添加”按钮。
 
 ![](1-073.png)
 
-登録されたことを確認します。
+确认您已注册。
 
 ![](1-079.png)
 
-以上で、アーティファクトの追加は完了です。
+这样就完成了工件的添加。
 
-4.デプロイメント・パイプライン
+4. 部署管道
 ---------------------------------
 
 ![](1-131.png)
 
-先ほど登録したアーティファクト・レジストリと連携して、OKEクラスタにアプリケーションを自動デプロイするためのパイプラインを作成します。
+结合您刚刚注册的工件注册表，创建一个用于将您的应用程序自动部署到 OKE 集群的管道。
 
-左メニュー「デプロイメント・パイプライン」をクリックします。
+单击左侧菜单中的“部署管道”。
 
 ![](1-080.png)
 
-「パイプラインの作成」ボタンをクリックします。
+单击创建管道按钮。
 
 ![](1-081.png)
 
-「パイプライン名」に「deploy-pipeline」と入力します。
+为“管道名称”输入“部署管道”。
 
 ![](1-082.png)
 
-「パイプラインの作成」ボタンをクリックします。
+单击创建管道按钮。
 
 ![](1-083.png)
 
-「ステージの追加」をクリックします。
+单击添加阶段。
 
 ![](1-084.png)
 
-「Kubernetesクラスタにマニフェストを適用」を選択します。
+选择将清单应用到 Kubernetes 集群。
 
 ![](1-085.png)
 
-「次へ」ボタンをクリックします。
+单击“下一步”按钮。
 
 ![](1-086.png)
 
-以下の設定をして、「アーティファクトの選択」ボタンをクリックします。
+进行以下设置并单击“选择工件”按钮。
 
-* ステージ名:deploy-to-oke
-* 環境:oke-cluster
-* Kubernetesネームスペースのオーバーライド オプション:default
+*阶段名称：部署到OK
+* 环境：oke-cluster
+* Kubernetes 命名空间覆盖选项：默认
 
 ![](1-087.png)
 
-「artifact-repository」にチェックを入れます。
+检查“工件存储库”。
 
 ![](1-088.png)
 
-「変更の保存」ボタンをクリックします。
+单击保存更改按钮。
 
 ![](1-089.png)
 
-「ステージの追加」画面に戻ってから「追加」ボタンをクリックします。
+返回“添加舞台”屏幕并单击“添加”按钮。
 
 ![](1-073.png)
 
-登録できたことを確認します。
+确认您已成功注册。
 
 ![](1-090.png)
 
-パンくずリストから「oci-devops-handson」をクリックします。
+单击面包屑中的 oci-devops-handson。
 
 ![](1-091.png)
 
-以上で、デプロイメント・パイプラインの作成は完了です。
+部署管道的创建现已完成。
 
-5.ビルド・パイプライン
+5.构建管道
 ---------------------------------
 
 ![](1-132.png)
 
-OCI DevOpsで利用する仮想マシン上で、コード・リポジトリからソースをダウンロードして、コンテナイメージビルド、コンテナイメージビルドをOCIRに格納、デプロイメント・パイプライン連携という一連の流れをビルド・パイプラインとして作成します。  
-最初にコンテナイメージビルドを行う「マネージド・ビルド」ステージを作成します。
+在OCI DevOps中使用的虚拟机上，从代码仓库下载源码，构建容器镜像，将容器镜像构建存储在OCIR中，创建链接部署管道的构建管道。。
+首先创建一个构建容器映像的“托管构建”阶段。
 
-「ビルド・パイプラインの作成」ボタンをクリックします。
+单击创建构建管道按钮。
 
 ![](1-092.png)
 
-「名前」に「build-pipeline」と入力します。
+为名称输入构建管道。
 
 ![](1-093.png)
 
-「作成」ボタンをクリックします。
+单击“创建”按钮。
 
 ![](1-016.png)
 
-「build-pipeline」をクリックします。
+单击构建管道。
 
 ![](1-094.png)
 
-「ステージの追加」をクリックします。
+单击添加阶段。
 
 ![](1-084.png)
 
-「マネージドビルド」を選択します。
+选择“托管构建”。
 
 ![](1-095.png)
 
-「次」ボタンをクリックします。
+单击下一步按钮。
 
 ![](1-005.png)
 
-以下の設定を行って、「選択」ボタンをクリックします。  
-「build_spec.yaml」は、ビルド・パイプラインが処理を行う仮想マシン内で実行するコマンドタスクを定義してあるファイルです。  
-この定義ファイルにアプリケーションテストやコンテナイメージビルドなどビルド時に実施したいタスクを定義します。
+进行以下设置并单击“选择”按钮。
+“build_spec.yaml”是一个文件，它定义了要在构建管道处理的虚拟机中执行的命令任务。
+在此定义文件中，定义您要在构建期间执行的任务，例如应用程序测试和容器映像构建。
 
-ここでは、定義済みの「build_spec.yaml」ファイルを登録します。
+在这里，注册定义的“build_spec.yaml”文件。
 
-* ステージ名: container-image-build
-* ビルド指定ファイル・パス オプション: build_spec.yaml
+* 阶段名称：container-image-build
+* 构建规范文件路径可选：build_spec.yaml
 
 ![](1-096.png)
 
-「プライマリ・コード・リポジトリの選択」画⾯で、以下の設定を行います。
+在 Select Primary Code Repository 屏幕上，配置以下设置。
 
-* 接続タイプ: OCIコード・リポジトリ
-* 「oci-devops-handson」
-* ソース名の作成: main
+* 连接类型：OCI 代码库
+*“oci-devops-handson”
+* 创建源名称：main
 
 ![](1-097.png)
 
-「保存」ボタンをクリックします。
+单击“保存”按钮。
 
 ![](1-098.png)
 
-「ステージの追加」画⾯に戻ってから、「追加」ボタンをクリックします。
+返回“添加舞台”屏幕后，单击“添加”按钮。
 
 ![](1-073.png)
 
-次に、コンテナイメージを行うOCIRに格納する「アーティファクトの配信」ステージを作成します。
-プラス部分をクリックして、「ステージの追加」を選択します。
+接下来，创建一个“Delivery Artifact”阶段，将容器图像存储在 OCIR 中。
+单击加号部分并选择添加阶段。
 
 ![](1-099.png)
 
-「アーティファクトの配信」を選択します。
+选择交付工件。
 
 ![](1-100.png)
 
-「次」ボタンをクリックします。
+单击下一步按钮。
 
 ![](1-005.png)
 
-「ステージ名」に「container-image-ship」と入力して、「アーティファクトの選択」ボタンをクリックします。
+为 Stage Name 输入“container-image-ship”，然后单击 Select Artifact 按钮。
 
 ![](1-101.png)
 
-「ocir」にチェックを入れます。
+检查“ocir”。
 
 ![](1-102.png)
 
-「追加」ボタンをクリックします。
+单击“添加”按钮。
 
 ![](1-103.png)
 
-「ビルド構成/結果アーティファクト名」に「handson_image」と入力します。
+为构建配置/结果工件名称输入“handson_image”。
 
 ![](1-104.png)
 
-「追加」ボタンをクリックします。
+单击“添加”按钮。
 
 ![](1-073.png)
 
-最後に、デプロイメント・パイプラインと連携する「デプロイメントのトリガー」ステージを作成します。
-プラス部分をクリックして、「ステージの追加」を選択します。
+最后，创建一个与部署管道一起使用的触发器部署阶段。
+单击加号部分并选择添加阶段。
 
 ![](1-105.png)
 
-「デプロイメントのトリガー」を選択します。
+选择触发器部署。
 
 ![](1-106.png)
 
-「次」ボタンをクリックします。
+单击下一步按钮。
 
 ![](1-005.png)
 
-「ステージ名」に「connect-deployment-pipeline」を入力して、「デプロイメント・パイプラインの選択」ボタンをクリックします。
+为 Stage Name 输入“connect-deployment-pipeline”，然后单击 Select Deployment Pipeline 按钮。
 
 ![](1-107.png)
 
-「deploy-pipeline」にチェックを入れます。
+检查“部署管道”。
 
 ![](1-108.png)
 
-「保存」ボタンをクリックします。
+单击“保存”按钮。
 
 ![](1-098.png)
 
-「ステージの追加」画⾯に戻ってから、「追加」ボタンをクリックします。
+返回“添加舞台”屏幕后，单击“添加”按钮。
 
 ![](1-073.png)
 
-登録できたことを確認します。
+确认您已成功注册。
 
 ![](1-109.png)
 
-パンくずリストから「oci-devops-handson」をクリックします。
+单击面包屑中的 oci-devops-handson。
 
 ![](1-110.png)
 
-以上で、ビルド・パイプラインの作成は完了です。
+这样就完成了构建管道的创建。
 
-6.トリガー
+6.触发
 ---------------------------------
 
 ![](1-133.png)
 
-トリガーでは、ソースコードを変更して、コード・リポジトリへの「git push」コマンド実行をトリガーに、これまで作成してきた「ビルド・パイプライン」、「デプロイメント・パイプライン」が自動で稼働して、OKEクラスタにコンテナアプリケーションがデプロイされるようにします。
+在触发器中更改源代码并触发对代码仓库的“git push”命令，自动启动目前已创建的“构建管道”和“部署管道”，允许部署容器应用在 OKE 集群上。
 
-「トリガーの作成」ボタンをクリックします。
+单击创建触发器按钮。
 
 ![](1-111.png)
 
-以下の設定をして、「選択」ボタンをクリックします。
+进行以下设置并单击“选择”按钮。
 
-* 名前: push-trigger
-* ソース接続:OCIコード・リポジトリ
+* 名称：推触发器
+* 源连接：OCI 代码库
 
 ![](1-112.png)
 
-「oci-devops-handson」にチェックを入れます。
+检查“oci-devops-handson”。
 
 ![](1-113.png)
 
-「保存」ボタンをクリックします。
+单击“保存”按钮。
 
 ![](1-098.png)
 
-「アクションの追加」をボタンをクリックします。
+单击“添加操作”按钮。
 
 ![](1-114.png)
 
-「選択」ボタンをクリックします。
+单击选择按钮。
 
 ![](1-115.png)
 
-「build-pipeline」にチェックを入れます。
+检查“构建管道”。
 
 ![](1-116.png)
 
-「保存」ボタンをクリックします。
+单击“保存”按钮。
 
 ![](1-098.png)
 
-「イベント オプション」で「プッシュ」にチェックを入れます。
+勾选“事件选项”中的“推送”。
 
 ![](1-117.png)
 
-「保存」ボタンをクリックします。
+单击“保存”按钮。
 
 ![](1-098.png)
 
-「トリガーの作成」画⾯に戻ってから、「作成」ボタンをクリックします。
+返回“创建触发器”屏幕，然后单击“创建”按钮。
 
 ![](1-016.png)
 
-登録できたことを確認します。
+确认您已成功注册。
 
 ![](1-118.png)
 
-以上で、トリガーの作成は完了です。
+触发器创建现已完成。
 
-7.パイプラインの実行
+7.流水线执行
 ---------------------------------
 
 ![](1-134.png)
 
-実際にソースコードを変更して、「git push」をトリガーにOKEクラスタへの自動デプロイを実行します。
+实际修改源码，以“git push”为触发，自动部署到OKE集群。
 
-対象のディレクトリに移動します。
+切换到目标目录。
 
 ```sh
 cd ~
@@ -1013,7 +1012,7 @@ git add -A .
 ```sh
 git commit -m "change code"
 ```
-***コマンド結果***
+***命令结果***
 ```sh
 [main 92df932] change code
  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -1024,7 +1023,7 @@ git branch -M main
 ```sh
 git push -u origin main
 ```
-ユーザ名は、先ほど確認した内容、パスワードは事前準備で作成した認証トークンを入力します。※パスワードは入力時に表示されません。
+对于用户名，输入您之前确认的内容，对于密码，输入预先创建的身份验证令牌。 *输入密码时不会显示密码。
 ```sh
 Username for 'https://devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com': xxxxxxxxx/oracleidentitycloudservice/xxxxxx.xxxxxxxx@oracle.com
 Password for 'https://xxxxxxxxxx/oracleidentitycloudservice/xxxxxx.xxxxxxxx@oracle.com@devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com': 
@@ -1039,47 +1038,47 @@ To https://devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com/namespaces/xxxxxxxx
 Branch main set up to track remote branch main from origin.
 ```
 
-パンくずリストから「oci-devops-handson」を選択します。
+从面包屑中选择“oci-devops-handson”。
 
 ![](1-141.png)
 
-「最新のビルド履歴」で、対象のビルド・パイプラインを選択します。
+在最新构建历史下，选择目标构建管道。
 
 ![](1-120.png)
 
-ビルド・パイプラインの経過を確認できます。全て問題なければ、グリーンのチェックアイコンが表示されます。
+您可以看到构建管道的进度。 如果一切正常，您将看到一个绿色的复选图标。
 
-また、ビルド・パイプラインの開始と終了に伴い、登録したメールアドレスに以下タイトルの通知が届きます。
+此外，随着构建管道的开始和结束，将向注册的电子邮件地址发送具有以下标题的通知。
 
 * [DevOps Notification] BuildRun STARTED: push-trigger:20211124083749
 * [DevOps Notification] BuildRun SUCCEEDED: push-trigger:20211124083749
 
 ![](1-121.png)
 
-確認後、パンくずリストから「oci-devops-handson」をクリックします。
+确认后，点击面包屑中的 oci-devops-handson。
 
 ![](1-137.png)
 
-「最新のデプロイメント」で、対象のデプロイメントを選択します。
+在最新部署下，选择所需的部署。
 
 ![](1-122.png)
 
-全て問題なければ、グリーンのチェックアイコンが表示されます。  
-OKEクラスタにアプリケーションがデプロイされたことになります。
+如果一切正常，您将看到一个绿色的复选图标。
+该应用程序现在已部署到 OKE 集群。
 
 ![](1-123.png)
 
-また、デプロイメント・パイプラインの開始と終了に伴い、登録したメールアドレスに以下タイトルの通知が届きます。
+当部署管道开始和结束时，您还将在您注册的电子邮件地址收到以下通知。
 
 * [DevOps Notification] Deployment STARTED: devopsdeployment20211124084745
 * [DevOps Notification] Deployment SUCCEEDED: devopsdeployment20211124084745
 
-以上で、パイプラインの実行は完了です。
+管道执行现已完成。
 
-8.デプロイの確認
+8. 确认部署
 ---------------------------------
 
-Cloud Shellを利用して、OKEクラスタのデプロイ状況を確認します。
+使用 Cloud Shell 检查 OKE 集群的部署状态。
 
 ```sh
 kubectl get pods
@@ -1091,7 +1090,7 @@ devops-handson-565f4b6d96-89w84   1/1     Running   0          12m
 devops-handson-565f4b6d96-bbgq2   1/1     Running   0          12m
 ```
 
-Webブラウザからアクセスする「EXTERNAL-IP」を確認します。
+检查从网络浏览器访问的“EXTERNAL-IP”。
 
 ```sh
 kubectl get services
@@ -1101,30 +1100,29 @@ NAME         TYPE           CLUSTER-IP    EXTERNAL-IP      PORT(S)        AGE
 frontend     LoadBalancer   10.96.139.8   132.xxx.xxx.xxx   80:32120/TCP   34m
 kubernetes   ClusterIP      10.96.0.1     <none>           443/TCP        5d7h
 ```
+启动浏览器并访问确认的外部 IP 地址。
+如果显示以下屏幕，则说明完成。
 
-ブラウザを起動して、確認したEXTERNAL-IPアドレスにアクセスします。  
-以下の画面が表示されれば完了です。
-
-http://＜EXTERNAL-IP＞/content.html
+http://<EXTERNAL-IP>/content.html
 
 ![](1-140.png)
 
-以上で、デプロイの確認は完了です。
+部署确认现已完成。
 
-コード変更からデプロイまでの一連の流れを自動化することができました。  
+我们能够自动化从代码更改到部署的一系列流程。
 
-9.【オプション】ビルド構成ファイルの解説
+9.【可选】构建配置文件说明
 ------------------
 
-ここでは、ハンズオンの中で利用したビルド構成ファイル(`build_spec.yaml`)の解説を行います。  
+在这里，我们将解释动手操作中使用的构建配置文件（`build_spec.yaml`）。
 
-今回のハンズオンでは、サンプルアプリケーションの中に予めビルド構成ファイル(`build_spec.yaml`)を用意していました。  
+在本次实践中，我们在示例应用程序中预先准备了一个构建配置文件（`build_spec.yaml`）。
 
-このファイルは、OCI DevOpsでビルドステップを定義する際に必ず必要になるファイルです。  
+在 OCI DevOps 中定义构建步骤时，这个文件是绝对必要的。
 
-ハンズオンの中では、[5.ビルド・パイプライン](#5ビルドパイプライン)内の手順で利用しました。
+在实践中，我在[5. Build Pipeline]（#5 Build Pipeline）的过程中使用了它。
 
-ファイルは以下のようになっています。  
+该文件如下所示：
 
 ```yaml
 version: 0.1
@@ -1179,9 +1177,9 @@ outputArtifacts:
     location: handson_image:latest
 ```
 
-今回はビルドステップ内で行うタスクは3つになっています。
+这一次，在构建步骤中要执行三个任务。
 
-まず最初のステップは、
+第一步是
 
 ```yaml
   - type: Command
@@ -1199,11 +1197,11 @@ outputArtifacts:
         runAs: root
 ```
 
-の部分で定義しています。
+节中定义
 
-このステップでは、後続でビルドするコンテナイメージのタグに利用するハッシュ値を生成して環境変数`BUILDRUN_HASH`としてエクスポートしています。  
+在这一步中，我们生成一个哈希值，用于稍后构建的容器镜像的标签，并将其导出为环境变量“BUILDRUN_HASH”。
 
-次のステップは、
+下一步是
 
 ```yaml
   - type: Command
@@ -1218,11 +1216,11 @@ outputArtifacts:
         runAs: root
 ```
 
-の部分で定義しています。
+节中定义
 
-このステップでは、`docker build`コマンドによるコンテナイメージのビルドをおこなっています。  
+此步骤使用 `docker build` 命令构建容器映像。
 
-最後のステップは、
+最后一步是
 
 ```yaml
   - type: Command
@@ -1239,16 +1237,16 @@ outputArtifacts:
         runAs: root
 ```
 
-の部分で定義しています。  
+节中定义
 
-このステップでは、`trivy`というコンテナイメージの脆弱性スキャンを行うプロダクトを利用し、ビルドしたコンテナイメージの脆弱性をチェックしています。  
+在这一步中，我们使用容器镜像漏洞扫描产品 trivy 来检查构建的容器镜像中的漏洞。
 
-**trivyについて**  
-trivyはオープンソースで開発されているコンテナイメージの脆弱性診断ツールです。  
-詳細は[こちら](https://github.com/aquasecurity/trivy)をご確認ください。  
+**关于琐碎**
+trivy 是一个用于容器镜像的开源漏洞诊断工具。
+有关详细信息，请参阅 [此处](https://github.com/aquasecurity/trivy)。
 {: .notice--info}
 
-また、2つ目のビルドステップ(コンテナイメージのビルドを行うステップ)でビルドされた成果物(コンテナイメージ)を
+此外，在第二个构建步骤（构建容器镜像的步骤）中构建的工件（容器镜像）是
 
 ```yaml
 outputArtifacts:
@@ -1257,12 +1255,12 @@ outputArtifacts:
     location: fn-hello
 ```
 
-の部分で`handson_image`という名前のコンテナイメージ(`type: DOCKER_IMAGE`)として出力しています。  
+输出为名为 `handson_image` 的容器图像（`type: DOCKER_IMAGE`）。
 
-この`handson_image`という成果物を[5.ビルド・パイプライン](#5ビルドパイプライン)の手順内の`ビルド構成/結果アーティファクト名`で指定し、アーティファクト・レポジトリにアップロードしました。　　
+这个 `handson_image` 工件在 [5. Build Pipeline] (#5 Build Pipeline) 步骤中被指定为 `build configuration/result artifact name` 并上传到工件存储库。 ​​​​
 
-以上で、ビルド構成ファイル(`build_spec.yaml`)の解説は終了です。  
+构建配置文件（`build_spec.yaml`）的解释到此结束。
 
-**ビルド構成ファイルについて**  
-ビルド構成ファイルの詳細については、[こちらのドキュメント](https://docs.oracle.com/ja-jp/iaas/Content/devops/using/build_specs.htm)をご確認ください。 
+**关于构建配置文件**
+有关构建配置文件的更多信息，请参阅 [此处的文档](https://docs.oracle.com/en-us/iaas/Content/devops/using/build_specs.htm)。
 {: .notice--info}

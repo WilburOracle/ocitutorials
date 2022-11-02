@@ -169,7 +169,7 @@ Allow dynamic-group OCI_DevOps_Dynamic_Group to use ons-topics in compartment id
 ```sh
 wget https://raw.githubusercontent.com/oracle-japan/devops-commons-script/master/common_prepare.sh
 ```
-***コマンド結果***
+***命令结果***
 ```sh
 --2022-04-05 00:55:37--  https://raw.githubusercontent.com/oracle-japan/devops-commons-script/master/common_prepare.sh
 Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 185.199.109.133, 185.199.110.133, 185.199.111.133, ...
@@ -191,7 +191,7 @@ chmod +x ./common_prepare.sh
 ```sh
 sh ./common_prepare.sh
 ```
-***コマンド結果***
+***命令结果***
 ```sh
 ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 {

@@ -158,7 +158,7 @@ chmod +x ./devops-template-for-oracle-functions/prepare/prepare.sh
 ```sh
 sh ./devops-template-for-oracle-functions/prepare/prepare.sh
 ```
-***コマンド結果***
+***命令结果***
 ```sh
 ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 {

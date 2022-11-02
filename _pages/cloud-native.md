@@ -1,6 +1,6 @@
 ---
-title: "Cloud Nativeチュートリアル"
-excerpt: "OCIにおける各種コンテナ/サーバレス関連サービスのチュートリアルについて学習できるチュートリアルです。"
+title: "Cloud Native教程"
+excerpt: "这是一个教程，您可以在其中了解 OCI 中各种容器/无服务器相关服务的教程。"
 permalink: /cloud-native/
 layout: single
 tags: "cloudnative"
@@ -10,115 +10,115 @@ date: "2022-04-06"
 lastmod: "2022-04-06"
 ---
 
-このページでは、Oracle Cloud Infrastructure(OCI)の各コンテナ/サーバレス関連サービスやCI/CDサービスのチュートリアルをまとめています。  
-各チュートリアルごとにステップ・バイ・ステップで学ぶことができ、各サービスの基本的な機能、操作やオペレーションについて学習することができます。  
+本页总结了 Oracle 云基础设施 (OCI) 的每个容器/无服务器相关服务和 CI/CD 服务的教程。
+您可以通过每个教程一步步学习，了解每个服务的基本功能、操作和操作。
 
-# 1. Oracle Cloud Infrastructure DevOpsチュートリアル
+# 1. Oracle 云基础设施 DevOps 教程
 
-<!-- ## 事前準備編 -->
+<!-- ## 准备 -->
 
-## 事前準備編
+＃＃ 准备
 
-+ **[Oracle Cloud Infrastructure(OCI) DevOps事前準備](/ocitutorials/cloud-native/devops-for-commons/)**  
-    OCI DevOpsを利用するための事前準備を行います。まずはここから始めましょう【所要時間:約30分】
++ **[Oracle 云基础设施 (OCI) DevOps 准备](/ocitutorials/cloud-native/devops-for-commons/)**
+    准备使用 OCI DevOps。让我们从这里开始[所需时间：约30分钟]
 
-## 初級編
+##初学者
 
-+ **[初級編 - Oracle Cloud Infrastructure(OCI) DevOpsことはじめ-Compute編-](/ocitutorials/cloud-native/devops-for-beginners-compute)**  
-    ここでは、Oracle Container Engine for Kubernetes(OKE)を利用したCI/CDパイプラインの実装と実行までの手順を記します。【所要時間:約1時間】
++ **[初学者 - 开始使用 Oracle 云基础设施 (OCI) DevOps -Compute-](/ocitutorials/cloud-native/devops-for-beginners-compute)**
+    在这里，我将描述使用 Oracle Container Engine for Kubernetes (OKE) 实施和执行 CI/CD 管道的步骤。 [所需时间：约1小时]
 
-+ **[初級編 - Oracle Cloud Infrastructure(OCI) DevOpsことはじめ-OKE編-](/ocitutorials/cloud-native/devops-for-beginners-oke/)**  
-    ここでは、OCI Computeを利用したアプリケーション環境の構築、CI/CDパイプラインの実装と実行までの手順を記します。【所要時間:約1時間】
++ **[初学者 - Oracle 云基础设施 (OCI) DevOps 入门 -OKE-](/ocitutorials/cloud-native/devops-for-beginners-oke/)**
+    在这里，我们将描述从使用 OCI Compute 构建应用程序环境到实施和执行 CI/CD 管道的步骤。 [所需时间：约1小时]
 
-+ **[初級編 - Oracle Cloud Infrastructure(OCI) DevOpsことはじめ-Oracle Functions編-](/ocitutorials/cloud-native/devops-for-beginners-functions/)**  
-    ここでは、Oracle Functionsを利用したCI/CDパイプラインの実装と実行までの手順を記します。【所要時間:約1時間】
-
-<br />
-
-# 2. Oracle Container Engine for Kubernetesチュートリアル
-
-## 事前準備編 - OKEクラスターのプロビジョニング
-
-+ **[OKEクラスターをプロビジョニングしよう](/ocitutorials/cloud-native/oke-for-commons/)**  
-    Oracle Cloud Infrastructure (OCI) の管理コンソールを利用し、OKEクラスターを作成します。まずはここから始めましょう【所要時間:約30分】
-
-## 初級編
-
-+ **[OKEでアプリケーションを動かしてみよう](/ocitutorials/cloud-native/oke-for-beginners/)**
-    OKEに対してサンプルアプリケーションをデプロイするプロセスを通して、Kubernetesの基本的な概念や特徴、操作方法をを学びます。【所要時間:約30分】
-
-## 中級編
-
-+ **[Oracle Container Engine for Kubernetes(OKE)でサンプルアプリケーションのデプロイとCI/CDを体験してみよう](/ocitutorials/cloud-native/oke-for-intermediates/)**  
-    OCI DevOpsを利用してCI/CD環境をセットアップし、Oracle Autonomous Transaction ProcessingをデータソースとしたJavaアプリケーションをOracle Container Engine for Kubernetes(OKE)にデプロイする一連の流れを体験することができます【所要時間:約1時間30分】
-
-## 上級編
-
-+ **[Oracle Container Engine for Kubernetes(OKE)でサンプルマイクロサービスアプリケーションをデプロイしてオブザバビリティツールを利用してみよう](/ocitutorials/cloud-native/oke-for-advances/)**  
-    OKEを使ってサンプルマイクロサービスアプリケーションのデプロイおよびオブザバビリティを体験していただけるコンテンツです。サードパーティーとしてOSSのIstio、Prometheus、Grafana、Loki、Jaeger、Kialiを利用します。【所要時間:約2時間】
-
-+ **[Oracle Container Engine for Kubernetes(OKE)でサンプルマイクロサービスアプリケーションをデプロイしてOCIのオブザバビリティサービスを利用してみよう](/ocitutorials/cloud-native/oke-observability-for-advances/)**  
-    OKEを使ってサンプルマイクロサービスアプリケーションのデプロイおよびオブザバビリティを体験していただけるコンテンツです。OCIのオブザバビリティサービスとして、Oracle Cloud Infrastructure Monitoring、Oracle Cloud Infrastructure Logging、Oracle Cloud Infrastructure Application Performance Monitoringを利用します。【所要時間:約2時間】
++ **[初学者 - Oracle 云基础设施 (OCI) DevOps 入门 -Oracle Functions-](/ocitutorials/cloud-native/devops-for-beginners-functions/)**
+    在这里，我将描述使用 Oracle Functions 实现和执行 CI/CD 管道的步骤。 [所需时间：约1小时]
 
 <br />
 
-# 3. Oracle Functionsチュートリアル
+# 2. Oracle Container Engine for Kubernetes 教程
 
-## 初級編
+## 准备工作 - 配置 OKE 集群
 
-+ **[Fn Projectことはじめ](/ocitutorials/cloud-native/fn-for-beginners/)**
-    Fn Projectは、開発者エクスペリエンス重視なFaaSを構築するためのプラットフォームです。
-    このエントリーでは、Fn Projectの環境構築から動作確認までの手順を記します。【所要時間:約30分】
++ **[让我们配置一个 OKE 集群](/ocitutorials/cloud-native/oke-for-commons/)**
+    使用 Oracle Cloud Infrastructure (OCI) 管理控制台创建 OKE 集群。让我们从这里开始[所需时间：约30分钟]
 
-+ **[Oracle Functionsことはじめ](/ocitutorials/cloud-native/functions-for-beginners/)**
-    Oracle Functionsは、Oracleが提供するFn Projectのマネージドサービスです。
-    このエントリーでは、Oracle Functions環境構築から動作確認までの手順を記します。【所要時間:約45分】
+##初学者
 
-+ **[Oracle Cloud Infrasturcture API Gateway + Oracle Functionsハンズオン](/ocitutorials/cloud-native/functions-apigateway-for-beginners/)**
-    OCI API GatewayとOracle Functionsを組み合わせて、 簡単なアプリケーションを開発する手順をご紹介します。【所要時間:約1時間】
++ **[让我们用 OKE 运行应用程序](/ocitutorials/cloud-native/oke-for-beginners/)**
+    通过将示例应用部署到 OKE 的过程，您将了解 Kubernetes 的基本概念、特性和操作方法。 [所需时间：约30分钟]
 
-## 中級編
+＃＃ 中间的
 
-+ **[Oracle Functionsを利用したVMシェイプ変更](/ocitutorials/cloud-native/functions-vmshape-for-intermediates)**
-    Fn Projectは、開発者エクスペリエンス重視なFaaSを構築するためのプラットフォームです。
-    このエントリーでは、Fn Projectの環境構築から動作確認までの手順を記します。【所要時間:約30分】
++ **[使用 Oracle Container Engine for Kubernetes (OKE) 体验示例应用程序部署和 CI/CD](/ocitutorials/cloud-native/oke-for-intermediates/)**
+    您可以在 Oracle Container Engine for Kubernetes (OKE) 上体验使用 OCI DevOps 设置 CI/CD 环境和使用 Oracle Autonomous Transaction Processing 作为数据源部署 Java 应用程序的一系列步骤。：大约 1 小时 30 分钟】
 
-+ **[Oracle Functionsを利用したATPとのREST連携](/ocitutorials/cloud-native/functions-ords-for-intermediates)**
-    Oracle Functionsは、Oracleが提供するFn Projectのマネージドサービスです。
-    このエントリーでは、Oracle Functions環境構築から動作確認までの手順を記します。【所要時間:約30分】
+＃＃ 先进的
 
-+ **[Oracle Functionsを利用したOracle NoSQL Database Cloud Serviceとの連携](/ocitutorials/cloud-native/functions-nosql-for-intermediates)**
-    OCI API GatewayとOracle Functionsを組み合わせて、 簡単なサーバレスアプリケーションを開発する手順をご紹介します。【所要時間:約30分】
++ **[在 Oracle Container Engine for Kubernetes (OKE) 上部署示例微服务应用程序并使用可观察性工具](/ocitutorials/cloud-native/oke-for-advances/)**
+    本内容让您体验使用 OKE 的示例微服务应用程序的部署和可观察性。我们使用 OSS Istio、Prometheus、Grafana、Loki、Jaeger 和 Kiali 作为第三方。 [所需时间：约2小时]
 
-+ **[Oracle Functionsを利用したOCI API Gatewayでの認証](/ocitutorials/cloud-native/functions-apigateway-for-intermediates)**
-    OCI API GatewayとOracle Functionsを組み合わせて、 簡単なサーバレスアプリケーションを開発する手順をご紹介します。【所要時間:約30分】
++ **[在 Oracle Container Engine for Kubernetes (OKE) 上部署示例微服务应用程序并使用 OCI 的可观察性服务](/ocitutorials/cloud-native/oke-observability-for-advances/) **
+    本内容让您体验使用 OKE 的示例微服务应用程序的部署和可观察性。利用 Oracle Cloud Infrastructure Monitoring、Oracle Cloud Infrastructure Logging 和 Oracle Cloud Infrastructure Application Performance Monitoring 作为 OCI 的可观察性服务。 [所需时间：约2小时]
 
 <br />
 
-# 4. OCI API Gatewayチュートリアル
+# 3. Oracle 函数教程
 
-## 初級編
+##初学者
 
-+ **[Oracle Cloud Infrasturcture API Gateway ハンズオン](/ocitutorials/cloud-native/apigateway-for-beginners/)**
-    OCI API Gatewayを利用して簡単にAPIを集約・公開する手順をご紹介します。【所要時間:約1時間】 
++ **[Fn Project Koto Hajime](/ocitutorials/cloud-native/fn-for-beginners/)**
+    Fn Project 是一个专注于开发者体验的 FaaS 构建平台。
+    在这篇文章中，我将描述从构建 Fn 项目环境到检查其运行的过程。 [所需时间：约30分钟]
+
++ **[Oracle Functions 入门](/ocitutorials/cloud-native/functions-for-beginners/)**
+    Oracle Functions 是 Oracle 提供的 Fn Project 托管服务。
+    在这篇文章中，我将描述从构建 Oracle Functions 环境到检查操作的过程。 [所需时间：约45分钟]
+
++ **[Oracle Cloud Infrasturcture API Gateway + Oracle Functions 动手实践](/ocitutorials/cloud-native/functions-apigateway-for-beginners/)**
+    我们将介绍结合 OCI API Gateway 和 Oracle Functions 开发简单应用程序的过程。 [所需时间：约1小时]
+
+＃＃ 中间的
+
++ **[使用 Oracle Functions 更改 VM 形状](/ocitutorials/cloud-native/functions-vmshape-for-intermediates)**
+    Fn Project 是一个专注于开发者体验的 FaaS 构建平台。
+    在这篇文章中，我将描述从构建 Fn 项目环境到检查其运行的过程。 [所需时间：约30分钟]
+
++ **[使用 Oracle Functions 与 ATP 进行 REST 链接](/ocitutorials/cloud-native/functions-ords-for-intermediate)**
+    Oracle Functions 是 Oracle 提供的 Fn Project 托管服务。
+    在这篇文章中，我将描述从构建 Oracle Functions 环境到检查操作的过程。 [所需时间：约30分钟]
+
++ **[使用 Oracle Functions 与 Oracle NoSQL 数据库云服务链接](/ocitutorials/cloud-native/functions-nosql-for-intermediates)**
+    我们将介绍结合 OCI API Gateway 和 Oracle Functions 开发简单无服务器应用程序的过程。 [所需时间：约30分钟]
+
++ **[使用 Oracle Functions 通过 OCI API 网关进行身份验证](/ocitutorials/cloud-native/functions-apigateway-for-intermediates)**
+    我们将介绍结合 OCI API Gateway 和 Oracle Functions 开发简单无服务器应用程序的过程。 [所需时间：约30分钟]
 
 <br />
 
-# 5. Oracle Cloud Infrastructure Service Meshチュートリアル
+# 4. OCI API 网关教程
 
-## 初級編
+##初学者
 
-+ **[OCI Service Meshを使ってサービスメッシュ環境を作ろう](/ocitutorials/cloud-native/osm-for-beginners/)**  
-    OCI Service Meshを利用してBookInfoアプリケーションを動かしてみます。【所要時間:約1時間】
++ **[Oracle Cloud Infrasturcture API Gateway 动手实践](/ocitutorials/cloud-native/apigateway-for-beginners/)**
+    我们将介绍使用 OCI API 网关轻松整合和发布 API 的过程。 [所需时间：约1小时]
 
 <br />
 
-# 6. Helidonチュートリアル
+# 5. Oracle 云基础设施服务网格教程
 
-## 初級編
+##初学者
 
-+ **[Helidon(MP)ハンズオン](/ocitutorials/cloud-native/helidon-mp-for-beginners/)**
-    Helidon MPは、Oracleが提供するMicroProfile準拠のマイクロサービスの開発に適したJavaアプリケーションフレームワークです。こちらのハンズオンは、サンプルアプリケーションの構築を通して、Helidonの特徴や使いやすさを学んでいただけるコンテンツになっています。【所要時間:約1時間】
++ **[让我们使用 OCI Service Mesh 创建一个服务网格环境](/ocitutorials/cloud-native/osm-for-beginners/)**
+    让我们使用 OCI 服务网格运行 BookInfo 应用程序。 [所需时间：约1小时]
 
-+ **[Helidon(SE)ハンズオン](/ocitutorials/cloud-native/helidon-se-for-beginners/)**
-    Helidon SEは、Oracleが提供するマイクロサービスの開発に適したJavaのマイクロフレームワークです。こちらのハンズオンは、サンプルアプリケーションの構築を通して、Helidonの特徴や使いやすさを学んでいただけるコンテンツになっています。【所要時間:約30分】
+<br />
+
+# 6. Helidon 教程
+
+##初学者
+
++ **[Helidon(MP) 动手实践](/ocitutorials/cloud-native/helidon-mp-for-beginners/)**
+    Helidon MP 是一个 Java 应用程序框架，适用于从 Oracle 开发符合 MicroProfile 的微服务。本动手实践是一个内容，可让您通过构建示例应用程序来了解 Helidon 的功能和可用性。 [所需时间：约1小时]
+
++ **[Helidon(SE) 动手实践](/ocitutorials/cloud-native/helidon-se-for-beginners/)**
+    Helidon SE 是 Oracle 提供的适用于开发微服务的 Java 微框架。本动手实践是一个内容，可让您通过构建示例应用程序来了解 Helidon 的功能和可用性。 [所需时间：约30分钟]

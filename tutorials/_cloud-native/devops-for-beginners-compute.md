@@ -235,7 +235,7 @@ chmod +x devops-template-for-compute/prepare/prepare.sh
 ./devops-template-for-compute/prepare/prepare.sh
 ```
 
-***コマンド結果***
+***命令结果***
 ```sh
 ocid1.tenancy.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 {
@@ -460,7 +460,7 @@ git config --global user.name "<user_name>"
 ```sh
 git commit -m "first commit"
 ```
-**コマンド結果**
+**命令结果**
 ```sh
 [main e964068] first commit
  6 files changed, 111 insertions(+)
@@ -482,7 +482,7 @@ git push -u origin main
 ユーザ名は、先ほど確認した内容、パスワードは事前準備で作成した認証トークンを入力します。  
 ※パスワードは入力時に表示されません。
 
-**コマンド結果**
+**命令结果**
 ```sh
 Username for 'https://devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com': xxxxxxxxx/oracleidentitycloudservice/xxxxxx.xxxxxxxx@oracle.com
 Password for 'https://xxxxxxxxxx/oracleidentitycloudservice/xxxxxx.xxxxxxxx@oracle.com@devops.scmservice.xx-xxxxxx-1.oci.oraclecloud.com':

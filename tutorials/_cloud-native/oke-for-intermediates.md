@@ -1818,7 +1818,7 @@ key|value|説明
 kubectl get service oke-atp-helidon
 ```
 
-**コマンド結果**
+**命令结果**
 ```
 NAME                  TYPE           CLUSTER-IP       EXTERNAL-IP         PORT(S)       AGE
 oke-atp-helidon   LoadBalancer      10.96.165.239     ***.***.***.***    80:31667/TCP   79s

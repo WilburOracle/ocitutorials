@@ -1,56 +1,55 @@
 ---
-title: "Oracle Container Engine for Kubernetes(OKE)でKubernetesを動かしてみよう"
-excerpt: "Oracle Container Engine for Kubernetes(OKE)は、Oracle Cloud Infrastructure(OCI)上で提供されるマネージドKubernetsサービスです。こちらのハンズオンでは、Kubernetes自体の特徴や使い方を含めて、OKEを触って頂けるコンテンツになっています。"
+title: "使用 Oracle Container Engine for Kubernetes (OKE) 运行 Kubernetes"
+excerpt: "Oracle Container Engine for Kubernetes (OKE) 是 Oracle 云基础设施 (OCI) 上提供的托管 Kubernetes 服务。 在本次动手中，是可以让你摸到OKE的内容，包括Kubernetes本身的特点和使用方法。"
 layout: single
 order: "020"
 tags:
 ---
+Oracle Container Engine for Kubernetes（以下简称 OKE）是 Oracle 的托管 Kubernetes 服务。
+在本次动手实践中，您可以通过将示例应用程序部署到 OKE 的过程来学习 Kubernetes 本身的基本操作方法和特性。
 
-Oracle Container Engine for Kubernetes（以下OKE）は、OracleのマネージドKubernetesサービスです。  
-このハンズオンでは、OKEにサンプルアプリケーションをデプロイするプロセスを通して、Kubernetesそのものの基本的な操作方法や特徴を学ぶことができます。  
+此类别包括以下服务：
 
-このカテゴリには以下のサービスが含まれます。
+- 适用于 Kubernetes 的 Oracle 容器引擎 (OKE)：
+：提供完全托管的 Kuberentes 集群的云服务。
+- Oracle 云基础设施注册表 (OCIR)：
+：提供完全托管的符合 Docker v2 标准的容器注册表的服务。
 
-- Oracle Container Engine for Kubernetes (OKE):
-:   フルマネージドなKuberentesクラスターを提供するクラウドサービスです。
-- Oracle Cloud Infrastructure Registry (OCIR):
-:   フルマネージドなDocker v2標準対応のコンテナレジストリを提供するサービスです。
-
-前提条件
+先决条件
 --------
 
-- クラウド環境
-    * Oracle Cloudのアカウントを取得済みであること
-    * [OKEハンズオン事前準備](/ocitutorials/cloud-native/oke-for-commons/)を実施済みであること
+- 云环境
+    * 必须拥有 Oracle 云帐户
+    * 完成【OKE动手准备】(/ocitutorials/cloud-native/oke-for-commons/)
 
-1.コンテナイメージの作成
+1.创建容器镜像
 ---------------------------------
-ここでは、サンプルアプリケーションが動作するコンテナイメージを作成します。
+在这里，我们将创建一个运行示例应用程序的容器映像。
 
-### 1.1. ソースコードをCloneする
+### 1.1. 克隆源代码
 
-今回利用するサンプルアプリケーションは、oracle-japanのGitHubアカウント配下のリポジトリとして作成してあります。
+这次使用的示例应用程序已创建为 oracle-japan GitHub 帐户下的存储库。
 
-[サンプルアプリケーションのリポジトリ](https://github.com/oracle-japan/cowweb-for-wercker-demo)にアクセスして、`Code`ボタンをクリックします。
+访问 [示例应用程序存储库](https://github.com/oracle-japan/cowweb-for-wercker-demo) 并单击“代码”按钮。
 
-ソースコードを取得する方法は2つあります。一つはgitのクライアントでCloneする方法、もう一つはZIPファイル形式でダウンロードする方法です。ここでは前者の手順を行いますので、展開した吹き出し型のダイアログで、URLの文字列の右側にあるクリップボード型のアイコンをクリックします。
+有两种方法可以获取源代码。一种是使用 git 客户端克隆，另一种是下载为 ZIP 文件。在这里，我们将使用前一个过程，因此在已展开的气球形对话框中单击 URL 字符串右侧的剪贴板图标。
 
-これにより、クリップボードにURLがコピーされます。
+这会将 URL 复制到剪贴板。
 
 ![](2.3.PNG)
 
-Cloud ShellまたはLinuxのコンソールから、以下のコマンドを実行してソースコードをCloneします。
+在 Cloud Shell 或 Linux 控制台中，执行以下命令以克隆源代码。
 
-    git clone [コピーしたリポジトリのURL]
+     git clone [复制仓库的 URL]
 
-続いて、Cloneしてできたディレクトリをカレントディレクトリにしておきます。
+接下来，将克隆的目录设置为当前目录。
 
-    cd cowweb-for-wercker-demo
+     cd cowweb-for-wercker-demo
 
-### 1.2. コンテナイメージを作る
-コンテナイメージは、Dockerfileと呼ばれるコンテナの構成を記述したファイルによって、その内容が定義されます。
+### 1.2. 创建容器镜像
+容器镜像由一个名为 Dockerfile 的文件定义，该文件描述了容器的配置。
 
-サンプルアプリケーションのコードには作成済みのDockerfileが含まれていますので、その内容を確認してみます。以下のコマンドを実行してください。
+示例应用程序的代码包含一个已经创建的 Dockerfile，所以让我们检查它的内容。 执行以下命令。
 
     cat Dockerfile
 
@@ -86,19 +85,19 @@ CMD ["java", "-jar", "cowweb-helidon.jar"]
 EXPOSE 8080
 ```
 
-Dockerfileの内容を見ると、FROMで始まる行が2つあることがわかります。最初のFROMから始まる数行は、jdkがインストールされたコンテナイメージ内にサンプルアプリケーションのコードをコピーし、さらに`mvn package`を実行してアプリをビルドしています。
+查看 Dockerfile 的内容，我们可以看到有两行以 FROM 开头。以 FROM 开头的前几行将示例应用程序的代码复制到安装了 jdk 的容器映像中，然后运行 ​​`mvn package` 来构建应用程序。
 
-次のFROMから続く一連の処理は、jdkがインストールされたコンテナイメージを基に、アプリの実行ユーザーの作成、ビルドしてできたjarファイルのコピー、コンテナ起動時に実行するコマンドの設定などを行っています。
+基于安装jdk的容器镜像，从以下FROM开始的一系列处理是创建应用执行用户，复制构建创建的jar文件，设置容器启动时执行的命令。增加。
 
-それではこのDockerfileを使ってコンテナイメージを作成します。以下のコマンドを実行してください。
+现在使用这个 Dockerfile 创建一个容器镜像。执行以下命令。
 
-    docker image build -t [リポジトリ名]/cowweb:v1.0 .
+    docker image build -t [存储库名称]/cowweb:v1.0 。
 
-このコマンドにおいて`リポジトリ名`には任意の文字列を指定できますが、通常はプロジェクト名やユーザー名などを小文字にしたものを指定します。例えば、以下のようなコマンドになります。
+您可以在此命令中为 `repository name` 指定任何字符串，但通常以小写形式指定项目名称、用户名等。例如，命令将是：
 
     docker image build -t oke-handson/cowweb:v1.0 .
 
-以下のように、`Successfully tagged`のメッセージで処理が終了していれば、イメージのビルドは完了です。
+如果该过程以如下所示的 `Successfully tagged` 消息结束，则映像构建完成。
 
 ```
 Sending build context to Docker daemon  128.5kB
@@ -146,7 +145,7 @@ Successfully built 5e997bb463db
 Successfully tagged oke-handson/cowweb:v1.0
 ```
 
-実際にビルドされたイメージは、`docker image ls`コマンドで確認することができます。
+您可以使用 `docker image ls` 命令检查实际构建的图像。
 
     docker image ls
 
@@ -157,51 +156,50 @@ oke-handson/cowweb   v1.0                    a328bfaffb52        4 minutes ago  
 openjdk              17-jdk-slim             37cb44321d04        4 months ago        408MB
 maven                3.8.4-openjdk-17-slim   849a2a2d4242        5 months ago        425MB
 ```
+你可以看到一个名为 `oke-handson/cowweb` 的图像已经被创建。
 
-`oke-handson/cowweb`の名前のイメージが作成されていることがわかります。
+应用程序容器镜像使用安装了 maven 的容器用于构建源代码，使用安装了 openjdk 的容器用于应用程序执行环境。因此，您还会看到名称为 maven 和 openjdk 的图像。
 
-アプリケーションのコンテナイメージは、ソースコードのビルドにはmavenがインストールされたコンテナを利用し、アプリケーションの実行環境にはopenjdkがインストールされたコンテナを利用しています。このため、mavenやopenjdkといった名前のついたイメージも表示されます。
+这些容器会在构建应用程序的容器映像时自动下载和使用。
 
-これらのコンテナは、アプリケーションのコンテナイメージの作成時に、自動的にダウンロードされて利用されています。
-
-2.OCIRへのプッシュとOKEへのデプロイ
+2.推送到OCIR并部署到OKE
 -------------------------------------
 
-### 2.1. OCIRを利用するための事前準備
-OCIRはOracleが提供するコンテナレジストリのマネージドサービスです。ここでは、1.3.で作成したコンテナイメージをOCIRにプッシュ（アップロード）します。
+### 2.1. 使用 OCIR 的提前准备
+OCIR 是 Oracle 提供的容器注册管理服务。在这里，将 1.3. 中创建的容器镜像推送（上传）到 OCIR。
 
-OCIRにdockerコマンドからアクセスするため、OCIのユーザーアカウントに必要な設定をしていきます。
+为了从 docker 命令访问 OCIR，我们将对 OCI 用户帐户进行必要的设置。
 
-OCIコンソール画面右上の人型のアイコンをクリックし、展開したプロファイルからユーザ名(oracleidentitycloudservice/<ユーザ名>)をクリックします。
+单击 OCI 控制台屏幕右上角的人形图标，然后从展开的配置文件中单击用户名 (oracleidentitycloudservice/<username>)。
 
 ![](3.2-1.png)
 
-下にスクロールした左側にある`認証トークン`をクリックして、トークンの作成画面に遷移します。
+向下滚动并单击左侧的“身份验证令牌”以移动到令牌创建屏幕。
 
 ![](3.3.png)
 
-`トークンの生成`ボタンをクリックします。
+单击“生成令牌”按钮。
     
 ![](3.4.png)
 
-[Geterate Token]ダイアログで、トークンの用途を説明する情報（任意の文字列）を入力し、`トークンの生成`ボタンをクリックします。
+在 [Geterate Token] 对话框中，输入描述令牌用途的信息（任意字符串），然后单击“Generate Token”按钮。
 
 ![](3.5.png)
     
-ダイアログに生成したトークンが表示されます。`Copy`という文字列をクリックするとクリップボードにこのトークンがコピーされます。そして`閉じる`をクリックします。
+您将在对话框中看到生成的令牌。单击“复制”字符串会将此标记复制到剪贴板。然后点击“关闭”。
 
 ![](3.6.png)
 
-このトークンはあとの手順で利用するため、テキストエディタ等にペーストするなどして控えておいてください。
+通过将其粘贴到文本编辑器等中来记下此标记，因为它将在后面的步骤中使用。
 
-### 2.2. OCIRにコンテナイメージをプッシュする
-それでは、コンテナイメージをOCIRにプッシュします。
+### 2.2. 将容器镜像推送到OCIR
+现在将容器图像推送到 OCIR。
 
-まず、`docker login`コマンドでOCIRにログインします。ログイン先のレジストリを指定するにあたり、ホストされているデータセンターリージョンに合わせて適切なリージョンコードを指定する必要があります。
+首先，使用 `docker login` 命令登录 OCIR。指定要登录的注册表时，您必须为托管数据中心区域指定适当的区域代码。
 
-ご自身の環境に合わせて、下表から適切なリージョンコードを見つけてください。
+从下表中找到适合您环境的区域代码。
 
-リージョン|リージョンコード
+地区|地区代码
 -|-
 ap-tokyo-1|nrt
 ap-osaka-1|kix
@@ -225,40 +223,38 @@ ap-chuncheon-1|yny
 me-dubai-1|dxb
 uk-cardiff-1|cwl
 us-sanjose-1|sjc
+接下来，检查对象存储命名空间以登录 OCIR。
 
-次に、OCIRにログインするためにオブジェクト・ストレージ・ネームスペースを確認します。
-
-オブジェクト・ストレージ・ネームスペースは、OCIコンソール画面右上の人型のアイコンをクリックし、展開したプロファイルからテナンシ:<テナンシ名>から確認します。
+要检查对象存储命名空间，请单击 OCI 控制台屏幕右上角的人形图标，然后从展开的配置文件中检查租户：<租户名称>。
 
 
 ![](3.6-0.png)
 
-テナンシ情報のオブジェクト・ストレージ設定からオブジェクト・ストレージ・ネームスペースの値を確認します。OCIRへのアクセスする際に使用するため、値をテキストファイルにコピー＆ペーストするなどして控えておいてください。
+检查租户信息中对象存储设置中的对象存储命名空间值。将该值复制并粘贴到文本文件中以记下它，因为它将在访问 OCIR 时使用。
 
 ![](3.6-1.png)
 
-**オブジェクト・ストレージ・ネームスペースについて**  
-オブジェクト・ストレージ・ネームスペースはテナントに対し1つ割り当てられます。リージョン内のすべてのコンパートメントにまたがり使用されます。任意の文字列が設定され、変更することはできません。
+**关于对象存储命名空间**
+每个租户分配一个对象存储命名空间。它跨越一个区域内的所有隔间。任意字符串已设置且无法更改。
 {: .notice--info}
 
-次に、以下のコマンドでOCIRにログインします。
+接下来，使用以下命令登录 OCIR。
+    docker login [地区代码].ocir.io
 
-    docker login [リージョンコード].ocir.io
-
-例えば、東京リージョン(nrt)をご利用の場合は、以下のコマンドでログインします。
+例如，如果您使用的是东京地区 (nrt)，请使用以下命令登录。
 
     docker login nrt.ocir.io
 
-ユーザー名、パスワードの入力を求めるメッセージが表示されますので、以下のように入力してください。
+系统会提示您输入您的用户名和密码，因此请按如下方式输入。
 
-- ユーザー名: [オブジェクト・ストレージ・ネームスペース]/[ユーザー名] （例: nrzftilbveen/oracleidentitycloudservice/yoi.naka.0106@gmail.com）
-- パスワード: [2.1.で作成したトークン文字列]
+- 用户名：[对象存储命名空间]/[用户名]（例如 nrzftilbveen/oracleidentitycloudservice/yoi.naka.0106@gmail.com）
+- 密码：[在 2.1 中创建的令牌字符串。]
 
-**パスワードについて**  
-ここで入力するパスワードはOCIコンソールにログインする際のパスワードとは異なるのでご注意ください
-{: .notice--warning}
+**密码**
+请注意，您在此处输入的密码与您用于登录 OCI 控制台的密码不同。
+{: .notice--警告}
 
-以下のように`Login Succeeded`というメッセージが表示されれば、ログイン成功です。
+如果您看到如下所示的“Login Succeeded”消息，则表示您已成功登录。
 
 ```
 Username: nrzftilbveen/Handson-001
@@ -266,27 +262,27 @@ Password:
 Login Succeeded
 ```
 
-続いて、OCIRの形式に合わせてコンテナイメージのタグを更新します。`docker tag`コマンドを実行してくさい。
+接下来，更新容器图像标签以匹配 OCIR 格式。运行 `docker tag` 命令。
 
-    docker image tag [リポジトリ名]/cowweb:v1.0 [リージョンコード].ocir.io/オブジェクト・ストレージ・ネームスペース]/[リポジトリ名]/cowweb:v1.0
+    docker image tag [repository name]/cowweb:v1.0 [region code].ocir.io/object storage namespace]/[repository name]/cowweb:v1.0
 
-[リージョンコード]と[オブジェクト・ストレージ・ネームスペース]は、これまでの手順で指定したものと同じものを指定します。リポジトリ名には`docker build`のときにしてしたものと同じ文字列を指定してください。
+指定与前面步骤中指定的相同的 [Region code] 和 [Object storage namespace]。对于存储库名称，请指定您在 `docker build` 期间所做的相同字符串。
 
-例えば、以下のように指定します。
+例如：
 
-    docker image tag oke-handson/cowweb:v1.0 nrt.ocir.io/nrzftilbveen/oke-handson/cowweb:v1.0
+    docker image tag  oke-handson/cowweb:v1.0 nrt.ocir.io/nrzftilbveen/oke-handson/cowweb:v1.0
 
-この操作によって、コンテナイメージにプッシュ先のレジストリを指定する情報を追加しています。これを行わない場合、コンテナイメージはデフォルトのレジストリが指定されたものとみなされ、Docker社が提供するDocker Hubというレジストリが利用されてしまいます。
+此操作将指定推送目标注册表的信息添加到容器映像。如果您不这样做，容器映像将采用默认注册表并使用 Docker 提供的 Docker Hub 注册表。
 
-これで準備が整いましたので、実際にOCIRにイメージをプッシュします。以下のコマンドを実行してください。
+现在我们准备好将图像实际推送到 OCIR。执行以下命令。
 
-    docker image push [リージョンコード].ocir.io/[オブジェクト・ストレージ・ネームスペース]/[リポジトリ名]/cowweb:v1.0
+    docker image push [region code].ocir.io/[object storage namespace]/[repository name]/cowweb:v1.0
 
-例えば、以下のように指定します。
+例如：
 
     docker image push nrt.ocir.io/nrzftilbveen/oke-handson/cowweb:v1.0
 
-以下のような実行結果となれば、プッシュが成功しています。
+如果执行结果如下，则推送成功。
 
 ```
 The push refers to repository [nrt.ocir.io/nrzftilbveen/oke-handson/cowweb]
@@ -298,39 +294,38 @@ d07a2053e8fb: Pushed
 v1.0: digest: sha256:5769c194f3861f71c9fd43eb763813676aaba0b41acf453fb6a09a1af7525c82 size: 1367
 ```
 
-{% capture notice %}**docker push時の挙動**  
-集合ハンズオンなどで、コンテナレジストリを複数のユーザーで共有している場合、以下のようなメッセージとなることがあります。
+{% capture notice %}**docker push时的行为**  
+如果容器注册中心被多个用户在一个组上手等情况下共享，可能会出现以下消息。
 ```sh
 60dc38cb0cd5: Layer already exists
 ea75a4331573: Layer already exists
 20dd87a4c2ab: Layer already exists
 …
 ```
-これは既にレジストリに存在するものと同じ内容をアップロードしたときに表示されるものですので、手順をそのまま続行して問題ありません。{% endcapture %}
+这是您在上传注册表中已存在的相同内容时看到的内容，因此您可以继续执行这些步骤。{% endcapture %}
 <div class="notice--warning">
   {{ notice | markdownify }}
 </div>
-
-それでは、OCIRにコンテナが保存されていることを確認してみましょう。OCIコンソールの画面で左上のメニューを展開し、`開発者サービス`－`コンテナ・レジストリ`をクリックします。
+现在让我们确认容器存储在 OCIR 中。在 OCI 控制台屏幕上，展开左上角的菜单，然后单击 `Developer Services` - `Container Registry`。
 
 ![](3.7.png)
 
-リポジトリの一覧が表示されます。この中に、指定した名前のコンテナがあることを確認してください。
+将显示存储库列表。确保其中有一个具有指定名称的容器。
 
-そして、画面右上にある`アクション`メニューを開き、`パブリックに変更`をクリックします。
+然后打开屏幕右上角的“Actions”菜单并单击“Change to Public”。
 
 ![](3.8.png)
 
-これでレジストリへのコンテナイメージの格納は完了しましたが、デフォルトでは、イメージを取得するためにPush時と同じ認証情報が必要な状態です。Kubernetesでの利用を簡単にするために、リポジトリをPublicに変更して、認証なしでイメージの取得が行えるように設定しておきます。
+这样就完成了在 registry 中的容器镜像存储，但默认情况下，需要与推送时获取镜像时相同的身份验证信息。为了更容易与 Kubernetes 一起使用，请将存储库更改为 Public 并将其设置为无需身份验证即可获取图像。
 
-以上で、OCIRへのコンテナイメージの格納は完了です。
+这样就完成了容器镜像在 OCIR 中的存储。
 
-### 2.3. OKEへのデプロイ
-それでは、いよいよOKEクラスターにアプリケーションのコンテナをデプロイします。
+### 2.3. 部署到 OKE
+现在是时候将应用程序的容器部署到 OKE 集群了。
 
-OKEを始めとして、Kubernetesのクラスターにコンテナをデプロイするには、クラスター上の配置情報をmanifestと呼ばれるファイルに記述しておく必要があります。
+从 OKE 开始，为了将容器部署到 Kubernetes 集群，需要在名为 manifest 的文件中描述集群上的放置信息。
 
-サンプルアプリケーションのコードには作成済みのmanifestファイルが含まれていますので、その内容を確認してみます。以下のコマンドを実行してください。
+示例应用程序的代码包含一个已创建的清单文件，因此让我们检查其内容。执行以下命令。
 
 ```
 cat ./kubernetes/cowweb.yaml
@@ -461,7 +456,7 @@ kubectl delete -f ./kubernetes/cowweb-service.yaml
     curl "http://[ロードバランサーのIP]/cowsay/say"
 
 ローカルで動作確認したときと同様、以下のようなアスキーアートが表示されれば、アプリケーションが正常に動作しています。
- 
+
 ```
  ______
 < Moo! >

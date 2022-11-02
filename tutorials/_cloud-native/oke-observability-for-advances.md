@@ -140,7 +140,7 @@ Cloud Shell起動後、「コピー」した内容をペーストして、Enter�
 ```sh
 kubectl get nodes
 ```
-***コマンド結果***
+***命令结果***
 ```sh
 NAME          STATUS   ROLES   AGE     VERSION
 10.0.10.139   Ready    node    2m7s    v1.21.5
@@ -413,7 +413,7 @@ APMドメイン名は重複が許容されないため、集合ハンズオン�
 vim code-at-customer-handson/olympic_frontend_apm/src/main/resources/web/index.html
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```
 ~~~
@@ -464,7 +464,7 @@ cd code-at-customer-handson/olympic_frontend_apm
 docker image build -t iad.ocir.io/<your-object-storage-namespace>/frontend-app-apm .
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 ~~~
@@ -485,7 +485,7 @@ Password|`認証トークン` |[手順1-3](#1-3-ocirのセットアップ)で作
 docker login iad.ocir.io
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 Username: <オブジェクト・ストレージ・ネームスペース>/<ユーザ名>
@@ -515,7 +515,7 @@ Login Succeeded
 docker image push iad.ocir.io/<your-object-storage-namespace>/frontend-app-apm
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 The push refers to repository [iad.ocir.io/<your-object-storage-namespace>/frontend-app-apm]
@@ -662,7 +662,7 @@ kubectl create secret generic apm-secret \
 --from-literal=private-key=<「データ・キー」の「プライベート」キー>
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 secret/apm-secret created
@@ -736,7 +736,7 @@ cd code-at-customer-handson/k8s/app/for-oci-apm
 kubectl apply -f . 
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 deployment.apps/backend-app-v1 created
@@ -755,7 +755,7 @@ service/frontend-app created
 kubectl get service frontend-app
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 NAME           TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)        AGE
@@ -1368,7 +1368,7 @@ java-openjdk をインストールします。
 yum install -y java-1.8.0-openjdk
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 ~~~
@@ -1381,7 +1381,7 @@ JMeterをダウンロードします。
 wget https://ftp.jaist.ac.jp/pub/apache/jmeter/binaries/apache-jmeter-5.4.3.tgz
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 --2022-02-07 08:33:34--  https://ftp.jaist.ac.jp/pub/apache/jmeter/binaries/apache-jmeter-5.4.3.tgz
@@ -1556,7 +1556,7 @@ APMドメインのプルダウンメニューから「oke-handson-apm」を選�
 kubectl get pods
 ```
 
-***コマンド結果***
+***命令结果***
 
 ```sh
 NAME                              READY   STATUS    RESTARTS   AGE
