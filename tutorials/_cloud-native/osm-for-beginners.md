@@ -1,178 +1,178 @@
 ---
-title: "OCI Service Meshを使ってサービスメッシュ環境を作ろう"
-excerpt: "フルマネージドのサービスメッシュサービスであるOCI Service MeshとOKEを利用してサービスメッシュ環境を構築し、サンプルアプリケーションを動かすコンテンツです。"
+title: "让我们使用 OCI Service Mesh 创建一个服务网格环境"
+excerpt: "本内容使用全托管服务网格服务 OCI 服务网格和 OKE 构建服务网格环境，并运行示例应用程序。"
 order: "100"
 tags:
 ---
 
-Oracle Cloud Infrastructure(OCI) Service Meshはインフラストラクチャ・レイヤーで、セキュリティ、トラフィック制御、およびオブザーバビリティ機能をアプリケーションに提供します。  
-OCI Service Meshを使用すると、クラウドネイティブ・アプリケーションの開発と運用が容易になります。  
+Oracle 云基础设施 (OCI) 服务网格是为您的应用程序提供安全性、流量控制和可观察性功能的基础设施层。
+OCI Service Mesh 让开发和运维云原生应用变得简单。
 
-このチュートリアルでは、BookinfoアプリケーションをOracle Container Engine for Kubernetes(OKE)クラスターにデプロイします。  
-次に、OCI Service Meshをアプリケーションのデプロイメントに追加します。  
+在本教程中，我们会将 Bookinfo 应用程序部署到 Oracle Container Engine for Kubernetes (OKE) 集群。
+接下来，将 OCI 服务网格添加到您的应用程序部署中。
 
-## 前提条件
+##先决条件
 
-- クラウド環境
-  - Oracle Cloudのアカウントを取得済みであること
+- 云环境
+  - 拥有甲骨文云账户
 
-## 事前準備
+## 提前准备
 
-まずは事前準備として以下を実施します。  
+首先，做以下准备工作。
 
-- 1.証明書サービスの構築
-  - 1-1.証明書と認証局の作成
-  - 1-2.コンパートメント・認証局・証明書のOCIDの取得
+- 1.搭建证书服务
+  - 1-1.创建证书和证书颁发机构
+  - 1-2.获取分区、证书颁发机构和证书的 OCID
 
-- 2.動的グループとポリシーの作成
-  - OCI Service Meshや証明書サービスに関連する動的グループとポリシーの作成
+- 2.创建动态组和策略
+  - 创建与 OCI 服务网格和证书服务相关的动态组和策略
 
-- 3.Oracle Container Engine for Kubernetes(OKE)クラスターの構築
-  - 3-1.OSOK(Oracle Service Operator for Kubernetes)のインストール
-  - 3-2.メトリクス・サーバーのインストール
+- 3. 构建 Oracle Container Engine for Kubernetes (OKE) 集群
+  - 3-1.安装 OSOK (Oracle Service Operator for Kubernetes)
+  - 3-2. 安装指标服务器
 
-### 1.証明書サービスの構築
+### 1.建筑证书服务
 
-ここでは、OCI Service MeshでTLS（Transport Layer Security）通信を行うために必要な証明書と認証局を作成します。  
+在这里，创建与 OCI 服务网格进行 TLS（传输层安全）通信所需的证书和证书颁发机构。
 
-#### 1-1. 認証局と証明書の作成  
+#### 1-1. 创建证书颁发机构和证书
 
-証明書サービスの構築について、[こちら](/ocitutorials/intermediates/certificate/)を実施してください。
+请参阅 [此处](/ocitutorials/intermediates/certificate/) 以构建证书服务。
 
-#### 1-2.コンパートメント・認証局・証明書のOCIDの取得
+#### 1-2.获取分区、证书颁发机构和证书的 OCID
 
-ここでは、後続の手順で利用するためにコンパートメントOCIDと[1-1. 認証局と証明書の作成](#1-1-認証局と証明書の作成)で作成した証明書と認証局のOCIDの取得を行います。  
+这里，隔间 OCID 和在 [1-1. 获取 OCID.
 
-まず、コンパートメントのOCIDを取得します。
+首先，获取隔间的 OCID。
 
-OCIコンソール画面で左上のメニューを展開して、`アイデンティティとセキュリティ`をクリックし、`コンパートメント`をクリックします。
+在 OCI 控制台屏幕上，展开左上角的菜单，单击“Identity and Security”，然后单击“Compartments”。
 
-コンパートメントのリストが表示されて、ご利用のコンパートメントをクリックします。
+将出现隔间列表，单击您的隔间。
 
-コンパートメントの詳細が表示されて、OCIDの右にある"コピー"をクリックして、コンパートメントのOCIDをメモしてください。
+当显示隔间详细信息时，单击 OCID 右侧的“复制”并记下隔间的 OCID。
 
-また、コンパートメント名をメモしてください。
+另外，记下隔间名称。
 
 ![compartment-ocid](compartment-ocid.png)
 
-次に、認証局のOCIDを取得します。
+接下来，获取证书颁发机构的 OCID。
 
-OCIコンソール画面で左上のメニューを展開して、`アイデンティティとセキュリティ`をクリックし、`認証局`をクリックします。
+在 OCI 控制台屏幕上，展开左上角的菜单，单击“Identity and Security”，然后单击“Certificate Authority”。
 
-認証局のリストが表示されて、事前準備で作成した認証局をクリックします。
+显示证书颁发机构列表，单击预先准备创建的证书颁发机构。
 
-認証局の詳細が表示されて、OCIDの右にある"コピー"をクリックして、認証局のOCIDをメモしてください。
+将显示 CA 的详细信息，单击 OCID 右侧的“复制”，并记下 CA 的 OCID。
 
 ![authority-ocid](authority-ocid.png)
 
-次に、証明書のOCIDを取得します。
+然后获取证书的OCID。
 
-OCIコンソール画面で左上のメニューを展開して、`アイデンティティとセキュリティ`をクリックし、`証明書`をクリックします。
+在 OCI 控制台屏幕上，展开左上角的菜单，单击“身份和安全”，然后单击“证书”。
 
-証明書のリストが表示されて、事前準備で作成した証明書をクリックします。
+显示证书列表，单击预先创建的证书准备。
 
-証明書の詳細が表示されて、OCIDの右にある"コピー"をクリックして、証明書のOCIDをメモしてください。
+当显示证书的详细信息时，单击 OCID 右侧的“复制”并记下证书的 OCID。
 
-![certificate-ocid](certificate-ocid.png)
+![证书-ocid](证书-ocid.png)
 
-これで、コンパートメント・認証局・証明書のOCIDの取得は完了です。
+这样就完成了隔离区、证书颁发机构和证书的 OCID 的获取。
 
-### 2.動的グループとポリシーの作成
+### 2. 创建动态组和策略
 
-ここでは、OCI Service Meshに必要な動的グループとポリシーを作成していきます。  
+我们现在将创建 OCI 服务网格所需的动态组和策略。
 
-**動的グループとポリシーについて**  
-Oracle Cloud Infrastrctureには動的グループという考え方があります。  
-動的グループの詳細は[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Identity/Tasks/managingdynamicgroups.htm)のページをご確認ください。  
-また、設定した動的グループは、ポリシーを利用することにより、OCI上のリソースやインスタンスを主体とした操作を実現できます。  
-ポリシーの詳細は[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Identity/Concepts/policygetstarted.htm#Getting_Started_with_Policies)のページをご確認ください。
-{: .notice--info}
+**关于动态组和策略**
+Oracle Cloud Infrastrcture 具有动态组的概念。
+有关动态组的详细信息，请参阅页面[此处](https://docs.oracle.com/ja-jp/iaas/Content/Identity/Tasks/managingdynamicgroups.htm)。
+另外，配置的动态组可以通过策略实现基于OCI上的资源和实例的操作。
+有关政策详情，请查看页面[此处](https://docs.oracle.com/ja-jp/iaas/Content/Identity/Concepts/policygetstarted.htm#Getting_Started_with_Policies)。
+{: .notice--信息}
 
-**ポリシー設定について**  
-このハンズオンでは、ご利用のコンパートメントに対しては管理者権限(`to manage all-resources in compartment`)がある前提としています。
-トライアル環境の方は、管理者権限となっておりますので、特に意識する必要はありません。
-{: .notice--warning}
+**关于策略设置**
+本实践假设您拥有您的隔间的管理员权限（“管理隔间中的所有资源”）。
+如果你在试用环境中，你不需要知道它，因为你有管理员权限。
+{: .notice--警告}
 
-OCIコンソール画面で左上のメニューを展開して、`アイデンティティとセキュリティ`をクリックし、`動的グループの作成`をクリックします。
+在 OCI 控制台屏幕上，展开左上角的菜单，单击“身份和安全”，然后单击“创建动态组”。
 
-以下のように動的グループを作成します。  
+创建动态组如下：
 
-- 名前：`MeshDynamicGroup`
-- 説明：`MeshDynamicGroup`
-- ルール1：
+- 名称：`MeshDynamicGroup`
+- 描述：`MeshDynamicGroup`
+- 规则1：
   ```
-  ANY {instance.compartment.id = '<事前準備で取得したご利用のコンパートメントのOCID>'}
+  ANY {instance.compartment.id = '<在准备中获得的您的隔间的 OCID>'}
   ANY {resource.type='certificateauthority', resource.type='certificate'}
   ```
 
-動的グループの意味はそれぞれ以下です。
+每个动态组的含义如下。
 
-| 動的グループ                                                                               | 説明                                                   |
-| ------------------------------------------------------------------------------------ |
-| ANY {instance.compartment.id = '<事前準備で取得したご利用のコンパートメントのOCID>'} | コンパートメント内の全てのインスタンスを意味するルール |
-| ANY {resource.type='certificateauthority', resource.type='certificate'}              | 証明書サービスを意味するルール                         |
+| 动态组 | 描述 |
+| ---------------------------------------------- ---------------------------------- |
+| ANY {instance.compartment.id = '<预先获得的你的隔离区的OCID>'} | 一条规则，表示隔离区中的所有实例 |
+| ANY {resource.type='certificatauthority', resource.type='certificate'} | 暗示证书服务的规则 |
 
-動的グループを作成したら、ポリシーを作成します。  
-OCIコンソール画面で左上のメニューを展開して、`アイデンティティとセキュリティ`をクリックし、`ポリシー`をクリックします。
+创建动态组后，创建策略。
+在 OCI 控制台屏幕上，展开左上角的菜单，单击“身份和安全”，然后单击“策略”。
 
-以下のようにポリシーを作成します。  
+创建如下策略。
 
-- 名前：`MeshPolicy`
-- 説明：`MeshPolicy`
-- ポリシー：
+- 名称：`MeshPolicy`
+- 描述：`MeshPolicy`
+- 策略：
   ```
-  Allow dynamic-group MeshDynamicGroup to use keys in compartment <ご利用のコンパートメント名>
-  Allow dynamic-group MeshDynamicGroup to manage objects in compartment <ご利用のコンパートメント名>
-  Allow dynamic-group MeshDynamicGroup to manage service-mesh-family in compartment <ご利用のコンパートメント名>
-  Allow dynamic-group MeshDynamicGroup to read certificate-authority-family in compartment <ご利用のコンパートメント名>
-  Allow dynamic-group MeshDynamicGroup to use certificate-authority-delegates in compartment <ご利用のコンパートメント名>
-  Allow dynamic-group MeshDynamicGroup to manage leaf-certificate-family in compartment <ご利用のコンパートメント名>
-  Allow dynamic-group MeshDynamicGroup to manage certificate-authority-associations in compartment <ご利用のコンパートメント名>
-  Allow dynamic-group MeshDynamicGroup to manage certificate-associations in compartment <ご利用のコンパートメント名>
-  Allow dynamic-group MeshDynamicGroup to manage cabundle-associations in compartment <ご利用のコンパートメント名>
+  Allow dynamic-group MeshDynamicGroup to use keys in compartment <您的隔间名称>
+  Allow dynamic-group MeshDynamicGroup to manage objects in compartment <您的隔间名称>
+  Allow dynamic-group MeshDynamicGroup to manage service-mesh-family in compartment <您的隔间名称>
+  Allow dynamic-group MeshDynamicGroup to read certificate-authority-family in compartment <您的隔间名称>
+  Allow dynamic-group MeshDynamicGroup to use certificate-authority-delegates in compartment <您的隔间名称>
+  Allow dynamic-group MeshDynamicGroup to manage leaf-certificate-family in compartment <您的隔间名称>
+  Allow dynamic-group MeshDynamicGroup to manage certificate-authority-associations in compartment <您的隔间名称>
+  Allow dynamic-group MeshDynamicGroup to manage certificate-associations in compartment <您的隔间名称>
+  Allow dynamic-group MeshDynamicGroup to manage cabundle-associations in compartment <您的隔间名称>
   ```
 
-ポリシーの意味はそれぞれ以下です。
+每个策略的含义如下。
 
- | ポリシー                                                                                                                        | 説明                                                                                       |
+  | 政策 | 说明  |
  | ----------------------------------------------------------------------------------------------------------------------------- |
- | Allow dynamic-group MeshDynamicGroup to use keys in compartment <ご利用のコンパートメント名>                                  | 動的グループがコンパートメント内のOCI Vault Keyを利用するためのポリシー                    |
- | Allow dynamic-group MeshDynamicGroup to manage objects in compartment <ご利用のコンパートメント名>                            | 動的グループがコンパートメント内のオブジェクトストレージ内のデータを管理するためのポリシー |
- | Allow dynamic-group MeshDynamicGroup to manage service-mesh-family in compartment <ご利用のコンパートメント名>                | 動的グループがOCI Service Meshを管理するためのポリシー                                     |
- | Allow dynamic-group MeshDynamicGroup to read certificate-authority-family in compartment <ご利用のコンパートメント名>         | 動的グループが証明書サービスの認証局を利用するためのポリシー                               |
- | Allow dynamic-group MeshDynamicGroup to use certificate-authority-delegates in compartment <ご利用のコンパートメント名>       | 動的グループが証明書サービスの各認証局と証明書を利用するためのポリシー                     |
- | Allow dynamic-group MeshDynamicGroup to manage leaf-certificate-family in compartment <ご利用のコンパートメント名>            | 動的グループが証明書サービスの各認証局と証明書を管理するためのポリシー                     |
- | Allow dynamic-group MeshDynamicGroup to manage certificate-authority-associations in compartment <ご利用のコンパートメント名> | 動的グループが証明書サービスの認証局アソシエーションを管理するためのポリシー                 |
- | Allow dynamic-group MeshDynamicGroup to manage certificate-associations in compartment <ご利用のコンパートメント名>           | 動的グループが証明書サービスの証明書アソシエーションを管理するためのポリシー                 |
- | Allow dynamic-group MeshDynamicGroup to manage cabundle-associations in compartment <ご利用のコンパートメント名>              | 動的グループが証明書サービスのバンドルアソシエーションを管理するためのポリシー               |
+ | Allow dynamic-group MeshDynamicGroup to use keys in compartment <您的隔间名称>                                  | 动态组在隔间中使用 OCI Vault 密钥的策略                  |
+ | Allow dynamic-group MeshDynamicGroup to manage objects in compartment <您的隔间名称>                            | 用于动态组管理隔离区对象存储中数据的策略|
+ | Allow dynamic-group MeshDynamicGroup to manage service-mesh-family in compartment <您的隔间名称>                | 动态组管理 OCI 服务网格的策略                                     |
+ | Allow dynamic-group MeshDynamicGroup to read certificate-authority-family in compartment <您的隔间名称>         | 动态组使用证书服务证书颁发机构的策略                               |
+ | Allow dynamic-group MeshDynamicGroup to use certificate-authority-delegates in compartment <您的隔间名称>       | 动态组在证书服务中使用每个证书颁发机构和证书的策略                     |
+ | Allow dynamic-group MeshDynamicGroup to manage leaf-certificate-family in compartment <您的隔间名称>            | 用于管理证书服务中每个证书颁发机构和证书的动态组策略                    |
+ | Allow dynamic-group MeshDynamicGroup to manage certificate-authority-associations in compartment <您的隔间名称> | 动态组管理证书服务中的证书颁发机构关联的策略                 |
+ | Allow dynamic-group MeshDynamicGroup to manage certificate-associations in compartment <您的隔间名称>           | 用于管理证书服务证书关联的动态组策略                 |
+ | Allow dynamic-group MeshDynamicGroup to manage cabundle-associations in compartment <您的隔间名称>              | 用于管理证书服务捆绑包关联的动态组策略               |
 
-これで、動的グループとポリシーの作成は完了です。
+这样就完成了动态组和策略的创建。
 
-### 3.OKEクラスターの構築
+### 3.搭建OKE集群
 
-OKEクラスターの構築について、[こちら](https://oracle-japan.github.io/ocitutorials/cloud-native/oke-for-commons/)を参考に実施してください。
+OKE集群搭建请参考[这里](https://oracle-japan.github.io/ocitutorials/cloud-native/oke-for-commons/)。
 
-#### 3-1.OSOKのインストール
+#### 3-1.安装OSOK
 
-OCI Service Meshでは、Kubernetes Operatorとして[OSOK(Oracle Service Operator for Kubernetes)](https://github.com/oracle/oci-service-operator)を利用します。
+OCI Service Mesh 使用 [OSOK (Oracle Service Operator for Kubernetes)](https://github.com/oracle/oci-service-operator) 作为 Kubernetes Operator。
 
-OSOKをインストールするためには、Operator SDKとオペレーター・ライフサイクル・マネージャ(OLM)のインストールが必要です。
+安装 OSOK 需要安装 Operator SDK 和 Operator Lifecycle Manager (OLM)。
 
-Operator SDKとオペレーター・ライフサイクル・マネージャ(OLM)のインストールは、[こちら](/ocitutorials/cloud-native/oke-for-intermediates/#3-1-operator-sdk%E3%81%8A%E3%82%88%E3%81%B3%E3%82%AA%E3%83%9A%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%A3olm%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB)を実施してください。(リンク先の実施手順は`3-1`のみで問題ありません)
+安装 Operator SDK 和 Operator Lifecycle Manager (OLM) [此处](/ocitutorials/cloud-native/oke-for-intermediates/#3-1-operator-sdk%E3%81%8A%E3%82%88%E3%81%B3%E3%82%AA%E3%83%9A%E3%83%AC%E3%83%BC%E3%82%BF%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B5%E3%82%A4%E3%82%AF%E3%83%AB%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%A3olm%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB） . （链接目标的执行过程没有问题，只有`3-1`）
 
-Operator SDKとオペレーター・ライフサイクル・マネージャ(OLM)のインストールが完了したら、以下のコマンドを実行し、OSOK用のNamespaceを作成します。
+安装 Operator SDK 和 Operator Lifecycle Manager (OLM) 后，运行以下命令为 OSOK 创建命名空间。
 
 ```sh
 kubectl create ns oci-service-operator-system
 ```
 
-次にOSOKをインストールします。
+然后安装OSOK。
 
 ```sh
 operator-sdk run bundle iad.ocir.io/oracle/oci-service-operator-bundle:1.1.0 -n oci-service-operator-system --timeout 5m
 ```
 
-以下のように出力され、OSOKがインストールされます。
+输出如下，安装OSOK。
 
 ```sh
 INFO[0036] Successfully created registry pod: iad-ocir-io-oracle-oci-service-operator-bundle-X-X-X 
@@ -189,106 +189,106 @@ INFO[0066]   Found ClusterServiceVersion "oci-service-operator-system/oci-servic
 INFO[0067] OLM has successfully installed "oci-service-operator.vX.X.X"
 ```
 
-#### 3-2.メトリクス・サーバーのインストール
+#### 3-2. 安装指标服务器
 
-OCI Service Meshでは、HPA(Horizontal Pod Autoscaler)を利用してIngress Gateway(後述)がスケールするので、メトリクス・サーバーをインストールしておきます。
+OCI Service Mesh 使用 HPA（Horizo​​ntal Pod Autoscaler）来缩放 Ingress Gateway（稍后介绍），因此安装一个 metrics server。
 
-```sh
+```嘘
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/high-availability.yaml
 ```
 
-これで事前準備は完了です！
+准备工作现已完成！
 
-## 1.OCI Service Meshの構築
+## 1.构建OCI服务网格
 
-ここから、いよいよOCI Service Meshの構築に入っていきます。
+从这里开始，我们将最终开始构建 OCI Service Mesh。
 
-全体としては以下のような手順になります。  
+总的来说，步骤如下：
 
-- 1.OCI Service Meshリソースの解説
+- 1. OCI Service Mesh资源说明
 
-- 2.サンプルアプリケーションのデプロイ
+- 2.部署示例应用
 
-- 3.OCI Service Meshリソースの作成
+- 3.创建OCI Service Mesh资源
 
-- 4.動作確認
+- 4.运行检查
 
-### 1.OCI Service Meshリソースの解説
+### 1. OCI Service Mesh资源说明
 
-まずは、OCI Service Meshで利用するリソースから確認します。  
+首先查看OCI Service Mesh使用的资源。
 
-次の図に示すように、OCI Service Meshは、マネージド・コントロール・プレーンから構成情報を受信する各マイクロサービスと共にプロキシをデプロイすることによって実装されます。  
-メッシュはプロキシを使用して、マイクロサービスに代わってIngressリクエストとOutboundリクエストを実行します。  
-この構成により、サービス・メッシュのセキュリティ、トラフィック制御、および監視機能が有効になります。イングレスゲートウェイ・リソースは、メッシュへの入力トラフィックを管理します。
+如下图所示，OCI 服务网格是通过部署代理来实现的，每个微服务从托管控制平面接收配置信息。
+Mesh 使用代理代表微服务发出入口和出站请求。
+此配置启用服务网格的安全、流量控制和监控功能。入口网关资源管理进入网格的流量。
 
-![service-mesh](service-mesh.jpg)
+![服务网格](服务网格.jpg)
 
-次の図は、OCI Service MeshにデプロイされるBookinfoアプリケーション(このハンズオンでも利用します)をベースにした各リソースを示しています。
+下图显示了基于部署在 OCI 服务网格上的 Bookinfo 应用程序（在本实践中使用）的每个资源。
 
-イングレストラフィックは、イングレスゲートウェイとイングレスゲートウェイのルート・テーブルを介して"Product Page"サービスにルーティングされます。  
-Reviewsサービスのさまざまなバージョンは、そのサービスの仮想デプロイメントを表します。アクセス・ポリシーは、サービス間通信のアクセス制御にセットアップされます。
+入口流量通过入口网关和入口网关的路由表路由到“产品页面”服务。
+评论服务的不同版本代表该服务的虚拟部署。为服务间通信的访问控制设置访问策略。
 
-![service-mesh-deployment](service-mesh-deployment.jpg)
+![服务网格部署](服务网格部署.jpg)
 
-次の図は、OCI Service Meshのリソース間の関係を定義します。![/mesh-components](mesh-components.jpg)
+下图定义了 OCI 服务网格中资源之间的关系。 ![/mesh-components](mesh-components.jpg)
 
-各リソースを簡単に説明します。
+简要描述每个资源。
 
-- Mesh: サービス・メッシュ全体を表すリソース
-- Virtual Service: サービス・メッシュ内の仮想サービス
-- Virtual Deployment: Virtual Serviceに紐づける仮想デプロイメント
-- Virtual Service Route Table: Virtual Service内のトラフィック・ルール。IstioでいうDestination Ruleのような存在。
-- Ingress Gateway: メッシュ外からメッシュ内への通信を制御するGateway。IstioのIngress Gatewayとほぼ同じ。
-- Ingress Gateway Route Table: Ingress Gatewayのトラフィック・ルール。
-- Access Policy: Virtual Serviceに対するアクセス制御。
+- Mesh: 代表整个服务网格的资源
+- Virtual Service: 服务网格中的虚拟服务
+- Virtual Deployment: 链接到虚拟服务的虚拟部署
+- Virtual Service Route Table: 虚拟服务中的流量规则。 存在就像 Istio 中的 Destination Rule。
+- Ingress Gateway: 控制从网格外部到网格内部的通信的网关。 和 Istio 的 Ingress Gateway 几乎一样。
+- Ingress Gateway Route Table: 入口网关流量规则。
+- Access Policy: 虚拟服务的访问控制。
 
-OCI Service Meshには他にもリソースがありますが、上の図は主なリソースだけピックアップしています。  
+OCI Service Mesh 中还有其他资源，但上图仅选取了主要资源。
 
-OCI Service Meshのリソースの全体像をまとめておきます。  
-(図内にはこのハンズオンでは取り上げないコンポーネントも含まれていますが、そちらは中級編以降で取り上げます)
+这是 OCI 服务网格资源的概述。
+（图中有一些组件未在本实践中介绍，但将在中间部分和后面的部分中介绍。）
 
 ![osm-overview](osm-overview.png)
 
-各種リソースを説明したところで、ここから、OCI Service Meshを構築していきます。  
+现在我们已经解释了各种资源，让我们构建 OCI 服务网格。
 
-### ２.サンプルアプリケーション(Bookinfoアプリケーション)のデプロイ
+### 2. 部署示例应用程序（Bookinfo 应用程序）
 
-今回はBookinfoアプリケーションを利用したService Mesh環境を構築していきます。
+这一次，我们将使用 Bookinfo 应用程序构建一个 Service Mesh 环境。
 
-まず、最初にBookinfoアプリケーション用のNamespaceを作成します。
+首先，让我们为 Bookinfo 应用程序创建一个命名空间。
 
 ```sh
 kubectl create namespace bookinfo
 ```
 
-次に、bookinfo Namespaceに対して、OCI Service Meshを有効にするラベルを付与します。
+接下来，给 bookinfo 命名空间一个启用 OCI 服务网格的标签。
 
 ```sh
 kubectl label namespace bookinfo servicemesh.oci.oracle.com/sidecar-injection=enabled
 ```
 
-Bookinfoアプリケーションをデプロイします。  
+部署 Bookinfo 应用程序。
 
 ```sh
 kubectl apply -n bookinfo -f https://raw.githubusercontent.com/istio/istio/release-1.12/samples/bookinfo/platform/kube/bookinfo.yaml
 ```
 
-これでサンプルアプリケーションのデプロイは完了です。  
+示例应用程序的部署已完成。
 
-### 3.OCI Service Meshリソースの作成
+### 3.创建OCI服务网格资源
 
-次に、OCI Service Meshを構成するためのリソースを作っていきます。
+接下来，我们将创建资源来配置 OCI 服务网格。
 
-なお、Manifestの中でアプリケーションのホスト名が定義されていますが、今回は`service-mesh.oracle.com`とします。  
-後でhostsファイルを編集します。
+此外，应用程序的主机名在清单中定义，但这次将是 `service-mesh.oracle.com`。
+稍后编辑主机文件。
 
-OCI Service Meshのリソースを作成するためのManifest`bookinfo_mesh.yaml`を作成します。  
-以下の情報を環境関数として設定します。  
-これらの情報は[1-2.コンパートメント・認証局・証明書のOCIDの取得](#1-2コンパートメント認証局証明書のocidの取得)で収集したものです。  
+创建 Manifest`bookinfo_mesh.yaml` 以创建 OCI 服务网格资源。
+将以下信息设置为环境功能。
+此信息收集于[1-2. 获取隔离区、CA 和证书的 OCID]（#1-2 获取隔离区 CA 证书的 ocid）。
 
-- YOUR_COMPARTMENT_OCID: 事前準備で取得したご利用のコンパートメントのOCIDに差し替えてください。
-- YOUR_CERTIFICATE_AUTHORITY_OCID: 事前準備で取得した認証局のOCIDに差し替えてください。
-- YOUR_CERTIFICATE_OCID: 事前準備で取得した証明書のOCIDに差し替えてください。
+- YOUR_COMPARTMENT_OCID：替换为你提前准备好的你的compartment的OCID。
+- YOUR_CERTIFICATE_AUTHORITY_OCID：替换为事先获得的认证机构的OCID。
+- YOUR_CERTIFICATE_OCID：替换为提前准备的证书的OCID。
 
 ```sh
 YOUR_COMPARTMENT_OCID=ocid1.compartment.oc1..xxxxxxxxxx
@@ -296,7 +296,7 @@ YOUR_CERTIFICATE_AUTHORITY_OCID=ocid1.certificateauthority.oc1.xxxxxxxxxx
 YOUR_CERTIFICATE_OCID=ocid1.certificate.oc1.xxxxxxxxxx
 ```
 
-`bookinfo_mesh.yaml`を作成します。  
+创建“bookinfo_mesh.yaml”。
 
 ```yaml
 cat > bookinfo_mesh.yaml << EOF
@@ -678,11 +678,11 @@ spec:
 EOF
 ```
 
-次に、上記Manifestで作成した`VirtualDeployment`と`Virtual Service`をバインドするために`binding.yaml`を作成します。  
+接下来，创建 binding.yaml 以绑定在上面的清单中创建的 VirtualDeployment 和 Virtual Service。
 
-`~Binding`という名称の[1.OCI Service Meshリソースの解説](#1oci-service-meshリソースの解説)で解説したリソースでは登場していないリソースが出てきますが、`VirtualDeployment`と`Virtual Service`を"バインド"するリソースというイメージを持って頂ければ問題ありません。  
+在【1.OCI Service Mesh资源解释】（#1oci-service-mesh资源解释）中解释的资源中有没有出现名为`~Binding`的资源，但是`VirtualDeployment`和`Virtual如果你是没有问题的有一个“绑定”服务的资源图像。
 
-`binding.yaml`を作成します。
+创建 `binding.yaml`。
 
 ```yaml
 cat > binding.yaml << EOF
@@ -792,13 +792,12 @@ spec:
 ---
 EOF
 ```
+接下来，创建“service.yaml”，这是用于创建入口网关资源的清单。
 
-次に、イングレスゲートウェイリソースを作成するためのManifestである`service.yaml`を作成します。  
+这里再说一遍，有一个名为`IngressGatewayDeployment`的资源在[1.OCI Service Mesh资源解释](#1oci-service-mesh资源解释)中没有解释，但是它是像proxy这样的镜像，如果你是没有问题的能够。
+（如果你了解 Istio，它就相当于 Envoy）
 
-ここでも、`IngressGatewayDeployment`という名称の[1.OCI Service Meshリソースの解説](#1oci-service-meshリソースの解説)では解説していないリソースが登場しますが、Proxyのような存在だとイメージ頂ければ問題ありません。  
-(Istioをご存知の方はEnvoyにあたるものです)
-
-`service.yaml`を作成します。  
+创建“service.yaml”。
 
 ```yaml
 cat > service.yaml << EOF
@@ -846,21 +845,20 @@ spec:
 EOF
 ```
 
-それでは作成したManifestを順番に適用していきます。
+然后，按顺序应用创建的清单。
 
 ```sh
 kubectl apply -f bookinfo_mesh.yaml
 kubectl apply -f binding.yaml
 kubectl apply -f service.yaml
 ```
+这样就完成了OCI Service Mesh环境的搭建。
 
-これで、OCI Service Meshの環境構築は完了です。
+### 4.运行检查
 
-### 4.動作確認
+最后，检查操作。
 
-最後に動作確認を行います。  
-
-Podが全て起動していることを確認します。
+确保所有 Pod 都在运行。
 
 ```sh
 $ kubectl get pods -n bookinfo
@@ -874,7 +872,7 @@ reviews-v2-6b86c676d9-r2j6x                                       2/2     Runnin
 reviews-v3-b77c579-69pkq                                          2/2     Running   0          4m38s
 ```
 
-アプリケーションにアクセスするにはイングレスゲートウェイ(実態はOCI LoadBalancerになります)を利用するので、以下のコマンドでIPアドレスを確認します。
+要访问应用程序，我们将使用入口网关（实际上是 OCI LoadBalancer），因此请使用以下命令检查 IP 地址。
 
 ```sh
 $ kubectl get svc -n bookinfo
@@ -887,48 +885,47 @@ ratings                                       ClusterIP      10.96.120.160   <no
 reviews                                       ClusterIP      10.96.22.199    <none>          9080/TCP                     13m
 ```
 
-`bookinfo-ingress`に表示される`EXTERNAL-IP`(`xxx.xxx.xxx.xxx`)がLoadBalancerのIPアドレスになります。
+`bookinfo-ingress` 中显示的 `EXTERNAL-IP` (`xxx.xxx.xxx.xxx`) 将是 LoadBalancer IP 地址。
 
-今回は、`https://service-mesh.oracle.com`でアクセスしたいので、ローカルのhostsファイルに以下の列を追記します。
+这次，我们要通过`https://service-mesh.oracle.com`访问，所以在本地的hosts文件中添加如下一行。
 
 ```
 xxx.xxx.xxx.xxx service-mesh.oracle.com
 ```
 
-これで`https://service-mesh.oracle.com/productpage`にアクセスし、以下のような画面が表示されれば成功です！
+现在访问`https://service-mesh.oracle.com/productpage`，如果出现如下画面，则表示成功！
 
 ![bookinfo-product-page](bookinfo-product-page.png)
 
-また、OCIコンソール上から見るとOSOKを利用して各種リソースが作成されていることが確認できます。  
-OCIコンソールは、左上のメニューを展開して、`開発者サービス`をクリックし、`サービス・メッシュ`をクリックします。
+此外，从 OCI 控制台查看时，您可以确认各种资源已使用 OSOK 创建。
+在 OCI 控制台中，展开左上角的菜单，单击“Developer Services”，然后单击“Service Mesh”。
 
-また、OCIコンソールからリソースを作成または変更すればOSOKがOKEクラスターに反映してくれます。
-
+此外，如果您从 OCI 控制台创建或更改资源，OSOK 会将它们反映在 OKE 集群中。
 ![oci-service-mesh-bookinfo](oci-service-mesh-bookinfo.png)
 
-これで、OCI Service Meshの構築は完了です。
+这样就完成了OCI Service Mesh的搭建。
 
-## Bookinfoアプリケーションの説明（オプション）
+## Bookinfo 应用描述（可选）
 
-Bookinfoアプリケーションは、オープンソースのサービスメッシュプラットフォームである`Istio`のプロジェクトの一部として配布されています。  
-オンライン書店の単一のカタログエントリと同様に、書籍に関する情報を表示します。  
-アプリケーションのページには、書籍の説明、書籍の詳細 (ISBN、ページ数など)、およびいくつかの書評が表示されます。
+Bookinfo 应用程序作为开源服务网格平台“Istio”项目的一部分进行分发。
+显示有关书籍的信息，类似于在线书店中的单个目录条目。
+该应用程序的页面显示图书描述、图书详细信息（ISBN、页数等）和一些图书评论。
 
-アプケーションの全体イメージは以下のようになります。  
+应用程序的整体形象如下所示：
 
 ![Bookinfo Application](bookinfo.png)
 
-次の4つの個別のマイクロサービスに分かれています。
+它分为四个独立的微服务：
 
-- `productpage`: `details`のマイクロサービスと`reviews`のマイクロサービスを呼び出し、フロントエンドページを提供します。  
-- `details`: 書籍情報を提供します。
-- `reviews`: 書評を提供します。また、`ratings`のマイクロサービスも呼び出します。(以下を参照)
-- `ratings`: 書評に付随する評価(レートポイント)を提供します。  
+- `productpage`：调用 `details` 和 `reviews` 微服务来为前端页面提供服务。
+- `details`：提供书籍信息。
+- `reviews`：提供书评。它还调用“评级”微服务。 （见下文）
+- `ratings`：提供书评附带的评级（评分点）。
 
-また、`reviews`のマイクロサービスには3つのバージョンがあります。
+此外，“评论”微服务有三个版本。
 
-- バージョンv1では、`ratings`は呼び出されません。
-- バージョンv2では、`ratings`を呼び出し、各評価を1~5個の黒い星として表示します。
-- バージョンv3では、`ratings`を呼び出し、各評価を1~5個の赤い星として表示します。
+- `ratings` 在版本 v1 中没有被调用。
+- 版本 v2 调用“评级”并将每个评级显示为 1-5 颗黑色星星。
+- 版本 v3 调用“评级”并将每个评级显示为 1-5 颗红星。
 
-このアプリケーションは複数言語からされており、これらのサービスは特定のサービスメッシュプラットフォームに依存していません。
+该应用程序是多语言的，这些服务独立于任何特定的服务网格平台。

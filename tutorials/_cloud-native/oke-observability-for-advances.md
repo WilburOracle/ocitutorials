@@ -1,141 +1,141 @@
 ---
-title: "Oracle Container Engine for Kubernetes(OKE)でサンプルマイクロサービスアプリケーションをデプロイしてOCIのオブザバビリティサービスを利用してみよう"
-excerpt: "OKEを使ってサンプルマイクロサービスアプリケーションのデプロイおよびオブザバビリティを体験していただけるコンテンツです。OCIのオブザバビリティサービスであるMonitoring、Logging、Application Performance Monitoring、Notificationsを利用します。"
+title: "在 Oracle Container Engine for Kubernetes (OKE) 上部署示例微服务应用程序并使用 OCI 的可观察性服务"
+excerpt: "本内容让您体验使用 OKE 部署和观察示例微服务应用程序。 利用 OCI 的可观察性服务监控、日志记录、应用程序性能监控和通知。"
 order: "031"
 tags:
 ---
 
-このハンズオンでは、Oracle Container Engine for Kubernetes（以下OKE）上に、マイクロサービスアプリケーションをデプロイします。そして、OCIのObservabilityサービスを利用して、モニタリング、ロギング、トレーシングを実践的に学びます。
+在本实践中，我们将在 Oracle Container Engine for Kubernetes (OKE) 之上部署一个微服务应用程序。 并使用 OCI 的 Observability 服务来学习监控、日志记录和跟踪实践。
 
-OCIのObservabilityサービスとして、以下を利用します。
+作为 OCI 的 Observability 服务，我们使用：
 
-***モニタリング***
+***监控***
 
-- [Oracle Cloud Infrastructure Monitoring](https://www.oracle.com/jp/devops/monitoring/)
-: メトリックおよびアラーム機能を使用してクラウド・リソースを積極的および受動的にモニター可能なフルマネージドサービスです。
+- [Oracle 云基础设施监控](https://www.oracle.com/jp/devops/monitoring/)
+：一项完全托管的服务，允许您使用指标和警报主动和被动地监控您的云资源。
 
-***ロギング***
+***记录***
 
-- [Oracle Cloud Infrastructure Logging](https://www.oracle.com/jp/devops/logging/)
-: 監査ログ、サービス・ログ、カスタム・ログに対応した、スケーラビリティの高いフルマネージド型のロギングサービスです。
+- [Oracle 云基础设施日志记录](https://www.oracle.com/jp/devops/logging/)
+：高度可扩展、完全托管的日志记录服务，适用于审计日志、服务日志和自定义日志。
 
-***トレーシング***
+*** 追踪 ***
 
-- [Oracle Cloud Infrastructure Application Performance Monitoring](https://www.oracle.com/jp/manageability/application-performance-monitoring/)
-: アプリケーションをモニターし、パフォーマンスの問題を診断するための包括的な機能セットが組み込まれたフルマネージドサービスです。
+- [Oracle 云基础设施应用程序性能监控](https://www.oracle.com/jp/manageability/application-performance-monitoring/)
+：一种完全托管的服务，具有一套全面的功能来监控您的应用程序和诊断性能问题。
 
-**Oracle Cloud Observability and Management Platformについて**  
-このハンズオンで利用するサービスは、[Oracle Cloud Observability and Management Platform(以下、O&M)](https://www.oracle.com/jp/manageability/)を構成するコンポーネントの一部です。
-O&Mには、このハンズオンで利用するサービスの他にも、オンプレミスおよびマルチクラウド環境からすべてのログ・データを監視、集計、インデックス作成、分析可能な[Logging Analytics](https://www.oracle.com/jp/manageability/logging-analytics/)、Oracle Enterprise Managerの主要な機能をクラウドサービスとして提供する[Database Management](https://www.oracle.com/jp/manageability/database-management/)などがあります。
-{: .notice--info}
+**关于 Oracle 云可观察性和管理平台**
+本实践中使用的服务是构成 [Oracle 云可观察性和管理平台 (O&M)](https://www.oracle.com/jp/manageability/) 的组件的一部分。
+除了这个动手实践的服务，运维还包括【日志分析】(https://www.oracle.com/jp/manageability/logging-analytics/)、【数据库管理】(https://www.oracle.com/jp/manageability/logging-analytics/)。 com/jp/manageability/database-management/) 作为云服务提供 Oracle Enterprise Manager 的主要功能等。
+{: .notice--信息}
 
-ハンズオンの流れは以下となります。
-
----
-1. OKEクラスタ構築とOCIRセットアップ
-    1. OCIダッシュボードからOKEクラスタの構築
-    2. Cloud Shellを利用してクラスタを操作
-    3. OCIRのセットアップ
-
-2. Application Performance Monitoring
-    1. サンプルアプリケーションの概要説明
-    2. サンプルアプリケーションとAPM連携設定
-    3. APMドメインの作成
-    4. サンプルアプリケーションへのAPM設定(ブラウザ側)とコンテナイメージ作成
-    5. サンプルアプリケーションへのAPM設定(サーバサイド側)
-    6. OCI APMでのトレーシング
-    7. OCI APMでのアプリケーションサーバのメトリクス監視
-    8. OCI APMでのリアルユーザモニタリング(RUM)
-    9. OCI APMでの合成モニタリング(Synthetic Monitoring)
-
-3. Logging
-    1. カスタム・ログの設定
-    2. ワーカーノード上のアプリケーションログの確認
-    3. Kubernetes APIサーバーの監査ログの確認
-
-4. Monitoring & Notifications
-    1. Notificationsの設定
-    2. Monitoringの設定
-    3. MonitoringとNotificationsの実践
-
-5. 今回利用したサンプルアプリケーションの補足説明
+实际操作流程如下。
 
 ---
+1. OKE集群搭建及OCIR设置
+    1. 从 OCI 仪表板构建 OKE 集群
+    2.使用Cloud Shell操作集群
+    3.设置OCIR
 
-ハンズオン概要図は以下となります。全環境の構築及びセットアップを行いながら、赤字で記載されている操作を実施します。
+2.应用性能监控
+    一、示例应用概述
+    2.示例应用与APM联动设置
+    3.创建APM域
+    4. 示例应用程序（浏览器端）和容器镜像创建的 APM 设置
+    5. 示例应用程序的 APM 设置（服务器端）
+    6. OCI APM 中的跟踪
+    7. 使用 OCI APM 监控应用程序服务器指标
+    8. 使用 OCI APM 进行真实用户监控 (RUM)
+    9. OCI APM 中的综合监控
+
+3.日志记录
+    1.自定义日志设置
+    2.检查工作节点上的应用程序日志
+    3.查看Kubernetes API服务器审计日志
+
+4.监控与通知
+    1.通知设置
+    2.监控设置
+    3. 实践监控和通知
+
+5、本次使用的示例应用补充说明
+
+---
+
+实际操作概述如下所示。在构建和设置整个环境时执行红色描述的操作。
 
 ![](0-0-000.png)
 
-1.OKEクラスタ構築とOCIRセットアップ
----------------------------------
+1. OKE集群搭建及OCIR设置
+----------------------------------
 
-Kubernetesクラスタの構築とコンテナイメージを格納するOCIRのセットアップを行います。
+构建 Kubernetes 集群并设置 OCIR 来存储容器镜像。
 
 ![](1-1-000.png)
 
-### 1-1 OCIダッシュボードからOKEクラスタの構築
+### 1-1 从 OCI 仪表板构建 OKE 集群
 
-左上のハンバーガーメニューを展開して、「開発者サービス」から「Kubernetesクラスタ(OKE)」を選択します。
+展开左上角的汉堡菜单，然后从“开发者服务”中选择“Kubernetes Cluster (OKE)”。
 
 ![](1-1-001.png)
 
-左メニューにある「リスト範囲」のコンパートメント選択プルダウンメニューからご自身のコンパートメントを選択します。
+从左侧菜单中列表范围下的隔间选择下拉菜单中选择您的隔间。
 
 ![](1-1-012.png)
 
-「クラスタの作成」ボタンをクリックします。
+单击创建集群按钮。
 
 ![](1-1-002.png)
 
-「クイック作成」が選択されていることを確認して、「ワークフローの起動」ボタンをクリックします。
+确保选择了“快速创建”并单击“启动工作流”按钮。
 
 ![](1-1-003.png)
 
-以下を設定の設定となっていることを確認します。
+确保在设置中设置了以下内容。
 
-key|value
+键|值
 -|-
-Kubernetes APIエンドポイント| パブリック・エンドポイント
-Kubernetesワーカー・ノード| プライベート・ワーカー
-シェイプ | VM Standard.E3.Flex
-OCPU数の選択 | 1
-メモリー量（GB）|16
+Kubernetes API 端点 | 公共端点
+Kubernetes 工作节点 | 私人工作人员
+形状 | VM Standard.E3.Flex
+选择 OCPU 数量 | 1
+内存量 (GB)|16
 
 ![](1-1-004.png)
 
-画面左下の「次」ボタンをクリックします。
+单击屏幕左下方的“下一步”按钮。
 
 ![](1-1-005.png)
 
-画面左下の「クラスタ作成」ボタンをクリックします。
+单击屏幕左下方的“创建集群”按钮。
 
 ![](1-1-006.png)
 
-画面左下の「閉じる」ボタンをクリックします。
+单击屏幕左下方的“关闭”按钮。
 
 ![](1-1-007.png)
 
-黄色の「作成中」から緑の「アクティブ」になることを確認します。「アクティブ」であればクラスタ作成は完了です。
+确认它从黄色“Creating”变为绿色“Active”。如果为“Active”，则集群创建完成。
 
 ![](1-1-008.png)
 
-### 1-2 Cloud Shellを利用してクラスタを操作
+### 1-2 使用Cloud Shell 操作集群
 
-Cloud Shellを利用して、作成したKubernetesクラスタに接続します。
+使用 Cloud Shell 连接到创建的 Kubernetes 集群。
 
-「クラスタへのアクセス」ボタンをクリックします。
+单击访问群集按钮。
 
 ![](1-1-009.png)
 
-「Cloud Shellの起動」ボタン、「コピー」リンクテキスト、「閉じる」ボタンの順にクリックします。
+单击“启动 Cloud Shell”按钮，然后单击“复制”链接文本，然后单击“关闭”按钮。
 
 ![](1-1-010.png)
 
-Cloud Shell起動後、「コピー」した内容をペーストして、Enterキーを押します。
+启动 Cloud Shell 后，粘贴“复制”的内容并按回车键。
 
 ![](1-1-011.png)
 
-以下コマンドを実行して、3ノードの「STATUS」が「Ready」になっていることを確認します。
+执行以下命令确认3个节点的“STATUS”为“Ready”。
 
 ```sh
 kubectl get nodes
@@ -148,108 +148,108 @@ NAME          STATUS   ROLES   AGE     VERSION
 10.0.10.24    Ready    node    2m27s   v1.21.5
 ```
 
-### 1-3 OCIRのセットアップ
+### 1-3 设置OCIR
 
-後続手順で、サンプルアプリケーションをビルドして、コンテナイメージを作成します。  
-そのコンテナイメージを格納するコンテナイメージレジストリのセットアップを行います。  
-OCIでは、Oracle Cloud Infrastructure Registry(OCIR)を利用します。
+在后续步骤中，您将构建示例应用程序并创建容器映像。
+设置容器映像注册表以存储容器映像。
+OCI 使用 Oracle Cloud Infrastructure Registry (OCIR)。
 
-**OCIRについて**  
-フルマネージドなDocker v2標準対応のコンテナレジストリを提供するサービスです。OKEと同一リージョンに展開することによる低レイテンシを実現します。  詳細は[こちら](https://www.oracle.com/jp/cloud-native/container-registry/)のページをご確認ください。
-{: .notice--info}
+**关于奥克尔**
+提供完全托管的 Docker v2 标准兼容容器注册表的服务。通过部署在与 OKE 相同的区域来实现低延迟。有关详细信息，请查看页面[此处](https://www.oracle.com/jp/cloud-native/container-registry/)。
+{: .notice--信息}
 
-左上のハンバーガーメニューをクリックして、「開発者サービス」-「コンテナ・レジストリ」を選択します。
+点击左上角的汉堡菜单，选择“开发者服务”-“容器注册”。
 
 ![](1-3-001.png)
 
-{% capture notice %}**ハンズオンに利用するコンパートメントついて**  
-トライアル環境でのハンズオンの場合は、ルートコンパートメントを利用します。  
-OCIRのコンソール画面はデフォルトでルートコンパートメントが選択されますが、ご自身に割り当てられているコンパートメントがある場合は、そちらのコンパートメントを利用してください。  
-コンパートメントはOCIRのコンソール画面の左側から選択できます。
+{% capture notice %}**关于用于动手操作的隔间**
+要在试用环境中动手操作，请使用根隔间。
+在 OCIR 控制台屏幕上默认选择根隔离区，但如果您有分配给您的隔离区，请使用该隔离区。
+可以从 OCIR 控制台屏幕的左侧选择隔间。
 ![0-013.jpg](1-1-013.jpg)
 {% endcapture %}
 <div class="notice--warning">
   {{ notice | markdownify }}
 </div>
 
-「リポジトリの作成」ボタンをクリックします。
+单击创建存储库按钮。
 
 ![](1-3-002.png)
 
-「リポジトリ名」に「frontend-app-apm」と入力、「アクセス」で「パブリック」を選択して、「リポジトリの作成」ボタンをクリックします。
+在“Repository Name”中输入“frontend-app-apm”，在“Access”中选择“Public”，点击“Create Repository”按钮。
 
 ![](1-3-003.png)
 
-**レポジトリ名について**  
-OCIRのレポジトリ名はテナンシで一意になります。  
-集合ハンズオンなど複数人で同一環境を共有されている皆様は、`frontend-app-apm01`や`frontend-app-apm-tn`などの名前のイニシャルを付与し、名前が重複しないようにしてください。
-{: .notice--warning}
+**关于存储库名称**
+OCIR 存储库名称在您的租户中是唯一的。
+对于集体动手等多人共享同一环境的，请在名字首字母上加上`frontend-app-apm01`和`frontend-app-apm-tn`，以免重名。。
+{: .notice--警告}
 
-OCIRにコンテナイメージをプッシュする際に必要となる、「Username」と「Password」を取得します。
+获取将容器镜像推送到 OCIR 时所需的“用户名”和“密码”。
 
-「Username」は、`<オブジェクト・ストレージ・ネームスペース>/<ユーザ名>` となります。
+“用户名”将为“<对象存储命名空间>/<用户名>”。
 
-＜ユーザ名＞を確認します。ユーザ名は右上にある「プロファイル」アイコンをクリックして、プロファイル名を選択します。
+检查<用户名>。对于您的用户名，单击右上角的个人资料图标并选择您的个人资料名称。
 
 ![](1-3-004.png)
 
-「ユーザーの詳細画面」の赤枠箇所をコピーして、テキストエディタにペーストしておきます。
+复制“用户详细信息屏幕”的红框部分并将其粘贴到文本编辑器中。
 
 ![](1-3-005.png)
 
-次に、＜オブジェクト・ストレージ・ネームスペース＞を確認します。
+接下来，检查 <Object Storage Namespace>。
 
-右上にある「プロファイル」アイコンをクリックして、「テナンシ」を選択します。
+单击右上角的配置文件图标并选择租赁。
 
 ![](1-3-006.png)
 
-「テナンシ詳細」の「オブジェクト・ストレージ・ネームスペース」の赤枠箇所をコピーして、テキストエディタにペーストしておきます。
+复制“Tenancy Details”中“Object Storage Namespace”红框部分，粘贴到文本编辑器中。
 
 ![](1-3-007.png)
 
-次に、「Password」となる認証トークンを設定します。
+接下来，设置将是“密码”的身份验证令牌。
 
-右上にある「プロファイル」アイコンをクリックして、プロファイル名を選択します。
+单击右上角的个人资料图标，然后选择您的个人资料名称。
 
 ![](1-3-008.png)
 
-左メニュー「認証トークン」を選択します。
+从左侧菜单中选择“身份验证令牌”。
 
 ![](1-3-009.png)
 
-「トークンの作成」をボタンをクリックします。
+单击“创建令牌”按钮。
 
 ![](1-3-010.png)
 
-「説明」に「oke-handson-apm」と入力して、「トークンの生成」ボタンをクリックします。
+在 Description 中输入 oke-handson-apm，然后单击 Generate Token 按钮。
 
 ![](1-3-011.png)
 
-「コピー」をクリックして、「閉じる」ボタンをクリックします。  コピーした認証トークンは、後の手順で必要となるので、テキストエディタなどにペーストしておきます。
+单击复制，然后单击关闭按钮。您将在后面的步骤中需要复制的身份验证令牌，因此将其粘贴到文本编辑器中。
 
 ![](1-3-012.png)
 
-以上で、認証トークンの作成は完了です。
+这样就完成了身份验证令牌的创建。
 
-以下、テキストエディタにペーストした内容に当てはめて利用します。
+下面，将其应用于文本编辑器中粘贴的内容并使用它。
 
-key|value
+键|值
 -|-
-Username|`<オブジェクト・ストレージ・ネームスペース>/<ユーザ名>`
-Password| `認証トークン`
+用户名|‘${对象存储命名空间}/‘${用户名}’
+密码| `身份验证令牌`
 
-以上でOCIRのセットアップは完了です。
+OCIR 设置现已完成。
 
-2.Application Performance Monitoring
----------------------------------
+2.应用性能监控
+----------------------------------
 
-Kubernetesクラスタ上にサンプルマイクロサービスアプリケーションのデプロイとAPMのセットアップを行い、トレーシング、アプリケーションサーバのメトリクス監視、リアルユーザモニタリング、合成モニタリングを実践します。
+在 Kubernetes 集群上部署示例微服务应用程序并设置 APM 以练习跟踪、应用程序服务器指标监控、真实用户监控和综合监控。
 
 ![](2-1-000.png)
 
-### 2-1. サンプルアプリケーションの概要説明
+### 2-1. 示例应用程序概述
 
-まずはホームディレクトリに移動し、以下のGitレポジトリをcloneします。  
+首先，移至您的主目录并克隆以下 Git 存储库。
 
 ```sh
 cd ~
@@ -259,155 +259,155 @@ cd ~
 git clone https://github.com/oracle-japan/code-at-customer-handson
 ```
 
-このハンズオン用に作成したサンプルアプリケーションです。  
-中身を簡単に紹介します。  
+为此实践创建的示例应用程序。
+我将简要介绍一下内容。
 
 ```sh
 .
 ├── README.md
-├── k8s ==> KubernetesのMainifest群
-├── olympic_backend_amp ==> バックエンドアプリケーション
-├── olympic_datasource_amp ==> データソースアプリケーション
-├── olympic_frontend_amp ==> フロントエンドアプリケーション
+├── k8s ==> Kubernetes 的主要集群
+├── olympic_backend_amp ==> 后端应用
+├── olympic_datasource_amp ==> 数据源应用
+├── olympic_frontend_amp ==> 前端应用
 .
 ```
 
-このサンプルアプリケーションは、主に以下の2つから構成されています。
+该示例应用程序主要包括以下内容：
 
 - [Helidon](https://oracle-japan-oss-docs.github.io/helidon/docs/v2/#/about/01_overview)
-  - Oracleがオープンソースで提供しているJavaのマイクロサービスフレームワーク
-- [Oracle JavaScript Extension Toolkit（Oracle JET）](https://www.oracle.com/jp/application-development/technologies/jet/oracle-jet.html)
-  - Oracleがオープンソースで開発しているJavascript用フレームワーク
-  - 業界標準として普及しているオープンソース・フレームワークに基づき、開発者がより優れたアプリケーションをより迅速に構築できるよう支援する高度な機能とサービスを付加
+  - Oracle 开源提供的 Java 微服务框架
+- [Oracle JavaScript 扩展工具包 (Oracle JET)](https://www.oracle.com/jp/application-development/technologies/jet/oracle-jet.html)
+  - Oracle 开发的开源 Javascript 框架
+  - 添加高级功能和服务，帮助开发人员更快地构建更好的应用程序，基于流行的开源框架作为行业标准
 
-簡単にアプリケーションの構成を見ていきます。  
-この手順が完了すると全体のイメージは以下のようになります。
+让我们快速浏览一下应用程序的组成。
+完成这一步后，整体形象应该是这样的：
 
 ![](2-1-001.png)
 
-Oracle Cloud Infrastructureの構成としては以下のような図になります。
+下图显示了 Oracle Cloud Infrastructure 的配置。
 
 ![](2-1-002.png)
 
-このサンプルアプリケーションは、3つのコンポーネントから以下のように構成されています。
+此示例应用程序包含三个组件：
 
-- **フロントエンドアプリケーション(図中の`Olympics`)**  
-  HelidonとOracle JETから構成されているアプリケーションです。  
-  Helidonの静的コンテンツルート(今回は`resources/web配下`)にOracle JETのコンテンツを配置しています。  
-  このアプリケーションは、バックエンドサービス(v1/v2/v3)のいずれかを呼び出します。  
-  また、このアプリケーションにはApplication Performance Monitoringで利用するAPM Browser AgentとAPM Server Agentが含まれています。
+- **前端应用程序（图中的`Olympics`）**
+  由 Helidon 和 Oracle JET 组成的应用程序。
+  Oracle JET 内容放置在 Helidon 的静态内容根目录中（在本例中位于“resources/web”下）。
+  此应用程序调用其中一项后端服务 (v1/v2/v3)。
+  该应用程序还包括用于应用程序性能监控的 APM 浏览器代理和 APM 服务器代理。
 
-- **バックエンドアプリケーション(図中の緑枠部分)**  
-  Helidonから構成されているアプリケーションです。
-  このアプリケーションには3つのバージョンが存在し、それぞれ金メダメリスト(v3)、銀メダリスト(v2)、銅メダリスト(v1)の一覧を返すようになっています。 
-  バージョン情報は環境変数として保持しています。
-  このアプリケーションは、データソースアプリケーションに対してバージョンに応じたAPIエンドポイントを呼び出し、データを取得しにいきます。  
-  また、このアプリケーションにはApplication Performance Monitoringで利用するAPM Server Agentが含まれています。
+- **后端应用（图中绿框）**
+  由 Helidon 组成的应用程序。
+  此应用程序有三个版本，每个版本都返回金牌得主 (v3)、银牌得主 (v2) 和铜牌得主 (v1) 的列表。
+  版本信息存储为环境变量。
+  本应用调用版本对应的API端点到数据源应用获取数据。
+  此应用程序还包括用于应用程序性能监控的 APM 服务器代理。
 
-- **データソースアプリケーション(図中の`Medal Info`)**  
-  Helidonとインメモリで動作しているデータベースである[H2 Database](https://www.h2database.com/html/main.html)から構成されているアプリケーションです。  
-  このアプリケーションでは、メダリストと獲得したメダルの色を保持しており、バックエンドアプリケーションから呼び出されたエンドポイント応じてメダリストとそのメダルの色を返却します。  
-  また、このアプリケーションにはApplication Performance Monitoringで利用するAPM Server Agentが含まれています。
+- **数据源应用（图中`Medal Info`）**
+  本应用由Helidon和[H2数据库](https://www.h2database.com/html/main.html)组成，后者是一个运行在内存中的数据库。
+  在这个应用程序中，存储了获奖者和获得奖牌的颜色，并根据从后端应用程序调用的端点返回奖牌获得者和奖牌的颜色。
+  此应用程序还包括用于应用程序性能监控的 APM 服务器代理。
 
-**Helidonについて**  
-Helidonは`Maven`を利用してプロジェクトの雛形を作成することができます。  
-コマンドについては[こちら](https://helidon.io/docs/v2/#/mp/guides/02_quickstart)をご確認ください。  
-この中にはデフォルトでDockerfileも含まれています。  
-以降で利用するDockerfileも、基本的に上記雛形ファイルを利用しています。
-また、HelidonにはHelidon CLIという便利なCLIツールがあります。  
-Helidon CLIについては[こちら](https://oracle-japan.github.io/ocitutorials/cloud-native/helidon-mp-for-beginners/)をご確認ください。
-{: .notice--info}
+**关于赫利顿**
+Helidon 可以使用 `Maven` 创建项目模板。
+有关命令，请查看[此处](https://helidon.io/docs/v2/#/mp/guides/02_quickstart)。
+默认情况下，它还包含一个 Dockerfile。
+后面用到的Dockerfile也基本都是用上面的模板文件。
+Helidon 还有一个方便的 CLI 工具，称为 Helidon CLI。
+对于 Helidon CLI，请查看[此处](https://oracle-japan.github.io/ocitutorials/cloud-native/helidon-mp-for-beginners/)。
+{: .notice--信息}
 
-### 2-2 サンプルアプリケーションとAPM連携設定
+### 2-2 示例应用程序和APM联动设置
 
-クローンしたサンプルアプリケーションにAPMと連携するための設定を行います。
+配置克隆的示例应用程序以使用 APM。
 
-**本手順について**  
-この手順2-2は、トライアル環境や管理者権限をお持ちの環境でハンズオンを実施されている皆様には不要な手順ですので、スキップしていただき、手順2-3から実施してください。
-{: .notice--info}
+**关于这个程序**
+这2-2步对于在试用环境或管理员权限环境中动手的人来说是不需要的，所以请跳过它，从2-3步开始。
+{: .notice--信息}
 
-まずは、OCI APMを利用するためのポリシーを作成してきます。  
+首先，创建一个使用 OCI APM 的策略。
 
-OCIコンソールのハンバーガーメニューを開き、「アイデンティティとセキュリティ」から「ポリシー」を選択します。  
+打开 OCI 控制台汉堡包菜单并选择身份和安全下的策略。
 
 ![](2-2-001.png)
 
-「ポリシーの作成」をクリックします。  
+单击创建策略。
 
 ![](2-2-002.png)
 
-以下の情報を入力します。  
-また、「手動エディタの表示」にチェックを入れます。  
+输入以下信息。
+另外，选中“显示手动编辑器”。
 
-key|value
+键|值
 -|-
-名前| apm_policy
-説明| apm_policy
-コンパートメント | ご自身のコンパートメント名
-ポリシー | `Allow group APM-Admins to manage apm-domains in compartment id <ご自身のコンパートメントOCID>`
+名称 | apm_policy
+说明 | apm_policy
+隔间 | 您的隔间名称
+政策 | `允许组 APM-Admins 管理隔间 ID <您的隔间 OCID> 中的 apm 域`
 
 ![](2-2-003.png)
 
-画像はイメージですので、コンパートメントOCIDはご自身の環境に合わせて読み替えてください。 
+图片是图片，请根据自己的环境更换隔间OCID。
 
-「作成」をクリックします。  
+单击创建。
 
-これで、ポリシーの設定は完了です。  
+策略配置现已完成。
 
-### 2-3 APMドメインの作成
+### 2-3 创建APM域
 
-ここでは、APMドメインの作成を行います。  
+在这里，我们将创建一个 APM 域。
 
-OCIコンソールのハンバーガーメニューを開き、「監視および管理」から「アプリケーション・パフォーマンス・モニタリング」カテゴリの「管理」を選択します。  
+打开 OCI 控制台汉堡包菜单，然后从“监视和管理”中的“应用程序性能监视”类别中选择“管理”。
 
 ![](2-3-001.png)
 
-「APMドメインの作成」をクリックします。  
+单击创建 APM 域。
 
 ![](2-3-002.png)
 
-以下の情報を入力します。 
+输入以下信息。
 
-key|value
+键|值
 -|-
-名前| oke-handson-apm
-説明| oke-handson-apm
+名称 | oke-handson-apm
+描述 | oke-handson-apm
 
-**集合ハンズオンで参加されている皆様へ**  
-APMドメイン名は重複が許容されないため、集合ハンズオンなどで同一環境を複数名でご利用されている皆様はAPMドメイン名に自分のイニシャルや好きな複数桁の番号などを付与し、重複しないようにAPMドメイン名を設定してください。  
-{: .notice--warning}
+**致所有参加集体实践会议的人**
+不允许重复的APM域名，因此如果您使用同一环境多人集体动手等，请在APM域名中添加您的姓名首字母或您选择的多位数以避免重复设置。您的 APM 域名。
+{: .notice--警告}
 
-「作成」をクリックします。
+单击创建。
 
 ![](2-3-003.png)
 
-ドメインが「作成中」のステータスになるので、「アクティブ」になるまで待機します。
+该域的状态为“正在创建”，等待它变为“活动”。
 
 ![](2-3-004.png)
 
-ドメインが「アクティブ」になったら、ドメイン名の箇所をクリックします。
+域处于“活动”状态后，单击域名。
 
-以下、「APMドメイン情報」をコピーし、エディタなどに記録しておきます。  
+复制下面的“APM域名信息”，用编辑器记录下来。
 
-項目|用途
+物品|使用
 -|-
-データ・アップロード・エンドポイント|トレース情報やメトリクス情報をアップロードするエンドポイント
-「データ・キー」の「プライベート」キー |トレース情報やメトリクス情報をアップロードするためのプライベートキー。主にAPMサーバー・エージェント(サーバサイド側のアプリケーション側)で利用
-「データ・キー」の「パブリック」キー|トレース情報やメトリクス情報をアップロードするためのプライベートキー。主にAPMブラウザ・エージェント(ブラウザ側のアプリケーション側)で利用
+Data Upload Endpoint | 上传trace和metrics信息的端点
+“数据密钥”的“私钥”|用于上传跟踪和指标信息的私钥。主要由APM服务器代理使用（服务器端的应用程序端）
+“数据密钥”的“公钥”| 用于上传跟踪和指标信息的私钥。主要用于APM浏览器代理（浏览器端应用程序端）
 
-この値は、アプリケーション側からトレーシング情報をAPMにアップロードする際のエンドポイントとその際に利用するキーになり、後ほど利用します。
+该值将作为应用端向APM上传跟踪信息时使用的endpoint和key，后面会用到。
 
 ![](2-3-005.png)
 ![](2-3-006.png)
 
-これで、APMドメインの作成は完了です。
+APM 域创建现已完成。
 
-### 2-4 サンプルアプリケーションへのAPM設定(ブラウザ側)とコンテナイメージ作成
+### 2-4 示例应用程序（浏览器端）和容器映像创建的 APM 设置
 
-サンプルアプリケーションのフロントエンドアプリケーションにAPMのエンドポイントとパブリックキーを設定します。
+在示例应用程序的前端应用程序中设置 APM 端点和公钥。
 
-この設定を行うことで、フロントエンドアプリケーションからのトレース情報をAPM側で取得できるようになります。  
-その後、ビルドしてコンテナイメージを作成します。
+通过此设置，您将能够从 APM 端的前端应用程序中获取跟踪信息。
+然后构建以创建容器镜像。
 
 ```sh
 vim code-at-customer-handson/olympic_frontend_apm/src/main/resources/web/index.html
@@ -421,44 +421,44 @@ vim code-at-customer-handson/olympic_frontend_apm/src/main/resources/web/index.h
       window.apmrum = (window.apmrum || {}); 
       window.apmrum.serviceName='oke-helidon-demo-frontend-UI';
       window.apmrum.webApplication='OracleJetApp';
-      window.apmrum.ociDataUploadEndpoint='https://xxxxxxxxxxxxxxx.apm-agt.us-ashburn-1.oci.oraclecloud.com';　#変更箇所1
-      window.apmrum.OracleAPMPublicDataKey='<your-public-data-key>';　#変更箇所2
+      window.apmrum.ociDataUploadEndpoint='https://xxxxxxxxxxxxxxx.apm-agt.us-ashburn-1.oci.oraclecloud.com';　#变更 1
+      window.apmrum.OracleAPMPublicDataKey='<your-public-data-key>';　#变更2
       window.apmrum.traceSupportingEndpoints =  [
         { headers: [ 'APM' ], hostPattern: '.*' },
       ]; 
     </script>
-    <script async crossorigin="anonymous" src="https://xxxxxxxxxxxxxxx.apm-agt.us-ashburn-1.oci.oraclecloud.com/static/jslib/apmrum.min.js"></script> #変更箇所3
+    <script async crossorigin="anonymous" src="https://xxxxxxxxxxxxxxx.apm-agt.us-ashburn-1.oci.oraclecloud.com/static/jslib/apmrum.min.js"></script> #变更3
 ~~~
 ```
 
-変更箇所|変更内容|備考
+变更位置|变更|备注
 -|-
-変更箇所1 | [2-3 APMドメインの作成](#2-3-apmドメインの作成)で記録した「データ・アップロード・エンドポイント」|
-変更箇所2|[2-3 APMドメインの作成](#2-3-apmドメインの作成)で記録したデータ・キーの「パブリック」キー|**プライベートキーではなく、パブリックキーとなるので注意してください。**
-変更箇所3|staticより前の部分`https～.com`までを[2-3 APMドメインの作成](#2-3-apmドメインの作成)で記録した「データ・アップロード・エンドポイント」を設定します。
+变更1 | [2-3 APM domain creation] (#2-3-apm domain creation)中记录的“Data upload endpoint” |
+变化2|【2-3创建APM域】（#2-3-创建apm域）中记录的数据密钥的“公钥”|** 注意，这是公钥，不是私钥。请。 **
+变化3| 将[2-3 APM domain creation](#2-3-apm domain creation)中记录的“数据上传端点”从static之前的`https to .com`设置为做。
 
-更新後、「:wq」でエディタを保存終了します。
+更新后，用“:wq”保存并退出编辑器。
 
-ディレクトリを移動後、ビルドしてコンテナイメージを作成します。
+移动目录后，构建以创建容器镜像。
 
 ```sh
 cd code-at-customer-handson/olympic_frontend_apm
 ```
 
-`your-object-storage-namespace` は、事前に取得したオブジェクト・ストレージ・ネームスペースを指定します。
+`your-object-storage-namespace` 指定先前获得的对象存储命名空间。
 
-**Ashburn(us-ashburn-1)リージョンではない参加者の皆様**  
-リージョンが、アッシュバーン(us-ashburn-1)ではない場合、環境に合わせて「iad.ocir.io」の部分も変更してください。
-各リージョンのOCIRエンドポイントは[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryprerequisites.htm)で確認できます。  
-ここでは、以降も「iad.ocir.io」で進めます。
+**对于不在 Ashburn(us-ashburn-1) 地区的参与者**
+如果区域不是Ashburn（us-ashburn-1），请根据您的环境更改“iad.ocir.io”部分。
+可以在[此处](https://docs.oracle.com/en-us/iaas/Content/Registry/Concepts/registryprerequisites.htm) 找到每个区域的 OCIR 端点。
+从现在开始，我们将继续“iad.ocir.io”。
 {: .notice--warning}
 
-**集合ハンズオンでご参加の皆様**  
-集合ハンズオンなど同一環境を複数人で利用されている場合は、[手順1-3](#1-3-ocirのセットアップ)で作成したレポジトリ名をそれぞれ変更しています。  
-リポジトリ名を自身で設定した名前に合わせてください。
+**所有参加集体动手课程的人**
+如果多人使用相同的环境，例如一组动手操作，请更改在[步骤 1-3]（#1-3-ocir 设置）中创建的存储库名称。
+将存储库名称与您自己设置的名称相匹配。
 {: .notice--warning}
 
-数分後に Successfully の表示がされればビルドは成功です。
+几分钟后显示Successfully则表示构建成功。
 
 ```sh
 docker image build -t iad.ocir.io/<your-object-storage-namespace>/frontend-app-apm .
@@ -472,15 +472,14 @@ Successfully built b3bd22ffd681
 Successfully tagged iad.ocir.io/<your-object-storage-namespace>/frontend-app-apm:latest
 ```
 
-OCIRにログインします。「iad.ocir.io」エンドポイントについては、ビルド時と同様、環境に合わせてください。
+登录 OCIR。 对于“iad.ocir.io”端点，请匹配您的环境，就像构建时一样。
 
-「Username」と「Password」は、事前に確認した以下を入力します。
+对于“用户名”和“密码”，请输入您事先确认的以下内容。
 
-入力項目|入力内容|取得元
+输入项|输入内容|获取来源
 -|-
-Username | `<オブジェクト・ストレージ・ネームスペース>/<ユーザ名>`|[手順1-3](#1-3-ocirのセットアップ)で作成した内容
-Password|`認証トークン` |[手順1-3](#1-3-ocirのセットアップ)で作成した内容
-
+用户名 | `<Object Storage Namespace>/<User Name>`|在 [Step 1-3] (#1-3-ocir setup) 中创建的内容
+Password|`Authentication token`|【Step 1-3】中创建的内容（#1-3-ocir setup）
 ```sh
 docker login iad.ocir.io
 ```
@@ -488,8 +487,8 @@ docker login iad.ocir.io
 ***命令结果***
 
 ```sh
-Username: <オブジェクト・ストレージ・ネームスペース>/<ユーザ名>
-Password: 認証トークン
+Username: <对象存储命名空间>/<用户名>
+Password: 身份验证令牌
 WARNING! Your password will be stored unencrypted in /home/xxxxx/.docker/config.json.
 Configure a credential helper to remove this warning. See
 https://docs.docker.com/engine/reference/commandline/login/#credentials-store
@@ -497,18 +496,18 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 ```
 
-作成したコンテナイメージをプッシュします。  
-`your-object-storage-namespace` は、事前に取得したオブジェクト・ストレージ・ネームスペースを指定します。
+推送创建的容器镜像。
+`your-object-storage-namespace` 指定先前获得的对象存储命名空间。
 
-**Ashburn(us-ashburn-1)リージョンではない参加者の皆様**  
-リージョンが、アッシュバーン(us-ashburn-1)ではない場合、環境に合わせて「iad.ocir.io」の部分も変更してください。
-各リージョンのOCIRエンドポイントは[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryprerequisites.htm)で確認できます。  
-ここでは、以降も「iad.ocir.io」で進めます。
+**对于不在 Ashburn(us-ashburn-1) 地区的参与者**
+如果区域不是Ashburn（us-ashburn-1），请根据您的环境更改“iad.ocir.io”部分。
+可以在[此处](https://docs.oracle.com/en-us/iaas/Content/Registry/Concepts/registryprerequisites.htm) 找到每个区域的 OCIR 端点。
+从现在开始，我们将继续“iad.ocir.io”。
 {: .notice--warning}
 
-**集合ハンズオンでご参加の皆様**  
-集合ハンズオンなど同一環境を複数人で利用されている場合は、[手順1-3](#1-3-ocirのセットアップ)で作成したレポジトリ名をそれぞれ変更しています。  
-リポジトリ名を自身で設定した名前に合わせてください。
+**所有参加集体动手课程的人**
+如果多人使用相同的环境，例如一组动手操作，请更改在[步骤 1-3]（#1-3-ocir 设置）中创建的存储库名称。
+将存储库名称与您自己设置的名称相匹配。
 {: .notice--warning}
 
 ```sh
@@ -528,11 +527,9 @@ aa321ebc98e2: Pushed
 7d0ebbe3f5d2: Pushed 
 latest: digest: sha256:5e52a9d52d52b18a58ec71972db95980b43dcfe9fc78c7a83502b76c50d971d5 size: 1789
 ```
+接下来，编辑 Mainifest 以使用推送的容器映像。
 
-次に、プッシュしたコンテナイメージを利用するように、Mainifestを編集します。  
-
-Manifestのあるディレクトリに移動します。  
-
+转到带有 Manifest 的目录。
 ```sh
 cd ~
 ```
@@ -541,7 +538,7 @@ cd ~
 cd code-at-customer-handson/k8s/app/for-oci-apm
 ```
 
-フロントエンドアプリケーションのManifestをvimで開きます。
+在 vim 中打开前端应用程序的清单。
 
 ```sh
 vim olympic_frontend.yaml
@@ -569,7 +566,7 @@ spec:
     spec:
       containers:
       - name: frontend-app
-        image: iad.ocir.io/orasejapan/frontend-app-apm #変更箇所
+        image: iad.ocir.io/orasejapan/frontend-app-apm #变更
         ports:
         - containerPort: 8082
         env:
@@ -586,24 +583,23 @@ spec:
 ~~~
 ```
 
-以下の項目を変更します。
+更改以下项目。
 
-変更前|変更内容
+之前 | 变更
 -|-
-iad.ocir.io/orasejapan/frontend-app-apm(22行目) | iad.ocir.io/＜your-object-storage-namespace＞/frontend-app-apm
+iad.ocir.io/orasejapan/frontend-app-apm（第 22 行）| iad.ocir.io/<your-object-storage-namespace>/frontend-app-apm
 
-**Ashburn(us-ashburn-1)リージョンではない参加者の皆様**  
-リージョンが、アッシュバーン(us-ashburn-1)ではない場合、環境に合わせて「iad.ocir.io」の部分も変更してください。
-各リージョンのOCIRエンドポイントは[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryprerequisites.htm)で確認できます。  
-ここでは、以降も「iad.ocir.io」で進めます。
+**对于不在 Ashburn(us-ashburn-1) 地区的参与者**
+如果区域不是Ashburn（us-ashburn-1），请根据您的环境更改“iad.ocir.io”部分。
+可以在[此处](https://docs.oracle.com/en-us/iaas/Content/Registry/Concepts/registryprerequisites.htm) 找到每个区域的 OCIR 端点。
+从现在开始，我们将继续“iad.ocir.io”。
+{: .notice--warning}
+**所有参加集体动手课程的人**
+如果多人使用相同的环境，例如一组动手操作，请更改在[步骤 1-3]（#1-3-ocir 设置）中创建的存储库名称。
+将存储库名称与您自己设置的名称相匹配。
 {: .notice--warning}
 
-**集合ハンズオンでご参加の皆様**  
-集合ハンズオンなど同一環境を複数人で利用されている場合は、[手順1-3](#1-3-ocirのセットアップ)で作成したレポジトリ名をそれぞれ変更しています。  
-リポジトリ名を自身で設定した名前に合わせてください。
-{: .notice--warning}
-
-以下のようになります。
+它将如下所示。
 
 ```yaml
 ~~~
@@ -637,29 +633,29 @@ spec:
               key: private-key
 ```
 
-編集後、「:wq」で内容を保存します。
+编辑完成后用“:wq”保存内容。
 
-以上で、サンプルアプリケーションへのAPM設定(ブラウザ側)とコンテナイメージ作成は完了です。
+这完成了示例应用程序的 APM 设置（浏览器端）和容器映像创建。
 
-### 2-5 サンプルアプリケーションへのAPM設定(サーバサイド側)
+### 2-5 示例应用程序的 APM 设置（服务器端）
 
-次に、サンプルアプリケーションへのAPM設定(サーバサイド側)がAPMに対してトレース情報やメトリクスをアップロードできるようにエンドポイントとプライベート・データキーをSecretとして設定します。  
-Cloud Shellから以下のコマンドを実行します。  
-`APMエンドポイント`と`「データ・キー」の「プライベート」キー`はそれぞれ以下の値に差し替えます。  
+接下来，将端点和私有数据密钥设置为机密，以便示例应用程序的 APM 配置（服务器端）可以将跟踪信息和指标上传到 APM。
+从 Cloud Shell 运行以下命令。
+将`Data Key`中的`APM Endpoint`和`private'key分别替换为以下值。
 
-**Secretについて**  
-Secretリソースについては[こちら](https://kubernetes.io/docs/concepts/configuration/secret/)をご確認ください。
+**关于密钥**
+请参阅 [此处](https://kubernetes.io/docs/concepts/configuration/secret/) 获取 Secret 资源。
 {: .notice--info}
 
-項目|設定内容|備考
+项目|设置|备注
 -|-
-APMエンドポイント|[2-3 APMドメインの作成](#2-3-apmドメインの作成)で記録した「データ・アップロード・エンドポイント」|
-「データ・キー」の「プライベート」キー|[2-3 APMドメインの作成](#2-3-apmドメインの作成)で記録したデータ・キーの「プライベート」キー|**パブリックキーではなく、プライベートキーとなるので注意してください。**
+APM端点|【2-3创建APM域】中记录的“数据上传端点”（#2-3-创建apm域）|
+“Data Key”的“Private” key | [2-3 Creating APM Domain] (#2-3-Creating apm Domain)中记录的data key的“Private” key |**不是公钥，请注意这是一个私钥。 **
 
 ```sh
 kubectl create secret generic apm-secret \
---from-literal=endpoint=<APMエンドポイント> \
---from-literal=private-key=<「データ・キー」の「プライベート」キー>
+--from-literal=endpoint=<APM 端点>\
+--from-literal=private-key=<数据密钥中的私钥>
 ```
 
 ***命令结果***
@@ -668,15 +664,15 @@ kubectl create secret generic apm-secret \
 secret/apm-secret created
 ```
 
-各アプリケーションでは、このSecret(`apm-secret`)を参照する設定を入れているので、設定したエンドポイントとデータキーを元にAPMにアプリケーションのトレース情報やメトリクスをアップロード可能になります。
-詳細は[5.今回利用したサンプルアプリケーションの補足説明](#5今回利用したサンプルアプリケーションの補足説明)をご確認ください。
+每个应用程序都有一个引用此秘密的设置（`apm-secret`），因此您可以根据设置的端点和数据密钥将应用程序跟踪信息和指标上传到 APM。
+详情请参考【5.本次使用示例应用补充说明】（#5 本次使用示例应用补充说明）。
 
-これでサンプルアプリケーションへのAPM設定(サーバサイド側)は完了です。  
+这样就完成了示例应用程序的 APM 设置（服务器端）。
 
-{% capture notice %}**HelidonアプリケーションでのOCI APMの利用**  
-今回はHelidonを利用したアプリケーションですが、[HelidonにはOCI APM専用のエージェント](https://docs.oracle.com/ja-jp/iaas/application-performance-monitoring/doc/use-apm-tracer-helidon.html)が用意されています。  
-基本的には、`pom.xml`に以下の依存関係を追加するだけで利用可能です。(アプリケーション側の変更は必要ありません)  
-また、必要に応じて`src/main/resources/META-INF/microprofile-config.properties`に設定値を追加します。  
+{% capture notice %}**将 OCI APM 与 Helidon 应用程序结合使用**
+这次，我们将使用 Helidon 作为应用程序，但提供了 [Helidon 是一个专用于 OCI APM 的代理] -helidon.html)。
+基本上，您可以通过将以下依赖项添加到 `pom.xml` 来使用它。 （无需更改应用程序端）
+另外，根据需要将配置值添加到`src/main/resources/META-INF/microprofile-config.properties`。
 
   ```xml
         <dependency>
@@ -700,10 +696,10 @@ secret/apm-secret created
     </repositories>
   ```
 
-  今回、`microprofile-config.properties`については以下のように設定しています。(フロントエンドアプリケーションの場合)
+这次，“microprofile-config.properties”设置如下。 （对于前端应用程序）
 
   ```yaml
-  # OCI APM関連
+  #OCI APM相关
   tracing.enabled=true
   tracing.service=oke-helidon-demo-frontend-service
   tracing.name="frontend-helidon-service"
@@ -713,17 +709,16 @@ secret/apm-secret created
   {{ notice | markdownify }}
 </div>
 
-**既存ZipkinプラットフォームでのOCI APMの利用**  
-OCI APMはZipkin互換にもなっているので、既存のZipkinベースのAPMプラットフォームをOCI APMで利用して頂くことも可能です。  
-詳細については[こちら](https://docs.oracle.com/ja-jp/iaas/application-performance-monitoring/doc/configure-open-source-tracing-systems.html)をご確認ください。
+**在现有 Zipkin 平台上使用 OCI APM**
+OCI APM 还与 Zipkin 兼容，因此现有的基于 Zipkin 的 APM 平台可以与 OCI APM 一起使用。
+请查看[此处](https://docs.oracle.com/en-us/iaas/application-performance-monitoring/doc/configure-open-source-tracing-systems.html)了解详细信息。
 {: .notice--info}
 
-### 2-6 OCI APMでのトレーシング
+### 2-6 OCI APM 中的跟踪
 
-いよいよ、OCI APMを利用したトレーシングを実施します。  
+最后，我们将使用 OCI APM 执行跟踪。
 
-再度、サンプルアプリケーションをデプロイします。  
-
+再次部署示例应用程序。
 ```sh
 cd ~
 ```
@@ -749,7 +744,7 @@ deployment.apps/frontend-app created
 service/frontend-app created
 ```
 
-アプリケーションにアクセスします。  
+访问您的应用程序。
 
 ```sh
 kubectl get service frontend-app
@@ -762,232 +757,232 @@ NAME           TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)        AGE
 frontend-app   LoadBalancer   10.96.220.188   193.122.***.***   80:31664/TCP   41s
 ```
 
-上記の場合は、frontend-app Serviceの`EXTERNAL-IP`である`193.122.***.***`がエンドポイントになります。
+在上述情况下，前端应用服务的 `193.122.***.***` 即 `EXTERNAL-IP` 将是端点。
 
-この場合は、以下のURLにアクセスします。  
+在这种情况下，访问以下 URL。
 `http://193.122.***.***`
 
 ![](2-6-008.png)
 
-何度かアクセスしたのちに、トレース情報をOCI APMから確認します。  
+访问几次后查看 OCI APM 的跟踪信息。
 
-OCIコンソールのハンバーガーメニューを開き、「監視および管理」から「アプリケーション・パフォーマンス・モニタリング」カテゴリの「トレース・エクスプローラー」を選択します。  
+打开 OCI 控制台汉堡包菜单，然后从“监视和管理”中的“应用程序性能监视”类别中选择“跟踪资源管理器”。
 
 ![](2-6-001.png)
 
-画面上部にある「APMドメイン」から、[6-2 APMドメインの作成](#6-2-apmドメインの作成)で作成したAPMドメインを選択します。  
+从屏幕顶部的“APM Domain”中，选择在[6-2 Create APM Domain]中创建的APM域（#6-2-Create apm Domain）。
 
 ![](2-6-002.png)
 
-右側にある検索条件を「過去15分間」に選択し、「実行」ボタンをクリックします。  
+在右侧选择“最近 15 分钟”作为搜索条件，然后单击“开始”按钮。
 
 ![](2-6-003.png)
 
-複数のトレース情報が表示されますので、「完了」と表示され、`Spans`が26となっている情報をクリックします。  
+会显示多条trace信息，点击显示“Completed”且`Spans`为26的信息。
 
 ![](2-6-004.png)
 
-以下のような詳細なトレース情報を取得できます。
+您可以获得详细的跟踪信息，例如：
 
 ![](2-6-005.png)
 ![](2-6-006.png)
 
-赤枠の「oke-helidon-demo-frontend-UI: Ajax /medalist」をクリックすると、詳細なクライアント情報を取得できます。
+点击红框中的“oke-helidon-demo-frontend-UI: Ajax /medalist”可以获取详细的客户端信息。
 
 ![](2-6-007.png)
 
-終了する場合は、「閉じる」ボタンをクリックします。
+要完成，请单击“关闭”按钮。
 
-以上で、OCI APMを利用したトレーシングは完了です。  
+这样就完成了使用 OCI APM 的跟踪。
 
-### 2-7 OCI APMでのアプリケーションサーバのメトリクス監視
+### 2-7 使用 OCI APM 监控应用程序服务器指标
 
-ここでは、OCI APMで監視できるアプリケーションサーバのメトリクスについて見ていきたいと思います。  
+现在让我们看一下可以使用 OCI APM 监视的应用程序服务器指标。
 
-画面左上のプルダウンから「ダッシュボード」をクリックします。  
+从屏幕左上角的下拉菜单中单击“仪表板”。
 
 ![](2-7-001.png)
 
-ダッシュボードから「アプリケーション・サーバー」をクリックします。  
+单击仪表板中的应用程序服务器。
 
 ![](2-7-002.png)
 
-左上に「アプリケーションサーバを選択します」というプルダウンがあるので、任意のアプリケーションサーバ(実体はHelidonのPod)を選択します。  
+由于左上角有一个下拉“Select an application server”，选择任意一个应用服务器（实际上是Helidon的Pod）。
 
-![](2-7-003.png) 
+![](2-7-003.png)
 
-アプリケーションサーバ(今回はHelidon)のメトリクス情報が表示されます。  
+显示应用程序服务器（在本例中为 helidon）的指标信息。
 
 ![](2-7-004.png)
 
-ここで取得したメトリクスをもとに、OCI MonitoringやOCI Notificationsと連携すると、一定の閾値を超過した際にアラーム通知を行うこともできます。  
+根据此处获取的指标，通过与OCI Monitoring或OCI Notifications联动，可以在超过某个阈值时发出告警通知。
 
-**OCI MonitoringとOCI Notificationsについて**  
-OCIにはリソース監視を行うOCI Monitoringがあり、OCI Notificationsと連携するとEmailやSlackなどに対してアラーム通知を行うことができます。  
-これは、[4.Monitoring & Notifications](#4monitoring--notifications)で実施します。
-{: .notice--info}
+**关于OCI监控和OCI通知**
+OCI有监控资源的OCI Monitoring，与OCI Notifications联动后，可以将告警通知发送到email、Slack等。
+这是在 [4.Monitoring & Notifications](#4monitoring--notifications) 中完成的。
+{: .notice--信息}
 
-このように、OCI APMを利用すると詳細なトレーシングの取得と確認およびアプリケーションサーバのメトリクス監視を行うことができます。  
+这样，OCI APM 可用于获取和审查详细的跟踪和监控应用程序服务器指标。
 
-### 2-8 OCI APMでのリアルユーザモニタリング(RUM)
+### 2-8 使用 OCI APM 进行真实用户监控 (RUM)
 
-ここでは、OCI APMのAPM Browser Agentを利用したリアルユーザモニタリング(RUM)について見ていきたいと思います。
+在这里，我想看看使用 OCI APM 的 APM 浏览器代理的真实用户监控 (RUM)。
 
-リアルユーザモニタリング(RUM)は、Webページのパフォーマンスを実ユーザのPCもしくはスマートフォンからのアクセスを元に計測・分析するものです。  
+真实用户监控 (RUM) 根据实际用户 PC 或智能手机的访问来测量和分析网页的性能。
 
-**フロントエンドのパフォーマンス・モニタリングについて**  
-フロントエンドのパフォーマンス・モニタリングには、「リアルユーザモニタリング(RUM)」と「合成モニタリング(Synthetic Monitoring)」の2種類があります。  
-この2種類のパフォーマンス・モニタリングは補完的な関係にあり、通常は併用をすることで効果的なモニタリングが可能となります。
-OCI APMでは、この2種類のパフォーマンス・モニタリングをいずれも利用可能です。
-{: .notice--info}
+**用于前端性能监控**
+前端性能监控有两种类型：真实用户监控（RUM）和综合监控。
+这两种类型的性能监控是互补的，通常一起使用以进行有效监控。
+OCI APM 中提供了这两种类型的性能监控。
+{: .notice--信息}
 
-画面左上のプルダウンから「ダッシュボード」をクリックします。  
+从屏幕左上角的下拉菜单中单击“仪表板”。
 
 ![](2-7-001.png)
 
-ダッシュボードから「リアル・ユーザー・モニタリング」をクリックします。  
+单击仪表板中的真实用户监控。
 
 ![](2-8-001.png)
 
-左上に「Webアプリケーションを選択します」というプルダウンがあるので、`OracleJetApp`を選択します。  
+由于左上角有一个下拉“Select a Web application”，所以选择`OracleJetApp`。
 
 ![](2-8-002.png)
 
-**Webアプリケーションについて**  
-今回のハンズオン環境では、`OracleJetApp`と`All Web Applications`という2種類のWebアプリケーションが表示されていますが、今回のサンプルアプリケーションは1つのみなので、どちらを選択しても表示される情報に変わりはありません。
-{: .notice--info}
+**关于网络应用**
+在这个实践环境中，显示了两种类型的 Web 应用程序：`OracleJetApp` 和 `All Web Applications`。没有。
+{: .notice--信息}
 
-お手元に別のブラウザやスマートフォンなどがある方は、そのブラウザや端末からサンプルアプリケーションにアクセス後に右上の検索条件を「過去15分間」に再設定してみてください。
+如果您手头有其他浏览器或智能手机，请在从该浏览器或设备访问示例应用程序后，尝试将右上角的搜索条件重置为“最近 15 分钟”。
 ![](2-8-004.png)
 
-以下のようなページが表示され、アクセス元のジオロケーションやApdex、ブラウザの種類、OSの情報などが表示されていることが確認できます。  
+显示如下页面，可以确认显示了访问源的地理位置和Apdex、浏览器类型、操作系统信息等。
 ![](2-8-003.png)
 
-**Apdexについて**  
-リアル・ユーザー・モニタリングの項目にある`Apdex`とは、Webアプリケーションやサービスのレスポンスタイムについて、ユーザー満足度を計測するための業界標準の指標です。  
-Satisfiedを1点、Toleratingを0.5点、Frustratedを0点としてその平均値を算出し、最高は1点最低は0点として表現されます。  
-詳細は[こちら](https://www.apdex.org/index.php/documents/)をご確認ください。  
-この指標はSLA(サービス品質保証)にも用いられています。
-{: .notice--info}
+**关于Apdex**
+真实用户监控项中的“Apdex”是衡量用户对网络应用和服务响应时间满意度的行业标准指标。
+满意为1分，可以忍受为0.5分，沮丧为0分，取平均值，最高为1分，最低为0分。
+请查看[此处](https://www.apdex.org/index.php/documents/)了解详情。
+该索引也用于 SLA（服务级别协议）。
+{: .notice--信息}
 
-このように、OCI APMでは、APM Browser Agentを利用したリアルユーザモニタリング(RUM)を行うことができます。  
+通过这种方式，OCI APM 允许使用 APM 浏览器代理进行真实用户监控 (RUM)。
 
-### 2-9 OCI APMでの合成モニタリング(Synthetic Monitoring)
+### 2-9 OCI APM中的综合监控
 
-ここでは、OCI APMを利用した合成モニタリング(Synthetic Monitoring)について見ていきたいと思います。
+在这里，我想看看使用 OCI APM 的综合监控。
 
-合成モニタリング(Synthetic Monitoring)は、地理的に分散したエージェントを使用して、能動的に対象のWebサイトにアクセスして監視や計測する手法です。  
+综合监控是一种利用地理分布的代理主动访问、监控和测量目标网站的技术。
 
-左上のプルダウンから「合成モニタリング」をクリックします。  
+从左上角的下拉菜单中单击“综合监控”。
 
 ![](2-9-001.png)
 
-「モニターの作成」をクリックします。ここで、合成モニタリングを実施するためのモニター・エージェントを作成します。  
+单击创建监视器。现在创建一个监控代理来执行综合监控。
 
 ![](2-9-007.png)
 
-以下の項目を入力し、「次」をクリックします。  
+输入以下项目，然后单击“下一步”。
 
 ![](2-9-002.png)
 
-入力項目|入力内容|取得元
+输入项|输入内容|获取来源
 -|-
-名前 | oke-handson-apm
-タイプ|Browser
-ベースURL|[2-6 OCI APMでのトレーシング](#2-6-oci-apmでのトレーシング)で確認したサンプルアプリケーションのIPアドレス
+名称 | oke-handson-apm
+类型|浏览器
+[2-6 Tracing with OCI APM](#2-6-oci-apm tracing) 中确认的示例应用程序的基本 URL|IP 地址
 
-以下の項目を入力し、「次」をクリックします。
+输入以下项目，然后单击“下一步”。
 
 ![](2-9-003.png)
 
-入力項目|入力内容|取得元
+输入项|输入内容|获取来源
 -|-
-バンテージ・ポイント | Japan East(Tokyo) / US East(Ashburn)
-間隔|1回実行
+有利位置 | 日本东部（东京）/美国东部（阿什本）
+间隔|运行一次
 
-**バンテージ・ポイントについて**  
-ここで設定する`バンテージ・ポイント`とは、モニタリングテストを実行する地理的な位置を指します。  
-{: .notice--info}
+**关于有利点**
+这里设置的“有利位置”是指将要进行监控测试的地理位置。
+{: .notice--信息}
 
-**間隔について**  
-一定間隔で自動的にモニタリングテストを実行したい場合は、何分間隔で実行するかを指定できます。
-{: .notice--info}
+**关于间距**
+如果您希望监控测试定期自动运行，您可以指定以分钟为单位的时间间隔。
+{: .notice--信息}
 
-そのまま「次」をクリックします。  
+点击下一步。
 
 ![](2-9-004.png)
 
-そのまま「作成」をクリックします。  
+只需单击“创建”。
 
 ![](2-9-005.png)
 
-以下の画面が表示されます。  
+将出现以下屏幕。
 
 ![](2-9-006.png)
 
-それでは、モニタリングテストを実行してみます。  
+现在让我们运行监控测试。
 
-「他のアクション」から「1回実行」をクリックします。  
+单击“其他操作”中的“运行一次”。
 
 ![](2-9-008.png)
 
-実行が完了すると、画面左側の「リソース」にある「履歴」から実行結果が確認できます。  
+执行完成后，您可以在屏幕左侧的“资源”中的“历史记录”中查看执行结果。
 
 ![](2-9-009.png)
 
-`バンテージ・ポイント`「Japan East (Tokyo)」の右側にあるケバブメニューから「HARの表示」をクリックします。  
+从“Vantage Point”“Japan East (Tokyo)”右侧的烤肉串菜单中点击“View HAR”。
 
 ![](2-9-011.png)
 
-以下のようにモニタリングテストの実行結果が表示されます。
+监控测试的执行结果显示如下。
 
 ![](2-9-010.png)
 
-このように、OCI APMでは合成モニタリング(Synthetic Monitoring)を行うことができます。  
+因此，OCI APM 允许综合监控。
 
-3.Logging
----------------------------------
+3.日志记录
+----------------------------------
 
-Loggingサービスのセットアップを行って、ワーカーノードのアプリケーションログとAPIサーバの監査ログを確認します。
+设置日志记录服务以检查工作节点应用程序日志和 API 服务器审计日志。
 
 ![](3-1-000.png)
 
-Oracle Cloud Infrastructure（OCI）Loggingサービスは、スタック全体からのログの取り込み、管理および分析を簡素化する、完全に管理されたクラウドネイティブの分散ロギング・プラットフォームです。インフラストラクチャ、アプリケーション、監査、およびデータベースのログが1つのビューで管理できます。
+Oracle 云基础设施 (OCI) 日志记录服务是一个完全托管的云原生分布式日志记录平台，可简化整个堆栈中日志的摄取、管理和分析。在一个视图中管理基础架构、应用程序、审计和数据库日志。
 
-実際に、構築したOKEクラスタ内のワーカー・ノードのコンピュート・インスタンスで実行されているアプリケーションのログを表示および検索します。
+查看和搜索您刚刚构建的 OKE 集群中工作节点的计算实例上运行的应用程序的日志。
 
-### 3-1 カスタム・ログの設定
+### 3-1 配置自定义日志
 
-OCI Loggingサービスを使用する上で必要となるポリシーを設定します。
+设置使用 OCI 日志记录服务所需的策略。
 
-#### 動的グループの作成
+#### 创建一个动态组
 
-テナントのOICDが必要となるので取得します。
+您将需要租户的 OICD，因此请获取它。
 
-右上にある「プロファイル」アイコンをクリックして、「テナンシ」を選択します。
+单击右上角的配置文件图标并选择租赁。
 
 ![](1-3-006.png)
 
-「OICD」の「コピー」テキストをクリックして、テキストエディタにペーストしておきます。
+单击“OICD”的“复制”文本并将其粘贴到文本编辑器中。
 
 ![](3-1-015.png)
 
-左上のハンバーガーメニューを展開して、「アイデンティティとセキュリティ」から「動的グループ」を選択します。
+展开左上角的汉堡菜单，然后从“身份和安全”中选择“动态组”。
 
 ![](3-1-012.png)
 
-「動的グループの作成」ボタンをクリックします。
+单击创建动态组按钮。
 
 ![](3-1-013.png)
 
-以下を設定します。
+设置以下内容：
 
-入力項目|入力内容
+输入项|输入内容
 -|-
-名前|logging-dynamic-group
-説明|logging-dynamic-group
+名称|记录动态组
+描述|记录动态组
 
-ルールについては以下を設定します。＜your-OCID＞ は事前に取得したOCIDを設定します。
+为规则设置以下内容。 <your-OCID> 设置预先获取的OCID。
 
 ```sh
 instance.compartment.id = '<your-OCID>'
@@ -995,230 +990,230 @@ instance.compartment.id = '<your-OCID>'
 
 ![](3-1-014.png)
 
-#### ポリシー設定
+#### 策略设置
 
-左上のハンバーガーメニューを展開して、「アイデンティティとセキュリティ」から「ポリシー」を選択します。
+展开左上角的汉堡菜单，然后从“身份和安全”中选择“策略”。
 
 ![](3-1-001.png)
 
-「ポリシーの作成」ボタンをクリックします。
+单击创建策略按钮。
 
 ![](3-1-002.png)
 
-以下を設定します。
+设置以下内容：
 
-入力項目|入力内容
+输入项|输入内容
 -|-
-名前|logging
-説明|logging
+名称|记录
+说明|记录
 
-「手動エディタの表示」ボタンを右にスライドします。
+将 Show Manual Editor 按钮滑动到右侧。
 
-以下のポリシーを設定します。
+设置以下策略。
 
-```sh
-allow dynamic-group logging-dynamic-group to use log-content in tenancy
+```嘘
+允许动态组日志动态组在租赁中使用日志内容
 ```
 
 ![](3-1-003.png)
 
-「作成」ボタンをクリックします。
+单击“创建”按钮。
 
 ![](3-1-004.png)
 
-以上で、ポリシーの設定は完了です。
+这样就完成了策略设置。
 
-#### カスタム・ログ設定
+####自定义日志设置
 
-次に、カスタム・ログ設定をします。  
-左上のハンバーガーメニューを展開して、「監視および管理」から「ログ」を選択します。
+接下来，设置您的自定义日志设置。
+展开左上角的汉堡菜单，然后从监控和管理中选择日志。
 
 ![](3-1-005.png)
 
-「カスタム・ログの作成」ボタンをクリックします。
+单击创建自定义日志按钮。
 
 ![](3-1-006.png)
 
-「カスタム・ログ名」に「worker-node」と入力して、「新規グループの作成」をクリックします。
+输入 worker-node 作为 Custom log name，然后单击 Create new group。
 
 ![](3-1-007.png)
 
-「名前」に「handson_log」と入力します。
+输入“handson_log”作为名称。
 
 ![](3-1-011.png)
 
-「作成」ボタンをクリックします。
+单击“创建”按钮。
 
 ![](3-1-004.png)
 
-「カスタム・ログの作成」ボタンをクリックします。
+单击创建自定义日志按钮。
 
 ![](3-1-008.png)
 
-「エージェント構成の作成」において、以下を設定します。
+在创建代理配置中，设置以下内容：
 
-入力項目|入力内容
+输入项|输入内容
 -|-
-構成名 | worker-node  
-説明|worker-node  
-グループ・タイプ|動的グループ  
-グループ|logging-dynamic-group
-入力タイプ|ログ・パス  
-名前の入力|oke_cluster  
-ファイル・パス|/var/log/containers/*
+配置名称 | 工作节点
+描述|工作节点
+群类型|动态群
+组|记录动态组
+输入类型|日志路径
+输入名称|oke_cluster
+文件路径|/var/log/containers/*
 
 ![](3-1-009.png)
 
-「カスタム・ログの作成」ボタンをクリックします。
+单击创建自定义日志按钮。
 
 ![](3-1-008.png)
 
-リストに「woker-node」と表示されていることを確認します。  
-※表示されない場合は、他のページに遷移するなどブラウザを更新してください。
+确保在列表中看到“worker-node”。
+*如果没有显示，请更新您的浏览器，例如转换到另一个页面。
 
 ![](3-1-010.png)
 
-### 3-2 ワーカーノード上のアプリケーションログの確認
+### 3-2 检查工作节点上的应用程序日志
 
-設定した「woker-node」を選択して、ログを確認します。
+选择配置好的“worker-node”，查看日志。
 
-「worker-node」をクリックします。
+单击工作节点。
 
 ![](3-2-001.png)
 
-以下のようにワーカーノード上のPod（コンテナ）から出力されるログが表示されます。  
-設定してからログを取得するまで時間を要する場合があります。
+worker节点上的Pod（容器）输出的日志显示如下。
+设置后获取日志可能需要一些时间。
 
 ![](3-2-002.png)
 
-### 3-3 Kubernetes APIサーバーの監査ログの確認
+### 3-3 查看Kubernetes API服务器的审计日志
 
-クラスタで発生するアクティビティの背後にあるコンテキストを理解することは、多くの場合有用です。たとえば、誰がいつ何をしたかを識別することによって、コンプライアンス・チェックを実行したり、セキュリティの異常を識別したり、エラーをトラブルシューティングします。
+了解集群中发生的活动背后的上下文通常很有用。例如，确定谁做了什么以及何时执行合规性检查、识别安全异常并解决错误。
 
-OCIのAuditサービスを利用することで、以下の監査イベントを取得できます。
+通过使用 OCI 审计服务，您可以获得以下审计事件。
 
-- OKEにおける作成や削除などのアクションをクラスタで実行するたびに監査イベントを発行します。
-- Kubernetes APIサーバーにおけるkubectlなどのツールを使用してサービスの作成などの管理上の変更をクラスタに加えるたびに監査イベントを発行します。
+- 每次在集群上执行 OKE 中的创建或删除等操作时，都会发出审计事件。
+- 每当使用 Kubernetes API 服务器中的 kubectl 等工具对集群进行管理更改（例如创建服务）时，都会发出审计事件。
 
-OKEで実行された操作のログを確認します。
+检查在 OKE 中执行的操作的日志。
 
-左上のハンバーガーメニューを展開して、「アイデンティティとセキュリティ」から「監査」を選択します。
+展开左上角的汉堡菜单，然后从“身份和安全”中选择“审计”。
 
 ![](3-3-001.png)
 
-「キーワード」に「ClustersAPI」と入力して、「検索」ボタンをクリックします。
+在“关键字”中输入“ClustersAPI”，然后单击“搜索”按钮。
 
 ![](3-3-002.png)
 
-以下のように表示されます。
+显示如下。
 
 ![](3-3-003.png)
 
-次に、Kubernetes APIサーバーによって実行された操作のログを確認します。
+接下来查看Kubernetes API服务器的操作日志。
 
-「キーワード」に「OKE API Server Admin Access」と入力して、「検索」ボタンをクリックします。
+在“关键字”中输入“OKE API Server Admin Access”，然后单击“搜索”按钮。
 
 ![](3-3-004.png)
 
-以下のように表示されます。
+显示如下。
 
 ![](3-3-005.png)
 
-以上で、Kubernetes APIサーバーの監査ログの確認は完了です。
+这样就完成了对 Kubernetes API 服务器审计日志的检查。
 
-4.Monitoring & Notifications
----------------------------------
+4.监控与通知
+----------------------------------
 
-OCI NotificationsとMonitoringを組み合わせて、アプリケーションのメトリクスが閾値を超えるとアラートが上がり、メール通知する仕組みを構築します。
+通过结合 OCI Notifications 和 Monitoring，当应用程序的指标超过阈值时将发出警报，并构建一个机制来发送电子邮件通知。
 
 ![](4-1-000.png)
 
-### 4-1 Notificationsの設定
+### 4-1 通知设置
 
-左上のハンバーガーメニューをクリックして、「開発者サービス」-「通知」を選択します。
+点击左上角的汉堡菜单，选择“开发者服务”-“通知”。
 
 ![](4-1-001.png)
 
-「トピックの作成」ボタンをクリックします。
+单击创建主题按钮。
 
 ![](4-1-002.png)
 
-**トピックの名前について**  
-トピックの名前はテナンシで一意になります。  
-集合ハンズオンなど複数人で同一環境を共有されている皆様は、`oci-devops-handson-01`や`handson-tn`などの名前のイニシャルを付与し、名前が重複しないようにしてください。
-{: .notice--warning}
+**关于题目名称**
+主题的名称在您的租赁中将是唯一的。
+对于集体动手等多人共享同一环境的，请给出名字的首字母，例如`oci-devops-handson-01`和`handson-tn`，以免重名。
+{: .notice--警告}
 
-「名前」に「oci-notifications」と入力します。
+输入 oci-notifications 作为名称。
 
 ![](4-1-003.png)
 
-「作成」ボタンをクリックします。
+单击“创建”按钮。
 
 ![](4-1-004.png)
 
-「アクティブ」になることを確認します。
+确保它是“活跃的”。
 
 ![](4-1-005.png)
 
-以上でトピックの作成は完了です。
+主题的创建现已完成。
 
-次に、サブスクリプションを作成します。
+接下来，创建订阅。
 
-左メニュー「サブスクリプション」を選択します。
+从左侧菜单中选择“订阅”。
 
 ![](4-1-006.png)
 
-「サブスクリプションの作成」ボタンをクリックします。
+单击创建订阅按钮。
 
 ![](4-1-007.png)
 
-「電子メール」にご自身のメールアドレスを入力します。
+在“电子邮件”中输入您的电子邮件地址。
 
 ![](4-1-008.png)
 
-「作成」ボタンをクリックします。
+单击“创建”按钮。
 
 ![](4-1-009.png)
 
-設定したメールアドレスに、以下の内容のメールが届きます。「Confirm subscription」をクリックして、サブスクリプションを有効にします。
+包含以下内容的电子邮件将发送到您设置的电子邮件地址。单击确认订阅以激活您的订阅。
 
 ![](4-1-010.png)
 
 ![](4-1-011.png)
 
-アクティブになっていることを確認します。  
-アクティブになっていない場合は、ブラウザを更新してください。
+确保它处于活动状态。
+如果浏览器未激活，请刷新它。
 
 ![](4-1-012.png)
 
-以上で、サブスクリプションの作成は完了です。
+这样就完成了订阅的创建。
 
-### 4-2 Monitoringの設定
+### 4-2 监控设置
 
-後続手順で、サンプルアプリケーションに負荷をかけて、JVMのヒープサイズを上げます。  
-ここでは、OCI Monitoringで閾値を設定して、その閾値を超えるとアラームが上がり、OCI Notificationsに設定したメールアドレスに通知されるように設定を行います。
+在后续步骤中，我们将通过加载示例应用程序来增加 JVM 堆大小。
+这里在OCI Monitoring中设置阈值，当超过阈值时会发出警报，并通知OCI Notifications中设置的邮箱地址。
 
-左上のハンバーガーメニューをクリックして、「監視および管理」-「アラーム定義」を選択します。
+点击左上角的汉堡菜单，选择“监控与管理”-“告警定义”。
 
 ![](4-2-001.png)
 
-「アラームの作成」ボタンをクリックします。
+单击创建警报按钮。
 
 ![](4-2-002.png)
 
-「アラームの定義」で以下を設定してます。
+在“报警定义”中设置如下。
 
-入力項目|入力内容
+输入项|输入内容
 -|-
-アラーム名 | heap-size
-メトリック・ネームスペース|oracle_apm_monitoring
-メトリック名|HeapUsed
-統計|Max
-ディメンション名|OkeClusterld
-ディメンション値|表示されるClusterIDを選択
-値|200000000
-トリガ遅延分数| 1
-トピック|oci-notifications
+警报名称 | 堆大小
+指标命名空间|oracle_apm_monitoring
+指标名称|HeapUsed
+统计|最大值
+维度名称|OkeClusterld
+维度值 | 选择显示的 ClusterID
+值|200000000
+触发延迟分钟 | 1
+主题|oci-通知
 
 ![](4-2-003.png)
 
@@ -1226,127 +1221,127 @@ OCI NotificationsとMonitoringを組み合わせて、アプリケーション�
 
 ![](4-2-004.png)
 
-「アラームの保存」ボタンをクリックします。
+单击保存警报按钮。
 
 ![](4-2-005.png)
 
-以上で、「アラーム定義」の設定は完了です。
+这样就完成了“报警定义”的设置。
 
-### 4-3 MonitoringとNotificationsの実践
+### 4-3 练习监控和通知
 
-サンプルアプリケーションに対して、過剰なアクセス負荷をかけます。そして、アラーム発生後にメールが通知されるように設定を行います。
+对示例应用程序施加了过多的访问负载。然后，配置设置，以便在发生警报后通过电子邮件通知您。
 
-最初に、負荷をかけるサーバを構築します。JMeterという負荷テスト用のアプリケーションを利用して環境をセットアップします。
+首先，构建一个服务器来加载。使用名为 JMeter 的负载测试应用程序设置环境。
 
-#### JMeterサーバの構築
+#### 构建 JMeter 服务器
 
-左上のハンバーガーメニューをクリックして、「コンピュート」-「インスタンス」を選択します。
+单击左上角的汉堡菜单并选择“计算”-“实例”。
 
 ![](4-3-001.png)
 
-「インスタンスの作成」ボタンをクリックします。
+单击创建实例按钮。
 
 ![](4-3-002.png)
 
-「名前」に「jmeter」と入力します。
+输入“jmeter”作为名称。
 
 ![](4-3-003.png)
 
-次に、「イメージとシェイプ」の「編集」をクリックします。
+然后单击图像和形状下的编辑。
 
 ![](4-3-004.png)
 
-「Shape」の「Change Shape」ボタンをクリックします。
+单击“形状”中的“更改形状”按钮。
 
 ![](4-3-030.png)
 
-以下の内容に設定をします。
+设定以下内容。
 
-入力項目|入力内容
+输入项|输入内容
 -|-
-シェイプ・シリーズ | AMD
-Shape Name|VM.Standard.E4.Flex
-OCPUの数|2
-メモリー量(GB)|32
+外形系列 | AMD
+形状名称|VM.Standard.E4.Flex
+OCPU数量|2
+内存量 (GB)|32
 
 ![](4-3-005.png)
 
-「シェイプの選択」ボタンをクリックします。
+单击选择形状按钮。
 
 ![](4-3-006.png)
 
-「ネットワーキング」で「編集」をクリックします。
+单击网络下的编辑。
 
 ![](4-3-031.png)
 
-「ネットワーキング」で「新規仮想クラウド・ネットワークの作成」を選択します。
+在网络下，选择创建新的虚拟云网络。
 
 ![](4-3-007.png)
 
-「SSHキーの追加」で「秘密キーの保存」ボタンをクリックして、秘密鍵をダウンロードします。
+单击添加 SSH 密钥中的保存私钥按钮以下载私钥。
 
 ![](4-3-008.png)
 
-「作成」ボタンをクリックします。
+单击“创建”按钮。
 
 ![](4-3-009.png)
 
-ログイン時に必要となる「パブリックIPアドレス」と「ユーザ名」を確認します。  
-※テキストエディタにコピーペーストしておきます。
+确认登录所需的“公网IP地址”和“用户名”。
+*复制并粘贴到文本编辑器中。
 
 ![](4-3-017.png)
 
-#### JMeter環境のセットアップ
+#### 设置JMeter环境
 
-JMeter環境をセットアップするために、作成した仮想マシンにログインします。
+登录到您创建的虚拟机以设置 JMeter 环境。
 
-Cloud Shell アイコンをクリックして、Cloud Shellを起動します。
+单击 Cloud Shell 图标以启动 Cloud Shell。
 
 ![](4-3-010.png)
 
 ![](4-3-011.png)
 
-最初に、ダウンロードした秘密鍵をCloud Shell上にアップロードします。
+首先，将下载的私钥上传到 Cloud Shell。
 
-「Cloud Shell」メニューをクリックします。
+单击 Cloud Shell 菜单。
 
 ![](4-3-012.png)
 
-「アップロード」を選択します。
+选择“上传”。
 
 ![](4-3-013.png)
 
-「コンピュータから選択」をクリックして、ダウンロードした秘密鍵を選択します。
+单击从计算机中选择并选择您下载的私钥。
 
 ![](4-3-014.png)
 
-「アップロード」ボタンをクリックします。
+单击“上传”按钮。
 
 ![](4-3-015.png)
 
-「非表示」をクリックします。
+单击隐藏。
 
 ![](4-3-016.png)
 
-ホームディレクトリに移動します。
+转到您的主目录。
 
 ```sh
 cd ~
 ```
 
-秘密鍵のパーミッションを変更します。
+更改私钥的权限。
 
 ```sh
 chmod 400 ssh-key-xxxx-xx-xx.key
 ```
 
-仮想マシンにログインします。事前に確認したユーザ名とパブリックIPアドレスを利用します。
+登录到您的虚拟机。 使用您事先确认的用户名和公网IP地址。
 
 ```sh
 ssh -i ssh-key-xxxx-xx-xx.key opc@***.***.***.***
 ```
 
-yes と入力します。
+输入是。
 
 ```sh
 FIPS mode initialized
@@ -1356,13 +1351,13 @@ ECDSA key fingerprint is SHA1:z2sVFWORAMBlpeuUgHx5Ou4X1Cg.
 Are you sure you want to continue connecting (yes/no)? yes
 ```
 
-rootユーザにスイッチします。
+切换到根用户。
 
 ```sh
 sudo -i
 ```
 
-java-openjdk をインストールします。
+安装 java-openjdk。
 
 ```sh
 yum install -y java-1.8.0-openjdk
@@ -1375,7 +1370,7 @@ yum install -y java-1.8.0-openjdk
 Complete!
 ```
 
-JMeterをダウンロードします。
+下载 JMeter。
 
 ```sh
 wget https://ftp.jaist.ac.jp/pub/apache/jmeter/binaries/apache-jmeter-5.4.3.tgz
@@ -1396,26 +1391,26 @@ Saving to: ‘apache-jmeter-5.4.3.tgz’
 2022-02-07 08:33:47 (5.49 MB/s) - ‘apache-jmeter-5.4.3.tgz’ saved [70796171/70796171]
 ```
 
-アーカイブを展開します。
+提取存档。
 
 ```sh
 tar -zxvf apache-jmeter-5.4.3.tgz
 ```
 
-作業ディレクトリを作成します。
+创建一个工作目录。
 
 ```sh
 mkdir test_work
 ```
-「test_work」ディレクトリに移動します。
+转到“test_work”目录。
 
 ```sh
 cd test_work
 ```
 
-Jmeterのプロファイルを作成します。  
+为 Jmeter 创建配置文件。
 
-36行目にある`***.***.***.***`を[手順2-6](#2-6-oci-apmでのトレーシング)で確認したサンプルアプリケーションのエンドポイントに書き換えます。
+在[步骤 2-6] 中确认第 36 行的 `***.***.***.***` 示例应用程序结束（使用#2-6-oci-apm 跟踪）转换为点。
 
 ```sh
 vim testplan.jmx
@@ -1475,13 +1470,13 @@ vim testplan.jmx
 </jmeterTestPlan>
 ```
 
-負荷をかけます。止める場合は、「Ctrl + C」で停止できます。
+施加负载。 如果要停止，可以用“Ctrl+C”停止。
 
 ```sh
 JVM_ARGS="-Xms12G -Xmx12G"  ../apache-jmeter-5.4.3/bin/jmeter -n -t ./testplan.jmx -l ./testplan.jtl -e -o html_repo_testplan
 ```
 
-途中でエラーで停止する場合は、以下コマンドで「testplan.jtl」ファイルを削除して、負荷をかけなおしてください。
+如果中途因错误而停止，请使用以下命令删除“testplan.jtl”文件并重新加载。
 
 ```sh
 rm -rf testplan.jtl
@@ -1491,9 +1486,8 @@ rm -rf testplan.jtl
 JVM_ARGS="-Xms12G -Xmx12G"  ../apache-jmeter-5.4.3/bin/jmeter -n -t ./testplan.jmx -l ./testplan.jtl -e -o html_repo_testplan
 ```
 
-{% capture notice %}**Jmeter起動時のエラーについて**  
-Computeで利用可能なメモリの状態によって、以下のようなエラーが発生する場合があります。  
-
+{% capture notice %}**关于启动Jmeter时的报错**
+根据 Compute 中可用内存的状态，可能会出现以下错误。
 ```sh
 JVM_ARGS="-Xms12G -Xmx12G"  ../apache-jmeter-5.4.3/bin/jmeter -n -t ./testplan.jmx -l ./testplan.jtl -e -o html_repo_testplan
 OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x00000004f0800000, 12884901888, 0) failed; error='Cannot allocate memory' (errno=12)
@@ -1504,7 +1498,7 @@ OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x00000004f0800000, 12
 # /home/tniita_obs/test_work/hs_err_pid5725.log
 ```
 
-上記のエラーが発生した場合は、ヒープサイズを以下のように`8G`にして実行してください。  
+如果出现上述错误，请将堆大小设置为 8G，如下所示。 
 
 ```sh
 JVM_ARGS="-Xms8G -Xmx8G"  ../apache-jmeter-5.4.3/bin/jmeter -n -t ./testplan.jmx -l ./testplan.jtl -e -o html_repo_testplan
@@ -1514,43 +1508,43 @@ JVM_ARGS="-Xms8G -Xmx8G"  ../apache-jmeter-5.4.3/bin/jmeter -n -t ./testplan.jmx
   {{ notice | markdownify }}
 </div>
 
-#### 状況の確認
+＃＃＃＃ 检查状态
 
-負荷の状況を確認します。
+检查负载状态。
 
-左上のハンバーガーメニューをクリックして、「監視および管理」-「アラーム定義」を選択します。
+点击左上角的汉堡菜单，选择“监控与管理”-“告警定义”。
 
 ![](4-3-018.png)
 
-「heap-size」をクリックします。
+单击“堆大小”。
 
 ![](4-3-019.png)
 
-赤い破線が設定した閾値となります。この閾値を超えるとアラームが上がって、メールで通知されます。
+红色虚线是设置的阈值。当超过此阈值时，将发出警报并通过电子邮件通知您。
 
 ![](4-3-020.png)
 
 ![](4-3-032.png)
 
-アラームと通知を停止する場合は、「アラームは有効です」のチェックを外します。
+要停止警报和通知，请取消选中“警报已启用”。
 
 ![](4-3-021.png)
 
-APMからも状況を確認します。
+也可以从 APM 检查状态。
 
-左上のハンバーガーメニューをクリックして、「監視および管理」-「ダッシュボード」を選択します。
+单击左上角的汉堡菜单，然后选择“监控和管理”-“仪表板”。
 
 ![](4-3-022.png)
 
-「アプリケーション・サーバー」をクリックします。
+单击应用程序服务器。
 
 ![](4-3-023.png)
 
-APMドメインのプルダウンメニューから「oke-handson-apm」を選択します。
+从 APM 域下拉菜单中选择 oke-handson-apm。
 
 ![](4-3-024.png)
 
-対象となるPod名「frontend-app-xxxxxxxxxx-xxxxx」を確認します。
+检查目标 Pod 名称“frontend-app-xxxxxxxxxx-xxxxx”。
 
 ```sh
 kubectl get pods
@@ -1566,44 +1560,44 @@ NAME                              READY   STATUS    RESTARTS   AGE
 frontend-app-56f7cfcb74-gpqh8     1/1     Running   0          23h
 ```
 
-プルダウンメニューから確認した対象のPodを選択します。
+从下拉菜单中选择您确认的目标 Pod。
 
 ![](4-3-025.png)
 
-デフォルトでは、「過去60分間」の状況を確認できます。負荷をかけることで「ヒープ使用状況」の数値があがります。「ヒープ使用状況」では、時系列で状況を確認できます。
+默认情况下，您可以看到“最近 60 分钟”的状态。通过施加负载，“堆使用”的数量增加。在“Heap usage”中，可以按时间顺序查看状态。
 
 ![](4-3-026.png)
 
-右上にあるプルダウンメニューから過去の時間で確認できます。「カスタム」を選択すると、任意の時間を設定できます。
+您可以从右上角的下拉菜单中查看过去的时间。如果选择“自定义”，则可以随时设置。
 
 ![](4-3-027.png)
 
-設定する場合は、時間を指定後、「OK」ボタンをクリックします。
+要设置，请指定时间并单击“确定”按钮。
 
 ![](4-3-028.png)
 
-通知としては、以下のメールが届きます。
+您将收到以下电子邮件作为通知。
 
 ![](4-3-029.png)
 
-以上でハンズオンは終了です。お疲れ様でした！
+动手到此结束。谢谢你的辛劳工作！
 
-5.今回利用したサンプルアプリケーションの補足説明
----------------------------------
+5、本次使用的示例应用补充说明
+----------------------------------
 
-ここでは、今回のサンプルアプリケーションでのAPM設定に関する補足説明を行います。　　
+下面对本示例应用程序中的 APM 设置进行补充说明。 〉〉
 
-今回のサンプルアプリケーションでは、APMの設定として以下の2点を実施しました。  
+在这个示例应用程序中，以下两点被实现为 APM 设置。
 
-- APM Browser Agentのエンドポイントとパブリック・データキーを`index.html`に設定(その後、コンテナイメージをビルド/プッシュ)
-- APM Server Agentのエンドポイントとプライベート・データキーをSecretリソースとして設定
+- 将 APM 浏览器代理端点和公共数据密钥设置为“index.html”（然后构建/推送容器图像）
+- 将 APM 服务器代理端点和私有数据密钥设置为秘密资源
 
-ここでの補足説明は主に2点目について見ていきます。  
+这里的补充说明主要针对第二点。
 
-今回利用したManifestを見ていきましょう。
+我们来看看这次使用的Manifest。
 
-まずは、フロントエンドアプリケーションのManifestを確認します。
-ここでは、Deploymentリソースだけ抜粋します。　　
+首先，查看前端应用的Manifest。
+这里只摘录了 Deployment 资源。
 
 ```yaml
 apiVersion: apps/v1
@@ -1643,7 +1637,7 @@ spec:
               key: private-key
 ```
 
-25行目〜35行目に注目してみましょう。
+让我们关注第 25-35 行。
 
 ```yaml
 ~~~
@@ -1660,11 +1654,11 @@ spec:
               key: private-key
 ```
 
-APMのエンドポイントとプライベート・データキーを`tracing.data-upload-endpoint`、`tracing.private-data-key`という環境変数名でSecretリソースから読み込んでいます。  
-ここで指定しているSecretリソースは、[2-5 サンプルアプリケーションへのAPM設定(サーバサイド側)](#2-5-サンプルアプリケーションへのapm設定サーバサイド側)で作成したものです。  
+APM 端点和私有数据密钥是从具有环境变量名称“tracing.data-upload-endpoint”和“tracing.private-data-key”的 Secret 资源加载的。
+此处指定的 Secret 资源是在 [2-5 APM settings for the sample application (server side)]（#2-5 - apm settings for sample application server side）中创建的。
 
-アプリケーション側(Helidon)では、APM Server Agentがこの環境変数を読み込み、APMに対してトレース情報やメトリクスのアップロードを行なっています。  
+在应用程序端 (Helidon)，APM 服务器代理读取此环境变量并将跟踪信息和指标上传到 APM。
 
-今回はSecretとして指定しましたが、各々のコンテナアプリケーション(Helidon)の設定ファイル(`microprofile-config.properties`)などでも指定することができます。
+我这次指定为Secret，但也可以在每个容器应用程序（Helidon）的配置文件（`microprofile-config.properties`）中指定。
 
-バックエンドアプリケーション、データソースアプリケーションのManifestでも同様に環境変数からAPMのエンドポイントとプライベート・データキーを取得する設定にしています。
+后端应用和数据源应用的Manifest也设置为从环境变量中获取APM端点和数据私钥。
