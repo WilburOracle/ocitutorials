@@ -58,15 +58,15 @@ tags:
 
 展开左上角的汉堡菜单，从“开发者服务”中选择“Kubernetes Cluster (OKE)”。
 
-![](1-001.png)
+![](oke-for-advances/1-001.png)
 
 单击创建集群按钮。
 
-![](1-002.png)
+![](oke-for-advances/1-002.png)
 
 确保选择了快速创建并单击启动工作流按钮。
 
-![](1-003.png)
+![](oke-for-advances/1-003.png)
 
 设置以下内容：
 
@@ -75,23 +75,23 @@ Kubernetes Worker 节点：Public Workers
 “选择 OCPU 数量”：“2”
 “内存量（GB）”：“32”
 
-![](1-004.png)
+![](oke-for-advances/1-004.png)
 
 单击屏幕左下方的“下一步”按钮。
 
-![](1-005.png)
+![](oke-for-advances/1-005.png)
 
 单击屏幕左下方的“创建集群”按钮。
 
-![](1-006.png)
+![](oke-for-advances/1-006.png)
 
 单击屏幕左下方的“关闭”按钮。
 
-![](1-007.png)
+![](oke-for-advances/1-007.png)
 
 确认它从黄色的“Creating”变为绿色的“Active”。如果是“Active”，则集群创建完成。
 
-![](1-008.png)
+![](oke-for-advances/1-008.png)
 
 ### 1-2 使用 Cloud Shell 操作集群
 
@@ -99,15 +99,15 @@ Kubernetes Worker 节点：Public Workers
 
 单击访问集群按钮。
 
-![](1-009.png)
+![](oke-for-advances/1-009.png)
 
 单击“启动 Cloud Shell”按钮，然后单击“复制”链接文本，然后单击“关闭”按钮。
 
-![](1-010.png)
+![](oke-for-advances/1-010.png)
 
 启动 Cloud Shell 后，粘贴“复制”的内容，然后按 Enter 键。
 
-![](1-011.png)
+![](oke-for-advances/1-011.png)
 
 执行以下命令确认3个节点的“STATUS”为“Ready”。
 
@@ -318,28 +318,28 @@ deployment.apps/prometheus             1/1     1            1           94s     
 
 在 OCI 控制台中，选择 [Networking]-[Virtual Cloud Network] 并选择目标 `oke-vcn-quick-cluster1-xxxxxxxxx`。
 
-![](1-027.png)
+![](oke-for-advances/1-027.png)
 
-![](1-032.png)
+![](oke-for-advances/1-032.png)
 
 在三个子网中，选择worker节点所属的子网`oke-nodesubnet-quick-cluster1-xxxxxxxxx-regional`。
 
-![](1-028.png)
+![](oke-for-advances/1-028.png)
 
 从列表中选择“oke-nodeseclist-quick-cluster1-xxxxxxxxx”。
 
-![](1-029.png)
+![](oke-for-advances/1-029.png)
 
 单击添加入口规则按钮。
 
-![](1-030.png)
+![](oke-for-advances/1-030.png)
 
 设置以下内容并单击添加入口规则按钮。
 
 `源 CIDR：0.0.0.0/0`<br>
 `目标端口范围：30000-65535`
 
-![](1-031.png)
+![](oke-for-advances/1-031.png)
 
 这样就完成了安全列表的修改。
 
@@ -499,31 +499,31 @@ http://[WorkerNode公网IP]:30536
 
 从左侧菜单中选择【配置】-【数据源】。
 
-![](1-012.png)
+![](oke-for-advances/1-012.png)
 
 单击添加数据源按钮。
 
-![](1-013.png)
+![](oke-for-advances/1-013.png)
 
 将光标移动到“日志和文档数据库”中的“Loki”，然后单击“选择”按钮。
 
-![](1-014.png)
+![](oke-for-advances/1-014.png)
 
 在 Loki 设置画面的“URL”中输入`http://loki:3100/`，在“Maximum lines”中输入`1000`，然后单击“Save & Test”按钮。
 
-![](1-015.png)
+![](oke-for-advances/1-015.png)
 
 在左侧菜单中选择“探索”。
 
-![](1-016.png)
+![](oke-for-advances/1-016.png)
 
 画面切换后，从画面左上方的下拉菜单中选择“Loki”。
 
-![](1-017.png)
+![](oke-for-advances/1-017.png)
 
 在“日志浏览器”中输入 `{app="istiod"}`，然后单击“运行查询”按钮。
 
-![](1-018.png)
+![](oke-for-advances/1-018.png)
 
 如果可以看到日志，则说明设置完成。
 
@@ -574,26 +574,26 @@ NodePort 是 `PORT(S)` 中 `:` 后面的端口号。
 在上述情况下，请访问以下 URL。
 http://[WorkerNode公网IP]:32582
 
-![](1-019.png)
+![](oke-for-advances/1-019.png)
 
 输入 `node_memory_MemAvailable_bytes` 并单击“执行”按钮。
 
-![](1-020.png)
+![](oke-for-advances/1-020.png)
 
 显示每个节点的可用内存容量。单击“图表”选项卡以查看图表。
 
-![](1-021.png)
+![](oke-for-advances/1-021.png)
 
-![](1-022.png)
+![](oke-for-advances/1-022.png)
 
 单击“表格”选项卡后，检查最后 3 分钟的情况。
 
-![](1-023.png)
+![](oke-for-advances/1-023.png)
 
 输入 `node_memory_MemAvailable_bytes[3m]` 并单击“执行”按钮。
 显示每个节点最近3分钟的空闲内存容量状态。
 
-![](1-024.png)
+![](oke-for-advances/1-024.png)
 
 接下来，检查3个节点的空闲内存空间。
 
@@ -601,11 +601,11 @@ http://[WorkerNode公网IP]:32582
 
 PromQL 使用 without 排除实例和 kubernetes_node 标签并输出 3 个节点的总和。
 
-![](1-025.png)
+![](oke-for-advances/1-025.png)
 
 您还可以通过单击“图表”选项卡来检查图表。
 
-![](1-026.png)
+![](oke-for-advances/1-026.png)
 
 PromQL 是 Prometheus 自己的查询语言，专门用于度量聚合。本实践中使用的查询就是一个示例。
 有很多方法可以使用它。更多信息请参见【官方参考】（https://prometheus.io/docs/prometheus/latest/querying/basics/）。
@@ -650,7 +650,7 @@ git clone https://github.com/oracle-japan/code-at-customer-handson
 让我们快速浏览一下应用程序的组成。
 完成此步骤后，整体图像应如下所示：
 
-![](3-001.png)
+![](oke-for-advances/3-001.png)
 
 它由顶部的示例应用程序和底部的可观察性环境组成。
 因此，从现在开始，我们将主要看顶部的示例应用程序。
@@ -659,7 +659,7 @@ git clone https://github.com/oracle-japan/code-at-customer-handson
 作为一个实体，istio-ingressgateway 使用 Oracle 云基础设施负载平衡服务，NodePort 使用将成为工作节点的计算实例的公共 IP 和端口。
 因此，Oracle Cloud Infrastructure 的配置如下图所示。
 
-![](3-031.png)
+![](oke-for-advances/3-031.png)
 
 此示例应用程序由三个组件组成：
 
@@ -983,7 +983,7 @@ istio-ingressgateway   LoadBalancer   10.96.176.93   132.226.xxx.xxx   15021:301
 
 出现如下画面就OK了！
 
-![](3-002.png)
+![](oke-for-advances/3-002.png)
 
 如果您尝试多次访问它，您会看到金牌得主 (v3)、银牌得主 (v2) 和铜牌得主 (v1) 是随机显示的。
 
@@ -1016,15 +1016,15 @@ http://[WorkerNode公网IP]:31624
 
 访问后，单击探索。
 
-![](3-003.png)
+![](oke-for-advances/3-003.png)
 
-从屏幕顶部的下拉菜单中选择 ![](3-004.png)。
+从屏幕顶部的下拉菜单中选择 ![](oke-for-advances/3-004.png)。
 
-![](3-005.png)
+![](oke-for-advances/3-005.png)
 
-单击![](3-006.png)。
+单击![](oke-for-advances/3-006.png)。
 
-![](3-007.png) 显示要记录的标签。
+![](oke-for-advances/3-007.png) 显示要记录的标签。
 这次我们以查看特定 Pod 的日志为例。
 
 选择目标 Pod 名称。
@@ -1054,25 +1054,25 @@ node-exporter-handson-mbdzl       1/1     Running   0          21m
 ```
 例如，目标 `backend-app-v2-84f5859c9f-gr6dd`。 （适应你的环境）
 
-从 ![](3-008.png) 中选择 `pod` 以显示 pod 名称。
+从 ![](oke-for-advances/3-008.png) 中选择 `pod` 以显示 pod 名称。
 选择感兴趣的 Pod 名称，然后单击“显示日志”。
 
-![](3-009.png)
+![](oke-for-advances/3-009.png)
 
 显示目标 Pod 输出的日志。
 
-![](3-010.png)
+![](oke-for-advances/3-010.png)
 
 您还可以过滤和搜索 Loki 上的日志。
 
 例如，在当前状态下，Istio 在 Pod 中注入的 Envoy 的日志也是输出的，所以我们只限于应用程序的日志。
 
-在![](3-006.png)列的文本框中添加字符串`,container="backend-app"`，点击左上角的![](3-013.png)。
-查询类似于 ![](3-030.png)。
+在![](oke-for-advances/3-006.png)列的文本框中添加字符串`,container="backend-app"`，点击左上角的![](oke-for-advances/3-013.png)。
+查询类似于 ![](oke-for-advances/3-030.png)。
 
 现在我们可以将其缩小到名为 `backend-app-v2-84f5859c9f-gr6dd` 的 pod 中的名为 `backend-app` 的容器。
 
-![](3-012.png)
+![](oke-for-advances/3-012.png)
 
 使用 Grafana Loki 进行日志监控现已完成。
 
@@ -1116,17 +1116,17 @@ http://[WorkerNode公网IP]:30483
 
 访问后，单击 Service 类别中的下拉菜单，单击 `istio-ingress-gateway.istio.system`，然后单击 `Find Trace`。
 
-![](3-014.png)
+![](oke-for-advances/3-014.png)
 
 现在您可以看到通过 `istio-ingress-gateway` 路由的流量。
 
-![](3-015.png)
+![](oke-for-advances/3-015.png)
 
 这样就可以获取到四个服务的跟踪信息，`istio-ingress-gateway`、`frontend-app.default`、`backend-app.default`和`datasource-app.default`。
 
 点击这个。
 
-![](3-016.png)
+![](oke-for-advances/3-016.png)
 
 通过这种方式，您可以看到一系列流量及其各自的延迟。
 
@@ -1245,80 +1245,80 @@ destinationrule.networking.istio.io/datasource created
 
 首先是“概述”。
 
-![](3-017.png)
+![](oke-for-advances/3-017.png)
 
 在这里，您可以看到 `default` 命名空间中有 4 个应用程序。
 这四个应用程序是我们正在部署的前端应用程序、后端应用程序、数据源应用程序和 Node Exporter。
 
 接下来，检查 `istio Config`。
 
-如果显示`No Namespace Selected`，从右上角的![](3-020.png)中勾选`default`。
+如果显示`No Namespace Selected`，从右上角的![](oke-for-advances/3-020.png)中勾选`default`。
 
-![](3-018.png)
+![](oke-for-advances/3-018.png)
 
 `Name` 中的 `DR` 标签指向 `DestinationRule`。
 如果点击`backend`，可以看到左侧`Destination Rule Overview`中有3个版本。
 
-![](3-019.png)
+![](oke-for-advances/3-019.png)
 
 接下来，检查“服务”。
 
-如果显示`No Namespace Selected`，从右上角的![](3-020.png)中勾选`default`。
+如果显示`No Namespace Selected`，从右上角的![](oke-for-advances/3-020.png)中勾选`default`。
 
-![](3-021.png)
+![](oke-for-advances/3-021.png)
 
 您可以检查 Kubernetes Service 资源。
 在 `Details` 中，您可以检查与 Service 资源关联的 `DestinationRule`。
 
 **关于`node-exporter-handson`**
-`node-exporter-handson`的`Details`栏中有一个![](3-032.png)标记，但不影响本次动手操作，请忽略。
+`node-exporter-handson`的`Details`栏中有一个![](oke-for-advances/3-032.png)标记，但不影响本次动手操作，请忽略。
 {: .notice--info}
 
 接下来，检查“工作负载”。
 
-如果显示`No Namespace Selected`，从右上角的![](3-020.png)中勾选`default`。
+如果显示`No Namespace Selected`，从右上角的![](oke-for-advances/3-020.png)中勾选`default`。
 
-![](3-022.png)
+![](oke-for-advances/3-022.png)
 
 在这里，您将看到已部署的部署资源。
 
 **关于`node-exporter-handson`**
-`node-exporter-handson`的`Details`栏中有一个标记![](3-032.png)![](3-033.png)，但不影响本手操作-开。，请无视。
+`node-exporter-handson`的`Details`栏中有一个标记![](oke-for-advances/3-032.png)![](oke-for-advances/3-033.png)，但不影响本手操作-开。，请无视。
 {: .notice--info}
 
 接下来，检查“应用程序”。
 
-如果显示`No Namespace Selected`，从右上角的![](3-020.png)中勾选`default`。
+如果显示`No Namespace Selected`，从右上角的![](oke-for-advances/3-020.png)中勾选`default`。
 
 在这里，您将看到已部署的应用程序。
 这里的应用程序几乎是服务资源的代名词。
 
-![](3-023.png)
+![](oke-for-advances/3-023.png)
 
 **关于`node-exporter-handson`**
-`node-exporter-handson`的`Details`栏中有一个![](3-032.png)标记，但不影响本次动手操作，请忽略。
+`node-exporter-handson`的`Details`栏中有一个![](oke-for-advances/3-032.png)标记，但不影响本次动手操作，请忽略。
 {: .notice--info}
 
 单击“后端应用程序”，您将看到以下屏幕。
 
-![](3-024.png)
+![](oke-for-advances/3-024.png)
 
 现在从浏览器访问应用程序后再次检查。
 稍等片刻，访问的Traffic会显示如下。
 
-![](3-025.png)
+![](oke-for-advances/3-025.png)
 
 此外，您可以通过使用图中红框部分的选项卡进行切换来查看各种信息，因此请检查它。
 
 最后，确认`Graph`。
 
-![](3-026.png)
+![](oke-for-advances/3-026.png)
 
 在这里，您可以将交通信息等以图表的形式可视化。
 
-例如，从右上角的![](3-027.png) 中选择`Versioned app graph`。
+例如，从右上角的![](oke-for-advances/3-027.png) 中选择`Versioned app graph`。
 
-![](3-028.png)
+![](oke-for-advances/3-028.png)
 
 在此状态下多次访问应用程序。
 目前后端服务的负载是由`DestinationRule`随机分配的，所以可以看到金牌、银牌、铜牌的名单是随机显示的。
@@ -1333,7 +1333,7 @@ destinationrule.networking.istio.io/datasource created
 
 在显示每个金牌得主、银牌得主和铜牌得主的名单后，再次检查“版本化应用图表”。
 
-![](3-029.png)
+![](oke-for-advances/3-029.png)
 
 通过这种方式，您可以可视化每个版本的流量路由方式。
 
@@ -1369,7 +1369,7 @@ cd ~
 
 `DestinationRule` 和 `VirtualService` 的关系如下。
 
-![](4-001.png)
+![](oke-for-advances/4-001.png)
 
 这次，我准备了以下 `VirtualService`。
 
@@ -1444,12 +1444,12 @@ virtualservice.networking.istio.io/canary-release created
 
 访问 Kiali UI 并从“应用程序”菜单中单击“后端应用程序”。
 
-![](4-002.png)
+![](oke-for-advances/4-002.png)
 
 图表部分显示了流量路由比率。
 一般可以确认是按照设置的权重进行路由。
 
-![](4-003.png)
+![](oke-for-advances/4-003.png)
 
 通过这种方式，Istio 允许您通过简单地创建适当的资源来实施高级部署策略，例如金丝雀版本。
 
@@ -1492,11 +1492,11 @@ virtualservice.networking.istio.io/canary-release created
 有关动态组的详细信息，请参阅页面 [此处](https://docs.oracle.com/ja-jp/iaas/Content/Identity/Tasks/managingdynamicgroups.htm)。
 {: .notice--info}
 
-![](5-001.png)
+![](oke-for-advances/5-001.png)
 
 单击创建动态组。
 
-![](5-002.png)
+![](oke-for-advances/5-002.png)
 
 输入信息如下。
 
@@ -1510,7 +1510,7 @@ virtualservice.networking.istio.io/canary-release created
 说明 | grafana_dynamic_group
 匹配规则 - 规则 1 | `instance.compartment.id = '<您的隔间 OCID>'`
 
-![](5-003.png)
+![](oke-for-advances/5-003.png)
 
 图片为图片，请根据自己的环境更换车厢OCID。
 
@@ -1522,11 +1522,11 @@ virtualservice.networking.istio.io/canary-release created
 
 然后从屏幕左侧的菜单中单击“策略”。
 
-![](5-004.png)
+![](oke-for-advances/5-004.png)
 
 单击创建策略。
 
-![](5-005.png)
+![](oke-for-advances/5-005.png)
 
 输入以下信息。
 另外，选中“显示手动编辑器”。
@@ -1550,7 +1550,7 @@ allow dynamic-group <您创建的动态组名称> to read metrics in compartment
   {{ notice | markdownify }}
 </div>
 
-![](5-006.png)
+![](oke-for-advances/5-006.png)
 图片为图片，请根据自己的环境更换车厢OCID。
 
 单击创建。
@@ -1640,9 +1640,9 @@ NodePort 是 `PORT(S)` 中 `:` 后面的端口号。
 在上述情况下，请访问以下 URL。
 http://[WorkerNode公网IP]:30453
 
-访问后点击![](5-007.png)的![](5-014.png)。
+访问后点击![](oke-for-advances/5-007.png)的![](oke-for-advances/5-014.png)。
 
-点击![](5-008.png)，选择底部的“Oracle Cloud Infrastructure Metrics”，点击![](5-015.png)。
+点击![](oke-for-advances/5-008.png)，选择底部的“Oracle Cloud Infrastructure Metrics”，点击![](oke-for-advances/5-015.png)。
 
 输入以下信息。
 
@@ -1652,7 +1652,7 @@ http://[WorkerNode公网IP]:30453
 默认区域 | ap-osaka-1
 环境 | OCI 实例
 
-![](5-009.png)
+![](oke-for-advances/5-009.png)
 
 **关于租赁 OCID **
 有关如何检查您的租赁 OCID 的信息，请参阅 [此处](https://oracle-japan.github.io/ocitutorials/cloud-native/oke-for-intermediates/#3%E3%83%AF%E3% 83%BC %E3%82%AF%E3%82%B7%E3%83%A7%E3%83%83%E3%83%97%E3%81%A7%E5%88%A9%E7%94% A8%E3 %81%99%E3%82%8B%E3%82%A2%E3%82%AB%E3%82%A6%E3%83%B3%E3%83%88%E6%83%85% E5%A0 请检查 %B1%E3%81%AE%E5%8F%8E%E9%9B%86 中的“3. Tenancy OCID”。
@@ -1660,9 +1660,9 @@ http://[WorkerNode公网IP]:30453
 
 单击保存并测试。
 
-单击 ![](5-010.png) 并从顶部选项卡中选择 Oracle Cloud Infrastructure Metrics。
+单击 ![](oke-for-advances/5-010.png) 并从顶部选项卡中选择 Oracle Cloud Infrastructure Metrics。
 
-![](5-011.png)
+![](oke-for-advances/5-011.png)
 
 输入以下必填项目。
 
@@ -1678,12 +1678,12 @@ http://[WorkerNode公网IP]:30453
 如果 `Namespace` 及以上无法选择，请稍等片刻重试。
 {: .notice--警告}
 
-![](5-012.png)
+![](oke-for-advances/5-012.png)
 图像是图像，因此请根据您自己的环境阅读每个项目。
 
 您将看到如下图和表格。
 
-![](5-013.png)
+![](oke-for-advances/5-013.png)
 
 使用 OCI Monitoring Grafana 插件，您可以将 OCI Compute（在本例中为 OKE Worker Node）指标集成到您的 Grafana 仪表板中。
 <!-- 6. 使用 OCI APM 进行跟踪 [可选]
@@ -1711,10 +1711,10 @@ OCI 拥有 [Oracle Cloud Observability and Management Platform](https://www.orac
 
 打开 OCI 控制台汉堡菜单并选择身份和安全下的策略。
 
-![](6-001.png)
+![](oke-for-advances/6-001.png)
 单击创建策略。
 
-![](5-005.png)
+![](oke-for-advances/5-005.png)
 
 输入以下信息。
 另外，选中“显示手动编辑器”。
@@ -1726,7 +1726,7 @@ OCI 拥有 [Oracle Cloud Observability and Management Platform](https://www.orac
 隔间 | 您的隔间名称
 策略 | `允许组 APM-Admins 管理隔离专区 ID <您的隔离专区 OCID> 中的 apm 域`
 
-![](6-002.png)
+![](oke-for-advances/6-002.png)
 
 图片为图片，请根据自己的环境更换车厢OCID。
 
@@ -1740,11 +1740,11 @@ OCI 拥有 [Oracle Cloud Observability and Management Platform](https://www.orac
 
 打开 OCI 控制台汉堡菜单，然后从监控和管理中选择应用程序性能监控类别中的管理。
 
-![](6-003.png)
+![](oke-for-advances/6-003.png)
 
 单击创建 APM 域。
 
-![](6-004.png)
+![](oke-for-advances/6-004.png)
 
 输入以下信息。
 
@@ -1759,19 +1759,19 @@ OCI 拥有 [Oracle Cloud Observability and Management Platform](https://www.orac
 
 单击创建。
 
-![](6-005.png)
+![](oke-for-advances/6-005.png)
 
 该域将具有“正在创建”的状态，等到它变为“活动”。
 
-![](6-006.png)
+![](oke-for-advances/6-006.png)
 
 一旦域是“活动的”，单击域名。
 
 复制“APM域信息”中“Data Upload Endpoint”的值和“Data Key”中的“Private”key的值，记录在编辑器等中。
 该值将是从应用程序端向 APM 上传跟踪信息时使用的端点和密钥，稍后将使用。
 
-![](6-007.png)
-![](6-008.png)
+![](oke-for-advances/6-007.png)
+![](oke-for-advances/6-008.png)
 
 APM 域创建现已完成。
 
@@ -2155,7 +2155,7 @@ spec:
         </repository>
     </repositories>
   ```
-  
+
 这次，`microprofile-config.properties` 设置如下。 （对于前端应用程序）
 
   ```yaml
@@ -2285,25 +2285,25 @@ istio-ingressgateway   LoadBalancer   10.96.176.93   132.226.xxx.xxx   15021:301
 
 打开 OCI Console 汉堡菜单，然后从 Monitoring and Administration 中选择 Application Performance Monitoring 类别中的 Trace Explorer。
 
-![](6-009.png)
+![](oke-for-advances/oke-for-advances/6-009.png)
 
 从屏幕顶部的“APM 域”中，选择在[6-2 创建 APM 域]（#6-2-创建 apm 域）中创建的 APM 域。
 
-![](6-010.png)
+![](oke-for-advances/6-010.png)
 
 在右侧选择“Last 15 minutes”作为搜索条件，然后单击“Go”按钮。
 
-![](6-011.png)
+![](oke-for-advances/6-011.png)
 
 会显示多条trace信息，点击“Spans”为25的信息。
 
-![](6-012.png)
+![](oke-for-advances/6-012.png)
 
 您将看到类似于以下内容的跟踪信息：
 可以确认，比起之前与Jaeger确认的信息，可以获得更详细的信息。
 
-![](6-013.png)
-![](6-014.png)
+![](oke-for-advances/6-013.png)
+![](oke-for-advances/6-014.png)
 
 使用 OCI APM 进行跟踪现已完成。
 
@@ -2313,19 +2313,19 @@ istio-ingressgateway   LoadBalancer   10.96.176.93   132.226.xxx.xxx   15021:301
 
 从屏幕左上角的下拉菜单中单击“仪表板”。
 
-![](6-015.png)
+![](oke-for-advances/6-015.png)
 
 单击仪表板中的应用程序服务器。
 
-![](6-016.png)
+![](oke-for-advances/6-016.png)
 
 由于左上角有下拉“Select an application server”，选择任意一个应用服务器（其实是Helidon的Pod）。
 
-![](6-017.png)
+![](oke-for-advances/6-017.png)
 
 显示应用程序服务器（在本例中为 helidon）的指标信息。
 
-![](6-018.png)
+![](oke-for-advances/6-018.png)
 
 根据此处获取的指标，通过与OCI Monitoring或OCI Notifications联动，可以在超过某个阈值时发出告警通知。
 

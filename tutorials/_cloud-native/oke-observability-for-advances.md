@@ -64,32 +64,32 @@ tags:
 
 实际操作概述如下所示。在构建和设置整个环境时执行红色描述的操作。
 
-![](0-0-000.png)
+![](oke-observability-for-advances/0-0-000.png)
 
 1. OKE集群搭建及OCIR设置
 ----------------------------------
 
 构建 Kubernetes 集群并设置 OCIR 来存储容器镜像。
 
-![](1-1-000.png)
+![](oke-observability-for-advances/1-1-000.png)
 
 ### 1-1 从 OCI 仪表板构建 OKE 集群
 
 展开左上角的汉堡菜单，然后从“开发者服务”中选择“Kubernetes Cluster (OKE)”。
 
-![](1-1-001.png)
+![](oke-observability-for-advances/1-1-001.png)
 
 从左侧菜单中列表范围下的隔间选择下拉菜单中选择您的隔间。
 
-![](1-1-012.png)
+![](oke-observability-for-advances/1-1-012.png)
 
 单击创建集群按钮。
 
-![](1-1-002.png)
+![](oke-observability-for-advances/1-1-002.png)
 
 确保选择了“快速创建”并单击“启动工作流”按钮。
 
-![](1-1-003.png)
+![](oke-observability-for-advances/1-1-003.png)
 
 确保在设置中设置了以下内容。
 
@@ -101,23 +101,23 @@ Kubernetes 工作节点 | 私人工作人员
 选择 OCPU 数量 | 1
 内存量 (GB)|16
 
-![](1-1-004.png)
+![](oke-observability-for-advances/1-1-004.png)
 
 单击屏幕左下方的“下一步”按钮。
 
-![](1-1-005.png)
+![](oke-observability-for-advances/1-1-005.png)
 
 单击屏幕左下方的“创建集群”按钮。
 
-![](1-1-006.png)
+![](oke-observability-for-advances/1-1-006.png)
 
 单击屏幕左下方的“关闭”按钮。
 
-![](1-1-007.png)
+![](oke-observability-for-advances/1-1-007.png)
 
 确认它从黄色“Creating”变为绿色“Active”。如果为“Active”，则集群创建完成。
 
-![](1-1-008.png)
+![](oke-observability-for-advances/1-1-008.png)
 
 ### 1-2 使用Cloud Shell 操作集群
 
@@ -125,15 +125,15 @@ Kubernetes 工作节点 | 私人工作人员
 
 单击访问群集按钮。
 
-![](1-1-009.png)
+![](oke-observability-for-advances/1-1-009.png)
 
 单击“启动 Cloud Shell”按钮，然后单击“复制”链接文本，然后单击“关闭”按钮。
 
-![](1-1-010.png)
+![](oke-observability-for-advances/1-1-010.png)
 
 启动 Cloud Shell 后，粘贴“复制”的内容并按回车键。
 
-![](1-1-011.png)
+![](oke-observability-for-advances/1-1-011.png)
 
 执行以下命令确认3个节点的“STATUS”为“Ready”。
 
@@ -160,7 +160,7 @@ OCI 使用 Oracle Cloud Infrastructure Registry (OCIR)。
 
 点击左上角的汉堡菜单，选择“开发者服务”-“容器注册”。
 
-![](1-3-001.png)
+![](oke-observability-for-advances/1-3-001.png)
 
 {% capture notice %}**关于用于动手操作的隔间**
 要在试用环境中动手操作，请使用根隔间。
@@ -174,11 +174,11 @@ OCI 使用 Oracle Cloud Infrastructure Registry (OCIR)。
 
 单击创建存储库按钮。
 
-![](1-3-002.png)
+![](oke-observability-for-advances/1-3-002.png)
 
 在“Repository Name”中输入“frontend-app-apm”，在“Access”中选择“Public”，点击“Create Repository”按钮。
 
-![](1-3-003.png)
+![](oke-observability-for-advances/1-3-003.png)
 
 **关于存储库名称**
 OCIR 存储库名称在您的租户中是唯一的。
@@ -191,43 +191,43 @@ OCIR 存储库名称在您的租户中是唯一的。
 
 检查<用户名>。对于您的用户名，单击右上角的个人资料图标并选择您的个人资料名称。
 
-![](1-3-004.png)
+![](oke-observability-for-advances/1-3-004.png)
 
 复制“用户详细信息屏幕”的红框部分并将其粘贴到文本编辑器中。
 
-![](1-3-005.png)
+![](oke-observability-for-advances/1-3-005.png)
 
 接下来，检查 <Object Storage Namespace>。
 
 单击右上角的配置文件图标并选择租赁。
 
-![](1-3-006.png)
+![](oke-observability-for-advances/1-3-006.png)
 
 复制“Tenancy Details”中“Object Storage Namespace”红框部分，粘贴到文本编辑器中。
 
-![](1-3-007.png)
+![](oke-observability-for-advances/1-3-007.png)
 
 接下来，设置将是“密码”的身份验证令牌。
 
 单击右上角的个人资料图标，然后选择您的个人资料名称。
 
-![](1-3-008.png)
+![](oke-observability-for-advances/1-3-008.png)
 
 从左侧菜单中选择“身份验证令牌”。
 
-![](1-3-009.png)
+![](oke-observability-for-advances/1-3-009.png)
 
 单击“创建令牌”按钮。
 
-![](1-3-010.png)
+![](oke-observability-for-advances/1-3-010.png)
 
 在 Description 中输入 oke-handson-apm，然后单击 Generate Token 按钮。
 
-![](1-3-011.png)
+![](oke-observability-for-advances/1-3-011.png)
 
 单击复制，然后单击关闭按钮。您将在后面的步骤中需要复制的身份验证令牌，因此将其粘贴到文本编辑器中。
 
-![](1-3-012.png)
+![](oke-observability-for-advances/1-3-012.png)
 
 这样就完成了身份验证令牌的创建。
 
@@ -245,7 +245,7 @@ OCIR 设置现已完成。
 
 在 Kubernetes 集群上部署示例微服务应用程序并设置 APM 以练习跟踪、应用程序服务器指标监控、真实用户监控和综合监控。
 
-![](2-1-000.png)
+![](oke-observability-for-advances/2-1-000.png)
 
 ### 2-1. 示例应用程序概述
 
@@ -283,11 +283,11 @@ git clone https://github.com/oracle-japan/code-at-customer-handson
 让我们快速浏览一下应用程序的组成。
 完成这一步后，整体形象应该是这样的：
 
-![](2-1-001.png)
+![](oke-observability-for-advances/2-1-001.png)
 
 下图显示了 Oracle Cloud Infrastructure 的配置。
 
-![](2-1-002.png)
+![](oke-observability-for-advances/2-1-002.png)
 
 此示例应用程序包含三个组件：
 
@@ -330,11 +330,11 @@ Helidon 还有一个方便的 CLI 工具，称为 Helidon CLI。
 
 打开 OCI 控制台汉堡包菜单并选择身份和安全下的策略。
 
-![](2-2-001.png)
+![](oke-observability-for-advances/2-2-001.png)
 
 单击创建策略。
 
-![](2-2-002.png)
+![](oke-observability-for-advances/2-2-002.png)
 
 输入以下信息。
 另外，选中“显示手动编辑器”。
@@ -346,7 +346,7 @@ Helidon 还有一个方便的 CLI 工具，称为 Helidon CLI。
 隔间 | 您的隔间名称
 政策 | `允许组 APM-Admins 管理隔间 ID <您的隔间 OCID> 中的 apm 域`
 
-![](2-2-003.png)
+![](oke-observability-for-advances/2-2-003.png)
 
 图片是图片，请根据自己的环境更换隔间OCID。
 
@@ -360,11 +360,11 @@ Helidon 还有一个方便的 CLI 工具，称为 Helidon CLI。
 
 打开 OCI 控制台汉堡包菜单，然后从“监视和管理”中的“应用程序性能监视”类别中选择“管理”。
 
-![](2-3-001.png)
+![](oke-observability-for-advances/2-3-001.png)
 
 单击创建 APM 域。
 
-![](2-3-002.png)
+![](oke-observability-for-advances/2-3-002.png)
 
 输入以下信息。
 
@@ -379,11 +379,11 @@ Helidon 还有一个方便的 CLI 工具，称为 Helidon CLI。
 
 单击创建。
 
-![](2-3-003.png)
+![](oke-observability-for-advances/2-3-003.png)
 
 该域的状态为“正在创建”，等待它变为“活动”。
 
-![](2-3-004.png)
+![](oke-observability-for-advances/2-3-004.png)
 
 域处于“活动”状态后，单击域名。
 
@@ -397,8 +397,8 @@ Data Upload Endpoint | 上传trace和metrics信息的端点
 
 该值将作为应用端向APM上传跟踪信息时使用的endpoint和key，后面会用到。
 
-![](2-3-005.png)
-![](2-3-006.png)
+![](oke-observability-for-advances/2-3-005.png)
+![](oke-observability-for-advances/2-3-006.png)
 
 APM 域创建现已完成。
 
@@ -762,34 +762,34 @@ frontend-app   LoadBalancer   10.96.220.188   193.122.***.***   80:31664/TCP   4
 在这种情况下，访问以下 URL。
 `http://193.122.***.***`
 
-![](2-6-008.png)
+![](oke-observability-for-advances/2-6-008.png)
 
 访问几次后查看 OCI APM 的跟踪信息。
 
 打开 OCI 控制台汉堡包菜单，然后从“监视和管理”中的“应用程序性能监视”类别中选择“跟踪资源管理器”。
 
-![](2-6-001.png)
+![](oke-observability-for-advances/2-6-001.png)
 
 从屏幕顶部的“APM Domain”中，选择在[6-2 Create APM Domain]中创建的APM域（#6-2-Create apm Domain）。
 
-![](2-6-002.png)
+![](oke-observability-for-advances/2-6-002.png)
 
 在右侧选择“最近 15 分钟”作为搜索条件，然后单击“开始”按钮。
 
-![](2-6-003.png)
+![](oke-observability-for-advances/2-6-003.png)
 
 会显示多条trace信息，点击显示“Completed”且`Spans`为26的信息。
 
-![](2-6-004.png)
+![](oke-observability-for-advances/2-6-004.png)
 
 您可以获得详细的跟踪信息，例如：
 
-![](2-6-005.png)
-![](2-6-006.png)
+![](oke-observability-for-advances/2-6-005.png)
+![](oke-observability-for-advances/2-6-006.png)
 
 点击红框中的“oke-helidon-demo-frontend-UI: Ajax /medalist”可以获取详细的客户端信息。
 
-![](2-6-007.png)
+![](oke-observability-for-advances/2-6-007.png)
 
 要完成，请单击“关闭”按钮。
 
@@ -801,19 +801,19 @@ frontend-app   LoadBalancer   10.96.220.188   193.122.***.***   80:31664/TCP   4
 
 从屏幕左上角的下拉菜单中单击“仪表板”。
 
-![](2-7-001.png)
+![](oke-observability-for-advances/2-7-001.png)
 
 单击仪表板中的应用程序服务器。
 
-![](2-7-002.png)
+![](oke-observability-for-advances/2-7-002.png)
 
 由于左上角有一个下拉“Select an application server”，选择任意一个应用服务器（实际上是Helidon的Pod）。
 
-![](2-7-003.png)
+![](oke-observability-for-advances/2-7-003.png)
 
 显示应用程序服务器（在本例中为 helidon）的指标信息。
 
-![](2-7-004.png)
+![](oke-observability-for-advances/2-7-004.png)
 
 根据此处获取的指标，通过与OCI Monitoring或OCI Notifications联动，可以在超过某个阈值时发出告警通知。
 
@@ -838,25 +838,25 @@ OCI APM 中提供了这两种类型的性能监控。
 
 从屏幕左上角的下拉菜单中单击“仪表板”。
 
-![](2-7-001.png)
+![](oke-observability-for-advances/2-7-001.png)
 
 单击仪表板中的真实用户监控。
 
-![](2-8-001.png)
+![](oke-observability-for-advances/2-8-001.png)
 
 由于左上角有一个下拉“Select a Web application”，所以选择`OracleJetApp`。
 
-![](2-8-002.png)
+![](oke-observability-for-advances/2-8-002.png)
 
 **关于网络应用**
 在这个实践环境中，显示了两种类型的 Web 应用程序：`OracleJetApp` 和 `All Web Applications`。没有。
 {: .notice--信息}
 
 如果您手头有其他浏览器或智能手机，请在从该浏览器或设备访问示例应用程序后，尝试将右上角的搜索条件重置为“最近 15 分钟”。
-![](2-8-004.png)
+![](oke-observability-for-advances/2-8-004.png)
 
 显示如下页面，可以确认显示了访问源的地理位置和Apdex、浏览器类型、操作系统信息等。
-![](2-8-003.png)
+![](oke-observability-for-advances/2-8-003.png)
 
 **关于Apdex**
 真实用户监控项中的“Apdex”是衡量用户对网络应用和服务响应时间满意度的行业标准指标。
@@ -875,15 +875,15 @@ OCI APM 中提供了这两种类型的性能监控。
 
 从左上角的下拉菜单中单击“综合监控”。
 
-![](2-9-001.png)
+![](oke-observability-for-advances/2-9-001.png)
 
 单击创建监视器。现在创建一个监控代理来执行综合监控。
 
-![](2-9-007.png)
+![](oke-observability-for-advances/2-9-007.png)
 
 输入以下项目，然后单击“下一步”。
 
-![](2-9-002.png)
+![](oke-observability-for-advances/2-9-002.png)
 
 输入项|输入内容|获取来源
 -|-
@@ -893,7 +893,7 @@ OCI APM 中提供了这两种类型的性能监控。
 
 输入以下项目，然后单击“下一步”。
 
-![](2-9-003.png)
+![](oke-observability-for-advances/2-9-003.png)
 
 输入项|输入内容|获取来源
 -|-
@@ -910,33 +910,33 @@ OCI APM 中提供了这两种类型的性能监控。
 
 点击下一步。
 
-![](2-9-004.png)
+![](oke-observability-for-advances/2-9-004.png)
 
 只需单击“创建”。
 
-![](2-9-005.png)
+![](oke-observability-for-advances/2-9-005.png)
 
 将出现以下屏幕。
 
-![](2-9-006.png)
+![](oke-observability-for-advances/2-9-006.png)
 
 现在让我们运行监控测试。
 
 单击“其他操作”中的“运行一次”。
 
-![](2-9-008.png)
+![](oke-observability-for-advances/2-9-008.png)
 
 执行完成后，您可以在屏幕左侧的“资源”中的“历史记录”中查看执行结果。
 
-![](2-9-009.png)
+![](oke-observability-for-advances/2-9-009.png)
 
 从“Vantage Point”“Japan East (Tokyo)”右侧的烤肉串菜单中点击“View HAR”。
 
-![](2-9-011.png)
+![](oke-observability-for-advances/2-9-011.png)
 
 监控测试的执行结果显示如下。
 
-![](2-9-010.png)
+![](oke-observability-for-advances/2-9-010.png)
 
 因此，OCI APM 允许综合监控。
 
@@ -945,7 +945,7 @@ OCI APM 中提供了这两种类型的性能监控。
 
 设置日志记录服务以检查工作节点应用程序日志和 API 服务器审计日志。
 
-![](3-1-000.png)
+![](oke-observability-for-advances/3-1-000.png)
 
 Oracle 云基础设施 (OCI) 日志记录服务是一个完全托管的云原生分布式日志记录平台，可简化整个堆栈中日志的摄取、管理和分析。在一个视图中管理基础架构、应用程序、审计和数据库日志。
 
@@ -961,19 +961,19 @@ Oracle 云基础设施 (OCI) 日志记录服务是一个完全托管的云原生
 
 单击右上角的配置文件图标并选择租赁。
 
-![](1-3-006.png)
+![](oke-observability-for-advances/1-3-006.png)
 
 单击“OICD”的“复制”文本并将其粘贴到文本编辑器中。
 
-![](3-1-015.png)
+![](oke-observability-for-advances/3-1-015.png)
 
 展开左上角的汉堡菜单，然后从“身份和安全”中选择“动态组”。
 
-![](3-1-012.png)
+![](oke-observability-for-advances/3-1-012.png)
 
 单击创建动态组按钮。
 
-![](3-1-013.png)
+![](oke-observability-for-advances/3-1-013.png)
 
 设置以下内容：
 
@@ -988,17 +988,17 @@ Oracle 云基础设施 (OCI) 日志记录服务是一个完全托管的云原生
 instance.compartment.id = '<your-OCID>'
 ```
 
-![](3-1-014.png)
+![](oke-observability-for-advances/3-1-014.png)
 
 #### 策略设置
 
 展开左上角的汉堡菜单，然后从“身份和安全”中选择“策略”。
 
-![](3-1-001.png)
+![](oke-observability-for-advances/3-1-001.png)
 
 单击创建策略按钮。
 
-![](3-1-002.png)
+![](oke-observability-for-advances/3-1-002.png)
 
 设置以下内容：
 
@@ -1015,11 +1015,11 @@ instance.compartment.id = '<your-OCID>'
 允许动态组日志动态组在租赁中使用日志内容
 ```
 
-![](3-1-003.png)
+![](oke-observability-for-advances/3-1-003.png)
 
 单击“创建”按钮。
 
-![](3-1-004.png)
+![](oke-observability-for-advances/3-1-004.png)
 
 这样就完成了策略设置。
 
@@ -1028,27 +1028,27 @@ instance.compartment.id = '<your-OCID>'
 接下来，设置您的自定义日志设置。
 展开左上角的汉堡菜单，然后从监控和管理中选择日志。
 
-![](3-1-005.png)
+![](oke-observability-for-advances/3-1-005.png)
 
 单击创建自定义日志按钮。
 
-![](3-1-006.png)
+![](oke-observability-for-advances/3-1-006.png)
 
 输入 worker-node 作为 Custom log name，然后单击 Create new group。
 
-![](3-1-007.png)
+![](oke-observability-for-advances/3-1-007.png)
 
 输入“handson_log”作为名称。
 
-![](3-1-011.png)
+![](oke-observability-for-advances/3-1-011.png)
 
 单击“创建”按钮。
 
-![](3-1-004.png)
+![](oke-observability-for-advances/3-1-004.png)
 
 单击创建自定义日志按钮。
 
-![](3-1-008.png)
+![](oke-observability-for-advances/3-1-008.png)
 
 在创建代理配置中，设置以下内容：
 
@@ -1062,16 +1062,16 @@ instance.compartment.id = '<your-OCID>'
 输入名称|oke_cluster
 文件路径|/var/log/containers/*
 
-![](3-1-009.png)
+![](oke-observability-for-advances/3-1-009.png)
 
 单击创建自定义日志按钮。
 
-![](3-1-008.png)
+![](oke-observability-for-advances/3-1-008.png)
 
 确保在列表中看到“worker-node”。
 *如果没有显示，请更新您的浏览器，例如转换到另一个页面。
 
-![](3-1-010.png)
+![](oke-observability-for-advances/3-1-010.png)
 
 ### 3-2 检查工作节点上的应用程序日志
 
@@ -1079,12 +1079,12 @@ instance.compartment.id = '<your-OCID>'
 
 单击工作节点。
 
-![](3-2-001.png)
+![](oke-observability-for-advances/3-2-001.png)
 
 worker节点上的Pod（容器）输出的日志显示如下。
 设置后获取日志可能需要一些时间。
 
-![](3-2-002.png)
+![](oke-observability-for-advances/3-2-002.png)
 
 ### 3-3 查看Kubernetes API服务器的审计日志
 
@@ -1099,25 +1099,25 @@ worker节点上的Pod（容器）输出的日志显示如下。
 
 展开左上角的汉堡菜单，然后从“身份和安全”中选择“审计”。
 
-![](3-3-001.png)
+![](oke-observability-for-advances/3-3-001.png)
 
 在“关键字”中输入“ClustersAPI”，然后单击“搜索”按钮。
 
-![](3-3-002.png)
+![](oke-observability-for-advances/3-3-002.png)
 
 显示如下。
 
-![](3-3-003.png)
+![](oke-observability-for-advances/3-3-003.png)
 
 接下来查看Kubernetes API服务器的操作日志。
 
 在“关键字”中输入“OKE API Server Admin Access”，然后单击“搜索”按钮。
 
-![](3-3-004.png)
+![](oke-observability-for-advances/3-3-004.png)
 
 显示如下。
 
-![](3-3-005.png)
+![](oke-observability-for-advances/3-3-005.png)
 
 这样就完成了对 Kubernetes API 服务器审计日志的检查。
 
@@ -1126,17 +1126,17 @@ worker节点上的Pod（容器）输出的日志显示如下。
 
 通过结合 OCI Notifications 和 Monitoring，当应用程序的指标超过阈值时将发出警报，并构建一个机制来发送电子邮件通知。
 
-![](4-1-000.png)
+![](oke-observability-for-advances/4-1-000.png)
 
 ### 4-1 通知设置
 
 点击左上角的汉堡菜单，选择“开发者服务”-“通知”。
 
-![](4-1-001.png)
+![](oke-observability-for-advances/4-1-001.png)
 
 单击创建主题按钮。
 
-![](4-1-002.png)
+![](oke-observability-for-advances/4-1-002.png)
 
 **关于题目名称**
 主题的名称在您的租赁中将是唯一的。
@@ -1145,15 +1145,15 @@ worker节点上的Pod（容器）输出的日志显示如下。
 
 输入 oci-notifications 作为名称。
 
-![](4-1-003.png)
+![](oke-observability-for-advances/4-1-003.png)
 
 单击“创建”按钮。
 
-![](4-1-004.png)
+![](oke-observability-for-advances/4-1-004.png)
 
 确保它是“活跃的”。
 
-![](4-1-005.png)
+![](oke-observability-for-advances/4-1-005.png)
 
 主题的创建现已完成。
 
@@ -1161,30 +1161,30 @@ worker节点上的Pod（容器）输出的日志显示如下。
 
 从左侧菜单中选择“订阅”。
 
-![](4-1-006.png)
+![](oke-observability-for-advances/4-1-006.png)
 
 单击创建订阅按钮。
 
-![](4-1-007.png)
+![](oke-observability-for-advances/4-1-007.png)
 
 在“电子邮件”中输入您的电子邮件地址。
 
-![](4-1-008.png)
+![](oke-observability-for-advances/4-1-008.png)
 
 单击“创建”按钮。
 
-![](4-1-009.png)
+![](oke-observability-for-advances/4-1-009.png)
 
 包含以下内容的电子邮件将发送到您设置的电子邮件地址。单击确认订阅以激活您的订阅。
 
-![](4-1-010.png)
+![](oke-observability-for-advances/4-1-010.png)
 
-![](4-1-011.png)
+![](oke-observability-for-advances/4-1-011.png)
 
 确保它处于活动状态。
 如果浏览器未激活，请刷新它。
 
-![](4-1-012.png)
+![](oke-observability-for-advances/4-1-012.png)
 
 这样就完成了订阅的创建。
 
@@ -1195,11 +1195,11 @@ worker节点上的Pod（容器）输出的日志显示如下。
 
 点击左上角的汉堡菜单，选择“监控与管理”-“告警定义”。
 
-![](4-2-001.png)
+![](oke-observability-for-advances/4-2-001.png)
 
 单击创建警报按钮。
 
-![](4-2-002.png)
+![](oke-observability-for-advances/4-2-002.png)
 
 在“报警定义”中设置如下。
 
@@ -1215,15 +1215,15 @@ worker节点上的Pod（容器）输出的日志显示如下。
 触发延迟分钟 | 1
 主题|oci-通知
 
-![](4-2-003.png)
+![](oke-observability-for-advances/4-2-003.png)
 
-![](4-2-006.png)
+![](oke-observability-for-advances/4-2-006.png)
 
-![](4-2-004.png)
+![](oke-observability-for-advances/4-2-004.png)
 
 单击保存警报按钮。
 
-![](4-2-005.png)
+![](oke-observability-for-advances/4-2-005.png)
 
 这样就完成了“报警定义”的设置。
 
@@ -1237,23 +1237,23 @@ worker节点上的Pod（容器）输出的日志显示如下。
 
 单击左上角的汉堡菜单并选择“计算”-“实例”。
 
-![](4-3-001.png)
+![](oke-observability-for-advances/4-3-001.png)
 
 单击创建实例按钮。
 
-![](4-3-002.png)
+![](oke-observability-for-advances/4-3-002.png)
 
 输入“jmeter”作为名称。
 
-![](4-3-003.png)
+![](oke-observability-for-advances/4-3-003.png)
 
 然后单击图像和形状下的编辑。
 
-![](4-3-004.png)
+![](oke-observability-for-advances/4-3-004.png)
 
 单击“形状”中的“更改形状”按钮。
 
-![](4-3-030.png)
+![](oke-observability-for-advances/4-3-030.png)
 
 设定以下内容。
 
@@ -1264,32 +1264,32 @@ worker节点上的Pod（容器）输出的日志显示如下。
 OCPU数量|2
 内存量 (GB)|32
 
-![](4-3-005.png)
+![](oke-observability-for-advances/4-3-005.png)
 
 单击选择形状按钮。
 
-![](4-3-006.png)
+![](oke-observability-for-advances/4-3-006.png)
 
 单击网络下的编辑。
 
-![](4-3-031.png)
+![](oke-observability-for-advances/4-3-031.png)
 
 在网络下，选择创建新的虚拟云网络。
 
-![](4-3-007.png)
+![](oke-observability-for-advances/4-3-007.png)
 
 单击添加 SSH 密钥中的保存私钥按钮以下载私钥。
 
-![](4-3-008.png)
+![](oke-observability-for-advances/4-3-008.png)
 
 单击“创建”按钮。
 
-![](4-3-009.png)
+![](oke-observability-for-advances/4-3-009.png)
 
 确认登录所需的“公网IP地址”和“用户名”。
 *复制并粘贴到文本编辑器中。
 
-![](4-3-017.png)
+![](oke-observability-for-advances/4-3-017.png)
 
 #### 设置JMeter环境
 
@@ -1297,31 +1297,31 @@ OCPU数量|2
 
 单击 Cloud Shell 图标以启动 Cloud Shell。
 
-![](4-3-010.png)
+![](oke-observability-for-advances/4-3-010.png)
 
-![](4-3-011.png)
+![](oke-observability-for-advances/4-3-011.png)
 
 首先，将下载的私钥上传到 Cloud Shell。
 
 单击 Cloud Shell 菜单。
 
-![](4-3-012.png)
+![](oke-observability-for-advances/4-3-012.png)
 
 选择“上传”。
 
-![](4-3-013.png)
+![](oke-observability-for-advances/4-3-013.png)
 
 单击从计算机中选择并选择您下载的私钥。
 
-![](4-3-014.png)
+![](oke-observability-for-advances/4-3-014.png)
 
 单击“上传”按钮。
 
-![](4-3-015.png)
+![](oke-observability-for-advances/4-3-015.png)
 
 单击隐藏。
 
-![](4-3-016.png)
+![](oke-observability-for-advances/4-3-016.png)
 
 转到您的主目录。
 
@@ -1514,35 +1514,35 @@ JVM_ARGS="-Xms8G -Xmx8G"  ../apache-jmeter-5.4.3/bin/jmeter -n -t ./testplan.jmx
 
 点击左上角的汉堡菜单，选择“监控与管理”-“告警定义”。
 
-![](4-3-018.png)
+![](oke-observability-for-advances/4-3-018.png)
 
 单击“堆大小”。
 
-![](4-3-019.png)
+![](oke-observability-for-advances/4-3-019.png)
 
 红色虚线是设置的阈值。当超过此阈值时，将发出警报并通过电子邮件通知您。
 
-![](4-3-020.png)
+![](oke-observability-for-advances/4-3-020.png)
 
-![](4-3-032.png)
+![](oke-observability-for-advances/4-3-032.png)
 
 要停止警报和通知，请取消选中“警报已启用”。
 
-![](4-3-021.png)
+![](oke-observability-for-advances/4-3-021.png)
 
 也可以从 APM 检查状态。
 
 单击左上角的汉堡菜单，然后选择“监控和管理”-“仪表板”。
 
-![](4-3-022.png)
+![](oke-observability-for-advances/4-3-022.png)
 
 单击应用程序服务器。
 
-![](4-3-023.png)
+![](oke-observability-for-advances/4-3-023.png)
 
 从 APM 域下拉菜单中选择 oke-handson-apm。
 
-![](4-3-024.png)
+![](oke-observability-for-advances/4-3-024.png)
 
 检查目标 Pod 名称“frontend-app-xxxxxxxxxx-xxxxx”。
 
@@ -1562,23 +1562,23 @@ frontend-app-56f7cfcb74-gpqh8     1/1     Running   0          23h
 
 从下拉菜单中选择您确认的目标 Pod。
 
-![](4-3-025.png)
+![](oke-observability-for-advances/4-3-025.png)
 
 默认情况下，您可以看到“最近 60 分钟”的状态。通过施加负载，“堆使用”的数量增加。在“Heap usage”中，可以按时间顺序查看状态。
 
-![](4-3-026.png)
+![](oke-observability-for-advances/4-3-026.png)
 
 您可以从右上角的下拉菜单中查看过去的时间。如果选择“自定义”，则可以随时设置。
 
-![](4-3-027.png)
+![](oke-observability-for-advances/4-3-027.png)
 
 要设置，请指定时间并单击“确定”按钮。
 
-![](4-3-028.png)
+![](oke-observability-for-advances/4-3-028.png)
 
 您将收到以下电子邮件作为通知。
 
-![](4-3-029.png)
+![](oke-observability-for-advances/4-3-029.png)
 
 动手到此结束。谢谢你的辛劳工作！
 

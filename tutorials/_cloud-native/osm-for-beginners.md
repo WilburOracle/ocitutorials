@@ -53,7 +53,7 @@ OCI Service Mesh 让开发和运维云原生应用变得简单。
 
 另外，记下隔间名称。
 
-![compartment-ocid](compartment-ocid.png)
+![compartment-ocid](osm-for-beginners/compartment-ocid.png)
 
 接下来，获取证书颁发机构的 OCID。
 
@@ -63,7 +63,7 @@ OCI Service Mesh 让开发和运维云原生应用变得简单。
 
 将显示 CA 的详细信息，单击 OCID 右侧的“复制”，并记下 CA 的 OCID。
 
-![authority-ocid](authority-ocid.png)
+![authority-ocid](osm-for-beginners/authority-ocid.png)
 
 然后获取证书的OCID。
 
@@ -73,7 +73,7 @@ OCI Service Mesh 让开发和运维云原生应用变得简单。
 
 当显示证书的详细信息时，单击 OCID 右侧的“复制”并记下证书的 OCID。
 
-![证书-ocid](证书-ocid.png)
+![证书-ocid](osm-for-beginners/证书-ocid.png)
 
 这样就完成了隔离区、证书颁发机构和证书的 OCID 的获取。
 
@@ -221,16 +221,16 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 Mesh 使用代理代表微服务发出入口和出站请求。
 此配置启用服务网格的安全、流量控制和监控功能。入口网关资源管理进入网格的流量。
 
-![服务网格](服务网格.jpg)
+![服务网格](osm-for-beginners/服务网格.jpg)
 
 下图显示了基于部署在 OCI 服务网格上的 Bookinfo 应用程序（在本实践中使用）的每个资源。
 
 入口流量通过入口网关和入口网关的路由表路由到“产品页面”服务。
 评论服务的不同版本代表该服务的虚拟部署。为服务间通信的访问控制设置访问策略。
 
-![服务网格部署](服务网格部署.jpg)
+![服务网格部署](osm-for-beginners/服务网格部署.jpg)
 
-下图定义了 OCI 服务网格中资源之间的关系。 ![/mesh-components](mesh-components.jpg)
+下图定义了 OCI 服务网格中资源之间的关系。 ![/mesh-components](osm-for-beginners/mesh-components.jpg)
 
 简要描述每个资源。
 
@@ -247,7 +247,7 @@ OCI Service Mesh 中还有其他资源，但上图仅选取了主要资源。
 这是 OCI 服务网格资源的概述。
 （图中有一些组件未在本实践中介绍，但将在中间部分和后面的部分中介绍。）
 
-![osm-overview](osm-overview.png)
+![osm-overview](osm-for-beginners/osm-overview.png)
 
 现在我们已经解释了各种资源，让我们构建 OCI 服务网格。
 
@@ -895,13 +895,13 @@ xxx.xxx.xxx.xxx service-mesh.oracle.com
 
 现在访问`https://service-mesh.oracle.com/productpage`，如果出现如下画面，则表示成功！
 
-![bookinfo-product-page](bookinfo-product-page.png)
+![bookinfo-product-page](osm-for-beginners/bookinfo-product-page.png)
 
 此外，从 OCI 控制台查看时，您可以确认各种资源已使用 OSOK 创建。
 在 OCI 控制台中，展开左上角的菜单，单击“Developer Services”，然后单击“Service Mesh”。
 
 此外，如果您从 OCI 控制台创建或更改资源，OSOK 会将它们反映在 OKE 集群中。
-![oci-service-mesh-bookinfo](oci-service-mesh-bookinfo.png)
+![oci-service-mesh-bookinfo](osm-for-beginners/oci-service-mesh-bookinfo.png)
 
 这样就完成了OCI Service Mesh的搭建。
 
@@ -913,7 +913,7 @@ Bookinfo 应用程序作为开源服务网格平台“Istio”项目的一部分
 
 应用程序的整体形象如下所示：
 
-![Bookinfo Application](bookinfo.png)
+![Bookinfo Application](osm-for-beginners/bookinfo.png)
 
 它分为四个独立的微服务：
 

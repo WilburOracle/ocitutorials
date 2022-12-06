@@ -36,7 +36,7 @@ Oracle Container Engine for Kubernetes（以下简称 OKE）是 Oracle 的托管
 
 这会将 URL 复制到剪贴板。
 
-![](2.3.PNG)
+![](oke-for-beginners/2.3.PNG)
 
 在 Cloud Shell 或 Linux 控制台中，执行以下命令以克隆源代码。
 
@@ -172,23 +172,23 @@ OCIR 是 Oracle 提供的容器注册管理服务。在这里，将 1.3. 中创�
 
 单击 OCI 控制台屏幕右上角的人形图标，然后从展开的配置文件中单击用户名 (oracleidentitycloudservice/<username>)。
 
-![](3.2-1.png)
+![](oke-for-beginners/3.2-1.png)
 
 向下滚动并单击左侧的“身份验证令牌”以移动到令牌创建屏幕。
 
-![](3.3.png)
+![](oke-for-beginners/3.3.png)
 
 单击“生成令牌”按钮。
     
-![](3.4.png)
+![](oke-for-beginners/3.4.png)
 
 在 [Geterate Token] 对话框中，输入描述令牌用途的信息（任意字符串），然后单击“Generate Token”按钮。
 
-![](3.5.png)
+![](oke-for-beginners/3.5.png)
     
 您将在对话框中看到生成的令牌。单击“复制”字符串会将此标记复制到剪贴板。然后点击“关闭”。
 
-![](3.6.png)
+![](oke-for-beginners/3.6.png)
 
 通过将其粘贴到文本编辑器等中来记下此标记，因为它将在后面的步骤中使用。
 
@@ -228,11 +228,11 @@ us-sanjose-1|sjc
 要检查对象存储命名空间，请单击 OCI 控制台屏幕右上角的人形图标，然后从展开的配置文件中检查租户：<租户名称>。
 
 
-![](3.6-0.png)
+![](oke-for-beginners/3.6-0.png)
 
 检查租户信息中对象存储设置中的对象存储命名空间值。将该值复制并粘贴到文本文件中以记下它，因为它将在访问 OCIR 时使用。
 
-![](3.6-1.png)
+![](oke-for-beginners/3.6-1.png)
 
 **关于对象存储命名空间**
 每个租户分配一个对象存储命名空间。它跨越一个区域内的所有隔间。任意字符串已设置且无法更改。
@@ -308,13 +308,13 @@ ea75a4331573: Layer already exists
 </div>
 现在让我们确认容器存储在 OCIR 中。在 OCI 控制台屏幕上，展开左上角的菜单，然后单击 `Developer Services` - `Container Registry`。
 
-![](3.7.png)
+![](oke-for-beginners/3.7.png)
 
 将显示存储库列表。确保其中有一个具有指定名称的容器。
 
 然后打开屏幕右上角的“Actions”菜单并单击“Change to Public”。
 
-![](3.8.png)
+![](oke-for-beginners/3.8.png)
 
 这样就完成了在 registry 中的容器镜像存储，但默认情况下，需要与推送时获取镜像时相同的身份验证信息。为了更容易与 Kubernetes 一起使用，请将存储库更改为 Public 并将其设置为无需身份验证即可获取图像。
 

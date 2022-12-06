@@ -36,7 +36,7 @@ Oracle云基础设施的基本操作请参考【教程：访问OCI控制台并�
 首先，让我们通过检查当过程执行到最后将创建什么样的环境来大致了解目标。
 在该过程结束时，您的环境将配置如下所示。
 
-![0-000.jpg](0-000.jpg)
+![0-000.jpg](oke-for-intermediates/0-000.jpg)
 
 组件|描述
 -|-
@@ -64,7 +64,7 @@ OCIR 存储库|这是 OCIR 上的存储库，用于存储此示例应用程序�
 
 对于OCIR存储库，在[确认目标]（#确认目标）所示的图中，创建红色虚线框（！[2-032.jpg]（2-032.jpg））我会继续。
 
-![0-013.jpg](0-013.jpg)
+![0-013.jpg](oke-for-intermediates/0-013.jpg)
 
 ### 0-1. 动手材料的获取
 首先，从 GitHub 获取本次实践中使用的材料。
@@ -88,7 +88,7 @@ cd ~
 
 点击OCI控制台画面右上方的人形图标，在编辑器等中记录展开的配置文件中显示的用户名。
 
-![0-014.jpg](0-014.jpg)
+![0-014.jpg](oke-for-intermediates/0-014.jpg)
 
 用户名确认现已完成。
 
@@ -98,13 +98,13 @@ cd ~
 
 单击 OCI 控制台屏幕右上角的人形图标，然后从展开的配置文件中单击用户名。
 
-![0-001.jpg](0-001.jpg)
+![0-001.jpg](oke-for-intermediates/0-001.jpg)
 
 向下滚动到资源、身份验证令牌，然后单击生成令牌按钮。
 
-![0-002.jpg](0-002.jpg)
+![0-002.jpg](oke-for-intermediates/0-002.jpg)
 
-点击！[0-003.jpg](0-003.jpg)。
+点击！[0-003.jpg](oke-for-intermediates/0-003.jpg)。
 
 输入以下项目。
 
@@ -112,11 +112,11 @@ cd ~
 -|-
 说明|奥克汉森
 
-![0-004.jpg](0-004.jpg)
+![0-004.jpg](oke-for-intermediates/0-004.jpg)
 
-点击！[0-005.jpg](0-005.jpg)。
+点击！[0-005.jpg](oke-for-intermediates/0-005.jpg)。
 
-![0-006.jpg](0-006.jpg)
+![0-006.jpg](oke-for-intermediates/0-006.jpg)
 
 复制显示的令牌并将其记录在编辑器等中。
 
@@ -131,12 +131,12 @@ cd ~
 
 单击 OCI 控制台屏幕右上角的人员图标，然后单击您的租户名称。
 
-![0-007.jpg](0-007.jpg)
+![0-007.jpg](oke-for-intermediates/0-007.jpg)
 
 复制两个红框中的值，保存在编辑器中。
 上面的红框是租户名称（`name`），下面的红框是对象存储命名空间（`object storage namespace`）。
 
-![0-008.jpg](0-008.jpg)
+![0-008.jpg](oke-for-intermediates/0-008.jpg)
 
 已完成租户名称和对象存储命名空间的确认。
 
@@ -146,11 +146,11 @@ cd ~
 
 在 CI 控制台的汉堡菜单中，单击 Identity and Security 菜单下的 Compartments。
 
-![0-015.jpg](0-015.jpg)
+![0-015.jpg](oke-for-intermediates/0-015.jpg)
 
 您的隔间已显示，因此请单击它。
 
-![0-016.jpg](0-016.jpg)
+![0-016.jpg](oke-for-intermediates/0-016.jpg)
 
 **关于用于动手操作的隔间**
 要在试用环境中动手操作，请使用根隔间。 （隔间的末端以 `(root)` 给出）
@@ -159,7 +159,7 @@ cd ~
 
 复制“车厢信息”中红框部分的值，保存到编辑器等中。
 
-![0-017.jpg](0-017.jpg)
+![0-017.jpg](oke-for-intermediates/0-017.jpg)
 
 隔间 OCID 确认现已完成。
 
@@ -169,19 +169,19 @@ cd ~
 
 在 OCI 控制台的汉堡菜单中，单击 Developer Services 下的 Container Registry。
 
-![0-009.jpg](0-009.jpg)
+![0-009.jpg](oke-for-intermediates/0-009.jpg)
 
 {% 捕获通知 %}**关于用于动手操作的隔间**
 要在试用环境中动手操作，请使用根隔间。
 默认情况下，在 OCIR 控制台屏幕上选择了根隔间，但如果您分配了一个隔间，请使用该隔间。
 可以从 OCIR 控制台屏幕的左侧选择隔间。
-![0-018.jpg](0-018.jpg)
+![0-018.jpg](oke-for-intermediates/0-018.jpg)
 {% endcapture %}
 <div class="notice--warning">
   {{ notice | markdownify }}
 </div>
 
-![0-010.jpg](0-010.jpg)点击。
+![0-010.jpg](oke-for-intermediates/0-010.jpg)点击。
 
 输入以下项目。
 
@@ -195,9 +195,9 @@ OCIR 存储库名称在您的租约中是唯一的。
 多人共享同一环境，如集体动手，请在名称前加上“handson01”、“handson-tn”等姓名的首字母，避免名称重复。
 {: .notice--警告}
 
-![0-011.jpg](0-011.jpg)
+![0-011.jpg](oke-for-intermediates/0-011.jpg)
 
-点击！[0-012.jpg](0-012.jpg)。
+点击！[0-012.jpg](oke-for-intermediates/0-012.jpg)。
 
 准备工作现已完成。
 
@@ -341,9 +341,9 @@ cd ~
 
 在这里，我们将创建一个 OCI DevOps 实例并准备示例应用程序。
 
-在[确认目标](#Confirm the goal)的图中，我们将创建红色虚线框(![2-032.jpg](2-032.jpg))。
+在[确认目标](#Confirm the goal)的图中，我们将创建红色虚线框(![2-032.jpg](oke-for-intermediates/2-032.jpg))。
 
-![2-031.jpg](2-031.jpg)
+![2-031.jpg](oke-for-intermediates/2-031.jpg)
 
 ### 2-1. 创建 OCI 通知
 
@@ -358,11 +358,11 @@ OCI Notifications 是一种用于安全、可靠、低延迟和持久消息传�
 
 在 OCI 控制台的汉堡菜单中，单击 Developer Services 下的 Notifications。
 
-![2-001.jpg](2-001.jpg)
+![2-001.jpg](oke-for-intermediates/2-001.jpg)
 
-单击![2-002.jpg](2-002.jpg)。
+单击![2-002.jpg](oke-for-intermediates/2-002.jpg)。
 
-输入以下项目并单击![2-004.jpg](2-004.jpg)。
+输入以下项目并单击![2-004.jpg](oke-for-intermediates/2-004.jpg)。
 
 键|值|
 -|-
@@ -373,40 +373,40 @@ OCI 通知名称在您的租约中是唯一的。
 多人共享同一个环境，比如集体动手，请在名字前加上‘oke-handson01’、‘oke-handson-tn’等名字的首字母，避免名字重复。
 {: .notice--警告}
 
-![2-003.jpg](2-003.jpg)
+![2-003.jpg](oke-for-intermediates/2-003.jpg)
 
 单击您创建的 OCI 通知链接（在本例中为“oke-handson”）。
 
-![2-005.jpg](2-005.jpg)
+![2-005.jpg](oke-for-intermediates/2-005.jpg)
 
-单击 ![2-006.jpg](2-006.jpg)。
+单击 ![2-006.jpg](oke-for-intermediates/2-006.jpg)。
 
-输入以下项目并单击![2-004.jpg](2-004.jpg)。
+输入以下项目并单击![2-004.jpg](oke-for-intermediates/2-004.jpg)。
 
 键|值|
 -|-
 电子邮件地址|您的电子邮件地址
 
-![2-007.jpg](2-007.jpg)
+![2-007.jpg](oke-for-intermediates/2-007.jpg)
 
 创建状态为“待定”的订阅。
 
-![2-008.jpg](2-008.jpg)
+![2-008.jpg](oke-for-intermediates/2-008.jpg)
 
 以下电子邮件已发送到您之前输入的电子邮件地址，请检查。
 
-![2-009.jpg](2-009.jpg)
+![2-009.jpg](oke-for-intermediates/2-009.jpg)
 
-单击电子邮件中的 ![2-010.jpg](2-010.jpg)。
+单击电子邮件中的 ![2-010.jpg](oke-for-intermediates/2-010.jpg)。
 
 将出现如下图所示的屏幕。
 
-![2-011.jpg](2-011.jpg)
+![2-011.jpg](oke-for-intermediates/2-011.jpg)
 
 如果您返回 OCI 通知屏幕，您可以看到订阅状态为“活动”。
 （如果不是“活动”，请刷新页面。）
 
-![2-012.jpg](2-012.jpg)
+![2-012.jpg](oke-for-intermediates/2-012.jpg)
 
 这样就完成了 OCI 通知的创建。
 
@@ -416,9 +416,9 @@ OCI 通知名称在您的租约中是唯一的。
 
 在 OCI 控制台的汉堡菜单中，单击 Developer Services 下的 DevOps 类别下的 Projects。
 
-![2-013.jpg](2-013.jpg)
+![2-013.jpg](oke-for-intermediates/2-013.jpg)
 
-单击![2-014.jpg](2-014.jpg)。
+单击![2-014.jpg](oke-for-intermediates/2-014.jpg)。
 
 输入以下项目。
 
@@ -431,35 +431,35 @@ OCI DevOps 实例名称在您的租户中是唯一的。
 多人共享同一个环境，比如集体动手，请在名字前加上‘oke-handson01’、‘oke-handson-tn’等名字的首字母，避免名字重复。
 {: .notice--警告}
 
-![2-016.jpg](2-016.jpg)
+![2-016.jpg](oke-for-intermediates/2-016.jpg)
 
-单击![2-015.jpg](2-015.jpg)。
+单击![2-015.jpg](oke-for-intermediates/2-015.jpg)。
 
 选择您之前创建的名为“oke-handson”的主题。
 
-![2-017.jpg](2-017.jpg)
+![2-017.jpg](oke-for-intermediates/2-017.jpg)
 
-![2-019.jpg](2-019.jpg)
+![2-019.jpg](oke-for-intermediates/2-019.jpg)
 
-单击![2-018.jpg](2-018.jpg)。
+单击![2-018.jpg](oke-for-intermediates/2-018.jpg)。
 
-配置完成后，您将看到如下所示的框，单击！[2-020.jpg](2-020.jpg)。
+配置完成后，您将看到如下所示的框，单击！[2-020.jpg](oke-for-intermediates/2-020.jpg)。
 
-![2-033.jpg](2-033.jpg)
+![2-033.jpg](oke-for-intermediates/2-033.jpg)
 
 点击下方。
 
-![2-021.jpg](2-021.jpg)
+![2-021.jpg](oke-for-intermediates/2-021.jpg)
 
 将出现如下图所示的屏幕。
 
-![2-034.jpg](2-034.jpg)
+![2-034.jpg](oke-for-intermediates/2-034.jpg)
 
-按原样点击！[2-022.jpg](2-022.jpg)。
+按原样点击！[2-022.jpg](oke-for-intermediates/2-022.jpg)。
 
 如果状态如下，则没有问题。
 
-![2-023.jpg](2-023.jpg)
+![2-023.jpg](oke-for-intermediates/2-023.jpg)
 
 实例创建现已完成。
 
@@ -469,9 +469,9 @@ OCI DevOps 实例名称在您的租户中是唯一的。
 
 从左侧菜单中选择代码存储库。
 
-![2-024.jpg](2-024.jpg)
+![2-024.jpg](oke-for-intermediates/2-024.jpg)
 
-单击![2-025.jpg](2-025.jpg)。
+单击![2-025.jpg](oke-for-intermediates/2-025.jpg)。
 
 输入以下项目。
 
@@ -479,18 +479,18 @@ OCI DevOps 实例名称在您的租户中是唯一的。
 -|-
 存储库名称|oke-handson
 
-单击![2-027.jpg](2-027.jpg)。
+单击![2-027.jpg](oke-for-intermediates/2-027.jpg)。
 
-![2-026.jpg](2-026.jpg)
+![2-026.jpg](oke-for-intermediates/2-026.jpg)
 
-创建存储库后，单击![2-028.jpg](2-028.jpg)。
+创建存储库后，单击![2-028.jpg](oke-for-intermediates/2-028.jpg)。
 
 在显示的对话框中单击下面的红框（`使用 HTTPS 克隆`）并复制 URL。
 在编辑器等中记录复制的 URL。
 
-![2-029.jpg](2-029.jpg)
+![2-029.jpg](oke-for-intermediates/2-029.jpg)
 
-单击![2-030.jpg](2-030.jpg)。
+单击![2-030.jpg](oke-for-intermediates/2-030.jpg)。
 
 [启动 Cloud Shell](/ocitutorials/cloud-native/oke-for-commons/#2cli%E5%AE%9F%E8%A1%8C%E7%92%B0%E5%A2%83cloud-shell%E3 % 81%AE%E6%BA%96%E5%82%99)。
 
@@ -699,9 +699,9 @@ cd ~
 
 此步骤从 OCI 控制台提供 ATP 并准备好从 OKE 连接。
 
-在[确认目标](#Confirm the goal)的图中，我们将创建红色虚线框(![2-032.jpg](2-032.jpg))。
+在[确认目标](#Confirm the goal)的图中，我们将创建红色虚线框(![2-032.jpg](oke-for-intermediates/2-032.jpg))。
 
-![3-001.jpg](3-001.jpg)
+![3-001.jpg](oke-for-intermediates/3-001.jpg)
 
 在本次实践中，我们将使用 OCI Service Operator for Kubernetes (OSOK) 来配置 ATP。
 OSOK 是一个开放平台，允许您使用 Kubernetes API 和 [Kubernetes Operator 模式]（https://kubernetes.io/en/docs/concepts/extend-kubernetes/operator/）创建、管理和连接 Oracle 云基础设施资源). 它是一个源 Kubernetes 插件。
@@ -1000,13 +1000,13 @@ oke-atp-handson-db   OLTP      Active   71s
 
 单击 Oracle 数据库菜单上自治数据库类别下的自治事务处理。
 
-![3-011.jpg](3-011.jpg)
+![3-011.jpg](oke-for-intermediates/3-011.jpg)
 
-点击[3-012.jpg](3-012.jpg) 在[3-2.ATP provisioning](#3-2-atp provisioning)中配置。
+点击[3-012.jpg](oke-for-intermediates/3-012.jpg) 在[3-2.ATP provisioning](#3-2-atp provisioning)中配置。
 
 单击数据库操作按钮。
 
-![3-002.jpg](3-002.jpg)
+![3-002.jpg](oke-for-intermediates/3-002.jpg)
 
 输入以下项目并单击“登录”。
 
@@ -1015,11 +1015,11 @@ oke-atp-handson-db   OLTP      Active   71s
 用户名|ATP 数据库用户名。这次是“管理员”
 密码|ATP 数据库密码。这次，“okehandson__Oracle1234”|[3-2. ATP provisioning] (#3-2-atp provisioning) 管理员密码由 `kuebctl create secret` 命令创建
 
-![3-006.jpg](3-006.jpg)
+![3-006.jpg](oke-for-intermediates/3-006.jpg)
 
 单击 SQL。
 
-![3-007.jpg](3-007.jpg)
+![3-007.jpg](oke-for-intermediates/3-007.jpg)
 
 登录后，在worksheet中输出存储库中`sql/create_schema.sql`中定义的DDL（从GitHub克隆的存储库，从代码存储库克隆的存储库，两者都可以）在worksheet中用以下命令输出，执行脚本（红框内的按钮）复制粘贴后。
 
@@ -1027,17 +1027,17 @@ oke-atp-handson-db   OLTP      Active   71s
 cat oke-handson/sql/create_schema.sql
 ```
 
-![3-008.jpg](3-008.jpg)
+![3-008.jpg](oke-for-intermediates/3-008.jpg)
 
 执行后，重新加载（刷新）一次浏览器，从“Navigator”菜单中选择用上述DDL创建的“HANDSON”。
 
-![3-009.jpg](3-009.jpg)
+![3-009.jpg](oke-for-intermediates/3-009.jpg)
 
 在 SQL Developer Web Worksheet 中输入 `select * from HANDSON.ITEMS;`，然后单击绿色箭头“Execute Statement”图标。
 
 显示来自 ITEMS 表的结果。
 
-![3-010.jpg](3-010.jpg)
+![3-010.jpg](oke-for-intermediates/3-010.jpg)
 
 这样就完成了样本数据的注册。
 
@@ -1159,17 +1159,17 @@ macOS 用户请执行解压输出的可执行文件。
 
 单击 Oracle 数据库菜单上自治数据库类别下的自治事务处理。
 
-![3-011.jpg](3-011.jpg)
+![3-011.jpg](oke-for-intermediates/3-011.jpg)
 
-点击[3-012.jpg](3-012.jpg) 在[3-2.ATP provisioning](#3-2-atp provisioning)中配置。
+点击[3-012.jpg](oke-for-intermediates/3-012.jpg) 在[3-2.ATP provisioning](#3-2-atp provisioning)中配置。
 
-![3-013.jpg](3-013.jpg)
+![3-013.jpg](oke-for-intermediates/3-013.jpg)
 
-单击 ![3-014.jpg](3-014.jpg)。
+单击 ![3-014.jpg](oke-for-intermediates/3-014.jpg)。
 
-![3-015.jpg](3-015.jpg)
+![3-015.jpg](oke-for-intermediates/3-015.jpg)
 
-单击 ![3-016.jpg](3-016.jpg)。
+单击 ![3-016.jpg](oke-for-intermediates/3-016.jpg)。
 
 输入以下项目。
 
@@ -1177,15 +1177,15 @@ macOS 用户请执行解压输出的可执行文件。
 -|-
 密码 |okehandson__Oracle1234| 在 [3-2. ATP provisioning] (#3-2-atp provisioning) 中使用 `kuebctl create secret` 命令创建的钱包密码
 
-![3-017.jpg](3-017.jpg)
+![3-017.jpg](oke-for-intermediates/3-017.jpg)
 
-点击![3-018.jpg](3-018.jpg)下载。
+点击![3-018.jpg](oke-for-intermediates/3-018.jpg)下载。
 
 然后打开 Oracle SQL Developer。
 
-![3-019.jpg](3-019.jpg)
+![3-019.jpg](oke-for-intermediates/3-019.jpg)
 
-点击左上角的![3-020.jpg](3-020.jpg)。
+点击左上角的![3-020.jpg](oke-for-intermediates/3-020.jpg)。
 
 输入以下项目。
 
@@ -1198,13 +1198,13 @@ Password | okehandson__Oracle1234|[3-2.ATP provisioning]中使用`kuebctl create
 连接类型 | 云钱包
 配置文件 | 指定下载的钱包文件
 
-![3-021.jpg](3-021.jpg)
+![3-021.jpg](oke-for-intermediates/3-021.jpg)
 
-单击 ![3-022.jpg](3-022.jpg)。
+单击 ![3-022.jpg](oke-for-intermediates/3-022.jpg)。
 
 连接完成后，将显示以下屏幕。
 
-![3-023.jpg](3-023.jpg)
+![3-023.jpg](oke-for-intermediates/3-023.jpg)
 
 在工作表中，使用以下命令输出存储库（从GitHub克隆的存储库，从代码存储库克隆的存储库，都可以）中`sql/create_schema.sql`中定义的DDL，复制并执行脚本（红色）框架按钮）粘贴后。
 
@@ -1212,11 +1212,11 @@ Password | okehandson__Oracle1234|[3-2.ATP provisioning]中使用`kuebctl create
 cat oke-handson/sql/create_schema.sql
 ```
 
-![3-024.jpg](3-024.jpg)
+![3-024.jpg](oke-for-intermediates/3-024.jpg)
 
 如果输出如下，则没有问题。
 
-![3-025.jpg](3-025.jpg)
+![3-025.jpg](oke-for-intermediates/3-025.jpg)
 
 使用 Oracle SQL Developer 完成示例数据注册。
 
@@ -1227,7 +1227,7 @@ cat oke-handson/sql/create_schema.sql
 
 在【确认目标】（#Confirm the goal）所示的图中，我们将创建红色虚线框（！[2-032.jpg]（2-032.jpg））。
 
-![4-039.jpg](4-039.jpg)
+![4-039.jpg](oke-for-intermediates/4-039.jpg)
 
 ### 4-1.检查build_spec.yaml
 
@@ -1319,15 +1319,15 @@ outputArtifacts:
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
-单击列表中的 ![4-002.jpg](4-002.jpg)。
+单击列表中的 ![4-002.jpg](oke-for-intermediates/4-002.jpg)。
 
 单击 DevOps 项目资源下的工件。
 
-![4-003.jpg](4-003.jpg)
+![4-003.jpg](oke-for-intermediates/4-003.jpg)
 
-单击 ![4-004.jpg](4-004.jpg)。
+单击 ![4-004.jpg](oke-for-intermediates/4-004.jpg)。
 
 输入以下项目。
 
@@ -1370,17 +1370,17 @@ me-dubai-1|dxb
 uk-cardiff-1|cwl
 us-sanjose-1|sjc
 
-![4-005.jpg](4-005.jpg)
+![4-005.jpg](oke-for-intermediates/4-005.jpg)
 
-![4-006.jpg](4-006.jpg)点击。
+![4-006.jpg](oke-for-intermediates/4-006.jpg)点击。
 
 结果，在稍后创建的构建管道中，容器注册表（这次是定义构建过程中导出的构建工件（在本例中为容器映像）的“<您正在使用的区域的区域代码>”。您可以推送到ocir.io/<对象存储命名空间>/handson:${BUILDRUN_HASH}`）。
 
 然后单击 DevOps Project Resources 下的 Build Pipelines。
 
-![4-007.jpg](4-007.jpg)
+![4-007.jpg](oke-for-intermediates/4-007.jpg)
 
-单击 ![4-008.jpg](4-008.jpg)。
+单击 ![4-008.jpg](oke-for-intermediates/4-008.jpg)。
 
 输入以下项目。
 
@@ -1388,17 +1388,17 @@ us-sanjose-1|sjc
 -|-
 名称|handson_build
 
-![4-009.jpg](4-009.jpg)
+![4-009.jpg](oke-for-intermediates/4-009.jpg)
 
-单击 ![4-010.jpg](4-010.jpg)。
+单击 ![4-010.jpg](oke-for-intermediates/4-010.jpg)。
 
-单击列表中的 ![4-011.jpg](4-011.jpg)。
+单击列表中的 ![4-011.jpg](oke-for-intermediates/4-011.jpg)。
 
-单击显示屏幕中央列表中的 ![4-012.jpg](4-012.jpg)，然后单击 ![4-013.jpg](4-013.jpg)。
+单击显示屏幕中央列表中的 ![4-012.jpg](oke-for-intermediates/4-012.jpg)，然后单击 ![4-013.jpg](oke-for-intermediates/4-013.jpg)。
 
-选择托管构建并单击 ![4-015.jpg](4-015.jpg)。
+选择托管构建并单击 ![4-015.jpg](oke-for-intermediates/4-015.jpg)。
 
-![4-014.jpg](4-014.jpg)
+![4-014.jpg](oke-for-intermediates/4-014.jpg)
 
 输入以下项目。
 
@@ -1407,9 +1407,9 @@ us-sanjose-1|sjc
 艺名|image_build|
 Build specification file path|build_spec.yaml|放置在稍后设置的“主代码库”中的构建定义文件的路径。这次直接放在项目下
 
-![4-016.jpg](4-016.jpg)
+![4-016.jpg](oke-for-intermediates/4-016.jpg)
 
-点击“主代码库”中的![4-022.jpg](4-022.jpg)。
+点击“主代码库”中的![4-022.jpg](oke-for-intermediates/4-022.jpg)。
 
 输入以下项目。
 
@@ -1419,21 +1419,21 @@ Build specification file path|build_spec.yaml|放置在稍后设置的“主代�
 选择分支名称|主
 创建源名称 | handson
 
-![4-018.jpg](4-018.jpg)
+![4-018.jpg](oke-for-intermediates/4-018.jpg)
 
-单击 ![4-019.jpg](4-019.jpg)。
+单击 ![4-019.jpg](oke-for-intermediates/4-019.jpg)。
 
 它将如下所示。
 
-![4-020.jpg](4-020.jpg)
+![4-020.jpg](oke-for-intermediates/4-020.jpg)
 
-单击 ![4-021.jpg](4-021.jpg)。
+单击 ![4-021.jpg](oke-for-intermediates/4-021.jpg)。
 
-接下来，点击前面创建的“image_build”底部的![4-012.jpg](4-012.jpg)，点击![4-013.jpg](4-013.jpg)增加。
+接下来，点击前面创建的“image_build”底部的![4-012.jpg](oke-for-intermediates/4-012.jpg)，点击![4-013.jpg](oke-for-intermediates/4-013.jpg)增加。
 
-选择 Deliver Artifact 并点击 ![4-015.jpg](4-015.jpg)。
+选择 Deliver Artifact 并点击 ![4-015.jpg](oke-for-intermediates/4-015.jpg)。
 
-![4-023jpg](4-023.jpg)
+![4-023jpg](oke-for-intermediates/4-023.jpg)
 
 输入以下项目。
 
@@ -1441,13 +1441,13 @@ Build specification file path|build_spec.yaml|放置在稍后设置的“主代�
 -|-
 名称|图片推送
 
-![4-024jpg](4-024.jpg)
+![4-024jpg](oke-for-intermediates/4-024.jpg)
 
-单击 ![4-025jpg](4-025.jpg)。
+单击 ![4-025jpg](oke-for-intermediates/4-025.jpg)。
 
-选中“handson-image”并单击![4-027jpg](4-027.jpg)。
+选中“handson-image”并单击![4-027jpg](oke-for-intermediates/4-027.jpg)。
 
-![4-026jpg](4-026.jpg)
+![4-026jpg](oke-for-intermediates/4-026.jpg)
 
 在“Associating Artifacts with Build Results”中输入以下项目。
 
@@ -1455,9 +1455,9 @@ Build specification file path|build_spec.yaml|放置在稍后设置的“主代�
 -|-
 构建配置/结果工件名称 |handson_image|在 `build_spec.yaml` 的 `outputArtifacts` 中定义的名称（参见 [4-1-Checking build_spec.yaml](#4-1-Checking build_specyaml)）。这次`handson_image`
 
-![4-029jpg](4-029.jpg)
+![4-029jpg](oke-for-intermediates/4-029.jpg)
 
-单击 ![4-028jpg](4-028.jpg)。
+单击 ![4-028jpg](oke-for-intermediates/4-028.jpg)。
 
 这样就完成了CI流水线的搭建。
 
@@ -1467,15 +1467,15 @@ Build specification file path|build_spec.yaml|放置在稍后设置的“主代�
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
-单击列表中的 ![4-002.jpg](4-002.jpg)。
+单击列表中的 ![4-002.jpg](oke-for-intermediates/4-002.jpg)。
 
 单击 DevOps 项目资源下的触发器。
 
-![4-030.jpg](4-030.jpg)
+![4-030.jpg](oke-for-intermediates/4-030.jpg)
 
-单击 ![4-031.jpg](4-031.jpg)。
+单击 ![4-031.jpg](oke-for-intermediates/4-031.jpg)。
 
 输入以下项目。
 
@@ -1483,28 +1483,28 @@ Build specification file path|build_spec.yaml|放置在稍后设置的“主代�
 -|-
 名称|handson-trigger
 源连接 | OCI 代码库
-单击选择代码存储库|oke-handson|![4-033.jpg](4-033.jpg) 并选中“oke-handson”
+单击选择代码存储库|oke-handson|![4-033.jpg](oke-for-intermediates/4-033.jpg) 并选中“oke-handson”
 
-![4-032.jpg](4-032.jpg)
+![4-032.jpg](oke-for-intermediates/4-032.jpg)
 
-单击 ![4-034.jpg](4-034.jpg)。
+单击 ![4-034.jpg](oke-for-intermediates/4-034.jpg)。
 
 输入以下项目。
 
 键|值|描述
 -|-
-选择 Build Pipeline|handson_build|![4-033.jpg](4-033.jpg) 并选中“handson_build”
+选择 Build Pipeline|handson_build|![4-033.jpg](oke-for-intermediates/4-033.jpg) 并选中“handson_build”
 事件 | 勾选“推送”
 
-![4-035.jpg](4-035.jpg)
+![4-035.jpg](oke-for-intermediates/4-035.jpg)
 
-单击 ![4-036.jpg](4-036.jpg)。
+单击 ![4-036.jpg](oke-for-intermediates/4-036.jpg)。
 
 它将如下所示。
 
-![4-037.jpg](4-037.jpg)
+![4-037.jpg](oke-for-intermediates/4-037.jpg)
 
-单击 ![4-038.jpg](4-038.jpg)。
+单击 ![4-038.jpg](oke-for-intermediates/4-038.jpg)。
 
 触发器创建现已完成。
 
@@ -1515,7 +1515,7 @@ Build specification file path|build_spec.yaml|放置在稍后设置的“主代�
 
 在【确认目标】（#Confirm the goal）所示的图中，我们将创建红色虚线框（！[2-032.jpg]（2-032.jpg））。
 
-![5-033.jpg](5-033.jpg)
+![5-033.jpg](oke-for-intermediates/5-033.jpg)
 
 ### 5-1. 将 Manifest 文件注册到 Artifact Registry
 
@@ -1523,19 +1523,19 @@ Build specification file path|build_spec.yaml|放置在稍后设置的“主代�
 
 单击 Developer Services 的 Containers and Artifacts 类别中的 Artifact Registry。
 
-![5-001.jpg](5-001.jpg)
+![5-001.jpg](oke-for-intermediates/5-001.jpg)
 
-单击 ![5-002.jpg](5-002.jpg)。
+单击 ![5-002.jpg](oke-for-intermediates/5-002.jpg)。
 
-输入以下项目并单击 ![5-004.jpg](5-004.jpg)。
+输入以下项目并单击 ![5-004.jpg](oke-for-intermediates/5-004.jpg)。
 
 键|值
 -|-
 名称|oke-handson
 
-![5-003.jpg](5-003.jpg)
+![5-003.jpg](oke-for-intermediates/5-003.jpg)
 
-单击 ![5-005.jpg](5-005.jpg)。
+单击 ![5-005.jpg](oke-for-intermediates/5-005.jpg)。
 
 输入以下项目。
 
@@ -1545,11 +1545,11 @@ Build specification file path|build_spec.yaml|放置在稍后设置的“主代�
 版本|v0.1
 上传方式|Cloud Shell
 
-![5-006.jpg](5-006.jpg)
+![5-006.jpg](oke-for-intermediates/5-006.jpg)
 
 ![5-034.jpg] 点击(5-034.jpg)中的`copy`按钮复制命令。
 
-从 ![5-007.jpg](5-007.jpg) 启动 Cloud Shell。
+从 ![5-007.jpg](oke-for-intermediates/5-007.jpg) 启动 Cloud Shell。
 
 移动到在 [2-3- 准备示例应用程序] (#2-3-Preparing the sample application) 中克隆的目录。
 
@@ -1598,7 +1598,7 @@ oci artifacts generic artifact upload-by-path
 
 您还可以按如下方式在 Artifact Registry 上查看它。
 
-![5-008.jpg](5-008.jpg)
+![5-008.jpg](oke-for-intermediates/5-008.jpg)
 
 这样就完成了 Manifest 文件到 Artifact Registry 的注册。
 
@@ -1608,15 +1608,15 @@ oci artifacts generic artifact upload-by-path
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
-单击列表中的 ![4-002.jpg](4-002.jpg)。
+单击列表中的 ![4-002.jpg](oke-for-intermediates/4-002.jpg)。
 
 单击 DevOps 项目资源下的环境。
 
-![5-009.jpg](5-009.jpg)
+![5-009.jpg](oke-for-intermediates/5-009.jpg)
 
-单击 ![5-010.jpg](5-010.jpg)。
+单击 ![5-010.jpg](oke-for-intermediates/5-010.jpg)。
 
 输入以下项目。
 
@@ -1625,9 +1625,9 @@ oci artifacts generic artifact upload-by-path
 环境类型|Oracle Kubernetes Engine
 名称|handson-env
 
-![5-011.jpg](5-011.jpg)
+![5-011.jpg](oke-for-intermediates/5-011.jpg)
 
-单击 ![5-012.jpg](5-012.jpg)。
+单击 ![5-012.jpg](oke-for-intermediates/5-012.jpg)。
 
 输入以下项目。
 
@@ -1637,9 +1637,9 @@ oci artifacts generic artifact upload-by-path
 车厢|你的车厢
 集群|集群1
 
-![5-013.jpg](5-013.jpg)
+![5-013.jpg](oke-for-intermediates/5-013.jpg)
 
-单击 ![5-014.jpg](5-014.jpg)。
+单击 ![5-014.jpg](oke-for-intermediates/5-014.jpg)。
 
 这样就完成了 OKE 环境向 OCI DevOps 的注册。
 
@@ -1651,15 +1651,15 @@ oci artifacts generic artifact upload-by-path
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
-单击列表中的 ![4-002.jpg](4-002.jpg)。
+单击列表中的 ![4-002.jpg](oke-for-intermediates/4-002.jpg)。
 
 单击 DevOps 项目资源下的工件。
 
-![4-003.jpg](4-003.jpg)
+![4-003.jpg](oke-for-intermediates/4-003.jpg)
 
-单击 ![4-004.jpg](4-004.jpg)。
+单击 ![4-004.jpg](oke-for-intermediates/4-004.jpg)。
 
 输入以下项目。
 
@@ -1671,23 +1671,23 @@ oci artifacts generic artifact upload-by-path
 Select artifact registry repository| 选择你在Registering the manifest file in中注册的artifact registry
 选择 Artifact | ![5-016.jpg] (5-016.jpg) 点击 [5-1- Register manifest file to artifact registry] (#5-1- Register manifest file to artifact registry Register) 选择工件（部署.yaml:v0.1) 注册于
 
-![5-018.jpg](5-018.jpg)
+![5-018.jpg](oke-for-intermediates/5-018.jpg)
 
-单击 ![5-017.jpg](5-017.jpg)。
+单击 ![5-017.jpg](oke-for-intermediates/5-017.jpg)。
 
 接下来，我们开始构建管道。
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
-单击列表中的 ![4-002.jpg](4-002.jpg)。
+单击列表中的 ![4-002.jpg](oke-for-intermediates/4-002.jpg)。
 
 单击 DevOps 项目资源下的部署管道。
 
-![5-015.jpg](5-015.jpg)
+![5-015.jpg](oke-for-intermediates/5-015.jpg)
 
-单击 ![5-019.jpg](5-019.jpg)。
+单击 ![5-019.jpg](oke-for-intermediates/5-019.jpg)。
 
 输入以下项目。
 
@@ -1695,27 +1695,27 @@ Select artifact registry repository| 选择你在Registering the manifest file i
 -|-
 名称|handson_deploy
 
-![5-020.jpg](5-020.jpg)
+![5-020.jpg](oke-for-intermediates/5-020.jpg)
 
-单击 ![5-021.jpg](5-021.jpg)。
+单击 ![5-021.jpg](oke-for-intermediates/5-021.jpg)。
 
-单击显示屏幕中央列表中的 ![4-012.jpg](4-012.jpg)，然后单击 ![4-013.jpg](4-013.jpg)。
+单击显示屏幕中央列表中的 ![4-012.jpg](oke-for-intermediates/4-012.jpg)，然后单击 ![4-013.jpg](oke-for-intermediates/4-013.jpg)。
 
 选择将清单应用到 Kubernetes 集群。
 
-![5-022.jpg](5-022.jpg)
+![5-022.jpg](oke-for-intermediates/5-022.jpg)
 
-单击 ![5-023.jpg](5-023.jpg)。
+单击 ![5-023.jpg](oke-for-intermediates/5-023.jpg)。
 
 键|值
 -|-
 阶段名称|handson_deploy
 Environment|Environment registered in [5-2-Registration of oke environment to oci-devops](#5-2-Registration of oke environment to oci-devops).这次`handson-env`
-选择一个或多个工件|选择 ![5-026.jpg](5-026.jpg) 并选择您刚刚创建的工件 (`handson_manifest`)
+选择一个或多个工件|选择 ![5-026.jpg](oke-for-intermediates/5-026.jpg) 并选择您刚刚创建的工件 (`handson_manifest`)
 
-![5-024.jpg](5-024.jpg)
+![5-024.jpg](oke-for-intermediates/5-024.jpg)
 
-单击 ![5-025.jpg](5-025.jpg)。
+单击 ![5-025.jpg](oke-for-intermediates/5-025.jpg)。
 
 这样就完成了 CD 流水线的构建。
 
@@ -1725,17 +1725,17 @@ Environment|Environment registered in [5-2-Registration of oke environment to oc
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
-单击列表中的 ![4-002.jpg](4-002.jpg)。
+单击列表中的 ![4-002.jpg](oke-for-intermediates/4-002.jpg)。
 
 然后单击 DevOps Project Resources 下的 Build Pipelines。
 
-![4-007.jpg](4-007.jpg)
+![4-007.jpg](oke-for-intermediates/4-007.jpg)
 
-单击 ![5-027.jpg](5-027.jpg)。
+单击 ![5-027.jpg](oke-for-intermediates/5-027.jpg)。
 
-接下来，![4-012.jpg](4-012.jpg)，然后点击![4-013.jpg](4-013.jpg)。
+接下来，![4-012.jpg](oke-for-intermediates/4-012.jpg)，然后点击![4-013.jpg](oke-for-intermediates/4-013.jpg)。
 
 选择：
 
@@ -1743,9 +1743,9 @@ Environment|Environment registered in [5-2-Registration of oke environment to oc
 -|-
 选项|触发器部署
 
-![5-028.jpg](5-028.jpg)
+![5-028.jpg](oke-for-intermediates/5-028.jpg)
 
-单击 ![5-029.jpg](5-029.jpg)。
+单击 ![5-029.jpg](oke-for-intermediates/5-029.jpg)。
 
 输入以下项目。
 
@@ -1753,9 +1753,9 @@ Environment|Environment registered in [5-2-Registration of oke environment to oc
 -|-
 单击阶段名称 |handson_deploy_call|! 选择 CD 管道 (`handson_deploy`)
 
-![5-030.jpg](5-030.jpg)
+![5-030.jpg](oke-for-intermediates/5-030.jpg)
 
-单击 ![5-031.jpg](5-031.jpg)。
+单击 ![5-031.jpg](oke-for-intermediates/5-031.jpg)。
 
 这样就完成了 CD 流水线的构建。
 
@@ -1764,33 +1764,33 @@ Environment|Environment registered in [5-2-Registration of oke environment to oc
 
 在这里，我们将运行到目前为止构建的 CI/CD 管道并检查示例应用程序。
 
-![0-000.jpg](0-000.jpg)
+![0-000.jpg](oke-for-intermediates/0-000.jpg)
 
 这次我将手动完成。 （自动CI/CD在[7. Redeploy application]（#7 Redeploy application）中执行）
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
-单击列表中的 ![4-002.jpg](4-002.jpg)。
+单击列表中的 ![4-002.jpg](oke-for-intermediates/4-002.jpg)。
 
 然后单击 DevOps Project Resources 下的 Build Pipelines。
 
-![4-007.jpg](4-007.jpg)
+![4-007.jpg](oke-for-intermediates/4-007.jpg)
 
-单击 ![5-027.jpg](5-027.jpg)。
+单击 ![5-027.jpg](oke-for-intermediates/5-027.jpg)。
 
-单击屏幕右上角的 ![6-001.jpg](6-001.jpg)。
+单击屏幕右上角的 ![6-001.jpg](oke-for-intermediates/6-001.jpg)。
 
 将出现如下所示的屏幕。
 
-![6-006.jpg](6-006.jpg)
+![6-006.jpg](oke-for-intermediates/6-006.jpg)
 
-单击 ![6-002.jpg](6-002.jpg)。
+单击 ![6-002.jpg](oke-for-intermediates/6-002.jpg)。
 
 将出现这样的屏幕，构建管道将启动。
 
-![6-003.jpg](6-003.jpg)
+![6-003.jpg](oke-for-intermediates/6-003.jpg)
 
 确认屏幕左上角的“状态”为“成功”。 （这需要一些时间）
 
@@ -1798,15 +1798,15 @@ Environment|Environment registered in [5-2-Registration of oke environment to oc
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
 然后单击 DevOps 项目资源下的部署。
 
-![6-007.jpg](6-007.jpg)
+![6-007.jpg](oke-for-intermediates/6-007.jpg)
 
 等待状态变为“成功”，如下图所示。 （这需要一些时间）
 
-![6-008.jpg](6-008.jpg)
+![6-008.jpg](oke-for-intermediates/6-008.jpg)
 
 当构建流水线和部署流水线都变成“成功”状态后，[启动Cloud Shell](/ocitutorials/cloud-native/oke-for-commons/#3准备cli执行环境cloud-shell)，运行如下命令：
 
@@ -1825,7 +1825,7 @@ oke-atp-helidon   LoadBalancer      10.96.165.239     ***.***.***.***    80:3166
 
 如果显示web应用程序，则成功。
 
-![6-004.jpg](6-004.jpg)
+![6-004.jpg](oke-for-intermediates/6-004.jpg)
 
 此外，在 CI 和 CD 管道的开始和完成（失败）时间，通知将发送到在 [2-1. Creating OCI Notifications]（#2-1-Creating Oci-notifications）中设置的电子邮件地址. 请检查。
 
@@ -1871,22 +1871,22 @@ git push
 
 单击 Developer Services 下 DevOps 类别下的 Projects。
 
-![4-001.jpg](4-001.jpg)
+![4-001.jpg](oke-for-intermediates/4-001.jpg)
 
-单击列表中的 ![4-002.jpg](4-002.jpg)。
+单击列表中的 ![4-002.jpg](oke-for-intermediates/4-002.jpg)。
 
 然后单击 DevOps Project Resources 下的 Build History。
 
-![7-001.jpg](7-001.jpg)
+![7-001.jpg](oke-for-intermediates/7-001.jpg)
 
 之前git push触发的历史会显示在构建历史列表中。
 
-![7-002.jpg](7-002.jpg)
+![7-002.jpg](oke-for-intermediates/7-002.jpg)
 
 与【6.部署应用】（#6 Deploying the application）一样，当构建流水线和部署流水线都变为“成功”状态时，【6.部署应用】（#6访问你在Deploying中确认的公网IP应用程序）再次。
 您可以看到标题图像已更改。
 
-![7-003.jpg](7-003.jpg)
+![7-003.jpg](oke-for-intermediates/7-003.jpg)
 
 本次动手实践到此结束！ ！谢谢你的辛劳工作！ ！
 
