@@ -252,7 +252,7 @@ us-sanjose-1|sjc
 
 **密码**
 请注意，您在此处输入的密码与您用于登录 OCI 控制台的密码不同。
-{: .notice--警告}
+{: .notice--warnning}
 
 如果您看到如下所示的“Login Succeeded”消息，则表示您已成功登录。
 
